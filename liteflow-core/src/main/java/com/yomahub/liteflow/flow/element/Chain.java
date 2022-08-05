@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class Chain implements Executable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Chain.class);
+    private static final Logger log = LoggerFactory.getLogger(Chain.class);
 
     private String chainName;
 

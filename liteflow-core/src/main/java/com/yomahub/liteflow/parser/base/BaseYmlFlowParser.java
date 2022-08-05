@@ -4,7 +4,9 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.helper.ParserHelper;
+import com.yomahub.liteflow.property.LiteflowConfig;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.HashSet;
@@ -20,38 +22,37 @@ import java.util.function.Consumer;
  */
 public abstract class BaseYmlFlowParser implements FlowParser {
 
-	private final Set<String> CHAIN_NAME_SET = new HashSet<>();
+    private final Set<String> CHAIN_NAME_SET = new HashSet<>();
 
-	public void parse(String content) throws Exception{
-		parse(ListUtil.toList(content));
-	}
+    public void parse(String content, LiteflowConfig liteflowConfig) throws Exception {
+        parse(ListUtil.toList(content), liteflowConfig);
+    }
 
-	@Override
-	public void parse(List<String> contentList) throws Exception {
-		if (CollectionUtil.isEmpty(contentList)) {
-			return;
-		}
+    @Override
+    public void parse(List<String> contentList, LiteflowConfig liteflowConfig) throws Exception {
+        if (CollectionUtil.isEmpty(contentList)) {
+            return;
+        }
 
-		List<JSONObject> jsonObjectList = ListUtil.toList();
-		for (String content : contentList){
-			JSONObject ruleObject = convertToJson(content);
-			jsonObjectList.add(ruleObject);
-		}
+        List<JSONObject> jsonObjectList = ListUtil.toList();
+        for (String content : contentList) {
+            JSONObject ruleObject = convertToJson(content);
+            jsonObjectList.add(ruleObject);
+        }
 
-		Consumer<JSONObject> parseOneChainConsumer = this::parseOneChain;
-		ParserHelper.parseJsonObject(jsonObjectList, CHAIN_NAME_SET,parseOneChainConsumer);
-	}
+        ParserHelper.parseJsonObject(jsonObjectList, CHAIN_NAME_SET, this::parseOneChain, liteflowConfig);
+    }
 
-	protected JSONObject convertToJson(String yamlString) {
-		Yaml yaml= new Yaml();
-		Map<String, Object> map = yaml.load(yamlString);
-		return JSON.parseObject(JSON.toJSONString(map));
-	}
+    protected JSONObject convertToJson(String yamlString) {
+        Yaml yaml = new Yaml();
+        Map<String, Object> map = yaml.load(yamlString);
+        return JSON.parseObject(JSON.toJSONString(map));
+    }
 
-	/**
-	 * 解析一个 chain 的过程
-	 *
-	 * @param chain chain
-	 */
-	public abstract void parseOneChain(JSONObject chain);
+    /**
+     * 解析一个 chain 的过程
+     *
+     * @param chain chain
+     */
+    public abstract void parseOneChain(FlowConfiguration flowConfiguration, JSONObject chain);
 }

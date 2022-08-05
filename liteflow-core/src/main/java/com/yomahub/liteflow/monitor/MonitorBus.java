@@ -32,7 +32,7 @@ public class MonitorBus {
 
 	private LiteflowConfig liteflowConfig;
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final ConcurrentHashMap<String, BoundedPriorityBlockingQueue<CompStatistics>> statisticsMap = new ConcurrentHashMap<>();
 
@@ -83,9 +83,9 @@ public class MonitorBus {
 				logStr.append(MessageFormat.format("COMPONENT[{0}] AVERAGE TIME SPENT : {1}\n", entry.getKey(), entry.getValue()));
 			}
 			logStr.append("======================================================================================\n");
-			LOG.info(logStr.toString());
+			log.info(logStr.toString());
 		}catch(Exception e){
-			LOG.error("print statistics cause error",e);
+			log.error("print statistics cause error",e);
 		}
 	}
 

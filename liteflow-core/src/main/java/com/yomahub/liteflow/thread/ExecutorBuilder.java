@@ -1,6 +1,7 @@
 package com.yomahub.liteflow.thread;
 
 import com.alibaba.ttl.threadpool.TtlExecutors;
+import com.yomahub.liteflow.property.ExecutorServiceProperties;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -13,21 +14,20 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public interface ExecutorBuilder {
 
-    ExecutorService buildExecutor();
-
     //构建默认的线程池对象
-    default ExecutorService buildDefaultExecutor(int corePoolSize, int maximumPoolSize, int queueCapacity, String threadName) {
-        return TtlExecutors.getTtlExecutorService(new ThreadPoolExecutor(corePoolSize,
-                maximumPoolSize,
-                0L, TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<>(queueCapacity),
+    default ExecutorService buildExecutor(ExecutorServiceProperties executorServiceProperties) {
+        return TtlExecutors.getTtlExecutorService(new ThreadPoolExecutor(executorServiceProperties.getCorePoolSize(),
+                executorServiceProperties.getMaximumPoolSize(),
+                executorServiceProperties.getKeepAliveTime(),
+                TimeUnit.MILLISECONDS,
+                new ArrayBlockingQueue<>(executorServiceProperties.getQueueCapacity()),
                 new ThreadFactory() {
                     private final AtomicLong number = new AtomicLong();
 
                     @Override
                     public Thread newThread(Runnable r) {
                         Thread newThread = Executors.defaultThreadFactory().newThread(r);
-                        newThread.setName(threadName + number.getAndIncrement());
+                        newThread.setName(executorServiceProperties.getThreadName() + number.getAndIncrement());
                         newThread.setDaemon(false);
                         return newThread;
                     }

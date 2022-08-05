@@ -2,10 +2,9 @@ package com.yomahub.liteflow.builder;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
-import com.yomahub.liteflow.flow.FlowBus;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Chain;
 import com.yomahub.liteflow.flow.element.condition.Condition;
 import com.yomahub.liteflow.flow.element.condition.ThenCondition;
@@ -36,23 +35,26 @@ public class LiteFlowChainBuilder {
     //后置处理Condition，用来区别主体的Condition
     private final List<Condition> finallyConditionList;
 
-    public static LiteFlowChainBuilder createChain() {
-        return new LiteFlowChainBuilder();
+    private final FlowConfiguration flowConfiguration;
+
+    public static LiteFlowChainBuilder createChain(FlowConfiguration flowConfiguration) {
+        return new LiteFlowChainBuilder(flowConfiguration);
     }
 
-    public LiteFlowChainBuilder() {
+    public LiteFlowChainBuilder(FlowConfiguration flowConfiguration) {
         chain = new Chain();
         conditionList = new ArrayList<>();
         preConditionList = new ArrayList<>();
         finallyConditionList = new ArrayList<>();
+        this.flowConfiguration = flowConfiguration;
     }
 
     //在parser中chain的build是2段式的，因为涉及到依赖问题，以前是递归parser
     //2.6.8之后取消了递归的模式，两段式组装，先把带有chainName的chain对象放进去，第二段再组装chain里面的condition
     //所以这里setChainName的时候需要判断下
     public LiteFlowChainBuilder setChainName(String chainName) {
-        if (FlowBus.containChain(chainName)) {
-            this.chain = FlowBus.getChain(chainName);
+        if (flowConfiguration.containChain(chainName)) {
+            this.chain = flowConfiguration.getChain(chainName);
         } else {
             this.chain.setChainName(chainName);
         }
@@ -65,14 +67,13 @@ public class LiteFlowChainBuilder {
         return this;
     }
 
-    public void build() {
+    public Chain build() {
         this.chain.setConditionList(this.conditionList);
         this.chain.setPreConditionList(this.preConditionList);
         this.chain.setFinallyConditionList(this.finallyConditionList);
 
         checkBuild();
-
-        FlowBus.addChain(this.chain);
+        return this.chain;
     }
 
     /**

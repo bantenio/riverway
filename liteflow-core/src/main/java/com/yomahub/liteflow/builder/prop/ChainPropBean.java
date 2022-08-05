@@ -30,7 +30,7 @@ public class ChainPropBean {
 	/**
 	 * 指定线程池
 	 */
-	String threadExecutorClass;
+	String threadExecutorName;
 
 	/**
 	 * chain 类型
@@ -73,12 +73,12 @@ public class ChainPropBean {
 		return this;
 	}
 
-	public String getThreadExecutorClass() {
-		return threadExecutorClass;
+	public String getThreadExecutorName() {
+		return threadExecutorName;
 	}
 
-	public ChainPropBean setThreadExecutorClass(String threadExecutorClass) {
-		this.threadExecutorClass = threadExecutorClass;
+	public ChainPropBean setThreadExecutorName(String threadExecutorName) {
+		this.threadExecutorName = threadExecutorName;
 		return this;
 	}
 

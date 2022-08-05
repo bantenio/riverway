@@ -1,5 +1,6 @@
 package com.yomahub.liteflow.parser.el;
 
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.base.BaseXmlFlowParser;
 import com.yomahub.liteflow.parser.helper.ParserHelper;
 import org.dom4j.Element;
@@ -16,8 +17,8 @@ public abstract class XmlFlowELParser extends BaseXmlFlowParser {
 	 * 解析一个chain的过程
 	 */
 	@Override
-	public void parseOneChain(Element e) {
-		ParserHelper.parseOneChainEl(e);
+	public void parseOneChain(FlowConfiguration flowConfiguration, Element e) {
+		ParserHelper.parseOneChainEl(e, flowConfiguration);
 	}
 
 }

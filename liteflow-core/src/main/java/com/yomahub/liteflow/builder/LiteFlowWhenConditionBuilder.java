@@ -3,6 +3,7 @@ package com.yomahub.liteflow.builder;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.common.LocalDefaultFlowConstant;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.condition.Condition;
 
 /**
@@ -51,11 +52,11 @@ public class LiteFlowWhenConditionBuilder extends LiteFlowConditionBuilder{
     }
 
 
-    public LiteFlowWhenConditionBuilder setThreadExecutorClass(String executorServiceName){
+    public LiteFlowWhenConditionBuilder setThreadExecutorName(String executorServiceName){
         if (StrUtil.isBlank(executorServiceName)) {
             return this;
         }
-        this.condition.setThreadExecutorClass(executorServiceName);
+        this.condition.setThreadExecutorName(executorServiceName);
         return this;
     }
 }

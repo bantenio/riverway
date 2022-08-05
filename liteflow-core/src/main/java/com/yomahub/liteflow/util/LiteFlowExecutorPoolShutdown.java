@@ -1,7 +1,7 @@
 package com.yomahub.liteflow.util;
 
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.spi.holder.ContextAwareHolder;
-import com.yomahub.liteflow.thread.ExecutorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +17,18 @@ public class LiteFlowExecutorPoolShutdown {
 
     private static final Logger LOG = LoggerFactory.getLogger(LiteFlowExecutorPoolShutdown.class);
 
+    private FlowConfiguration flowConfiguration;
+
+    public LiteFlowExecutorPoolShutdown(FlowConfiguration flowConfiguration) {
+        this.flowConfiguration = flowConfiguration;
+    }
+
     @PreDestroy
     public void destroy() throws Exception {
         ExecutorService executorService = ContextAwareHolder.loadContextAware().getBean("whenExecutors");
 
         LOG.info("Start closing the liteflow-when-calls...");
-        ExecutorHelper.loadInstance().shutdownAwaitTermination(executorService);
+        flowConfiguration.getExecutorServiceManager().shutdownAwaitTermination(executorService);
         LOG.info("Succeed closing the liteflow-when-calls ok...");
     }
 }

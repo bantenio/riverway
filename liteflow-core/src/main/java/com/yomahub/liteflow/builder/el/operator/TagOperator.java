@@ -2,9 +2,8 @@ package com.yomahub.liteflow.builder.el.operator;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.ql.util.express.Operator;
-import com.yomahub.liteflow.core.NodeComponent;
 import com.yomahub.liteflow.exception.ELParseException;
-import com.yomahub.liteflow.flow.FlowBus;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,13 @@ import org.slf4j.LoggerFactory;
  */
 public class TagOperator extends Operator {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    private final FlowConfiguration flowConfiguration;
+
+    public TagOperator(FlowConfiguration flowConfiguration) {
+        this.flowConfiguration = flowConfiguration;
+    }
 
     @Override
     public Node executeInner(Object[] objects) throws Exception {
@@ -26,7 +31,7 @@ public class TagOperator extends Operator {
             }
 
             if (objects.length != 2){
-                LOG.error("parameter error");
+                log.error("parameter error");
                 throw new Exception();
             }
 
@@ -34,7 +39,7 @@ public class TagOperator extends Operator {
             if (objects[0] instanceof Node){
                 node = (Node) objects[0];
             }else{
-                LOG.error("The caller must be Node item!");
+                log.error("The caller must be Node item!");
                 throw new Exception();
             }
 
@@ -42,13 +47,13 @@ public class TagOperator extends Operator {
             if (objects[1] instanceof String){
                 tag = objects[1].toString();
             }else{
-                LOG.error("the parameter must be String type!");
+                log.error("the parameter must be String type!");
                 throw new Exception();
             }
 
             //这里为什么要clone一个呢？
             //因为tag是跟着chain走的。而在el上下文里的放的都是同一个node，如果多个同样的node tag不同，则这里必须copy
-            Node copyNode = FlowBus.copyNode(node.getId());
+            Node copyNode = flowConfiguration.copyNode(node.getId());
 
             copyNode.setTag(tag);
 

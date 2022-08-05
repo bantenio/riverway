@@ -18,6 +18,7 @@ import com.yomahub.liteflow.enums.CmpStepTypeEnum;
  */
 public class CmpStep {
 
+    private String chainName;
     private String nodeId;
 
     private String nodeName;
@@ -36,10 +37,19 @@ public class CmpStep {
     //但是success为false，不一定有exception，因为有可能没执行到，或者没执行结束(any)
     private Exception exception;
 
-    public CmpStep(String nodeId, String nodeName, CmpStepTypeEnum stepType) {
+    public CmpStep(String chainName, String nodeId, String nodeName, CmpStepTypeEnum stepType) {
         this.nodeId = nodeId;
         this.nodeName = nodeName;
         this.stepType = stepType;
+    }
+
+    public String getChainName() {
+        return chainName;
+    }
+
+    public CmpStep setChainName(String chainName) {
+        this.chainName = chainName;
+        return this;
     }
 
     public String getNodeId() {

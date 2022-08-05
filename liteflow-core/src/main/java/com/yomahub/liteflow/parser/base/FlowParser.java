@@ -1,5 +1,7 @@
 package com.yomahub.liteflow.parser.base;
 
+import com.yomahub.liteflow.flow.FlowConfiguration;
+import com.yomahub.liteflow.property.LiteflowConfig;
 import org.dom4j.Element;
 
 import java.util.*;
@@ -11,8 +13,8 @@ import java.util.*;
  */
 public interface FlowParser {
 
-    void parseMain(List<String> pathList) throws Exception;
+    void parseMain(List<String> pathList, LiteflowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws Exception;
 
-    void parse(List<String> contentList) throws Exception;
+    void parse(List<String> contentList, LiteflowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws Exception;
 
 }

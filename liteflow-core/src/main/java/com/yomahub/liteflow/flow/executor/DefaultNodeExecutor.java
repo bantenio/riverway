@@ -1,6 +1,6 @@
 package com.yomahub.liteflow.flow.executor;
 
-import com.yomahub.liteflow.core.NodeComponent;
+import com.yomahub.liteflow.flow.element.Node;
 
 /**
  * 默认的节点执行器
@@ -10,7 +10,7 @@ import com.yomahub.liteflow.core.NodeComponent;
  */
 public class DefaultNodeExecutor extends NodeExecutor {
     @Override
-    public void execute(NodeComponent instance) throws Exception {
+    public void execute(Node instance) throws Exception {
         super.execute(instance);
     }
 }

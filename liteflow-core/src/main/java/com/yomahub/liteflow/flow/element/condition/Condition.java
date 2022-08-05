@@ -36,7 +36,7 @@ public abstract class Condition implements Executable{
 	private boolean any = false;
 
 	// when单独的线程池名称
-	private String threadExecutorClass;
+	private String threadExecutorName;
 
 	//当前所在的ChainName
 	//如果对于子流程来说，那这个就是子流程所在的Chain
@@ -90,12 +90,13 @@ public abstract class Condition implements Executable{
 		this.any = any;
 	}
 
-	public String getThreadExecutorClass() {
-		return threadExecutorClass;
+	public String getThreadExecutorName() {
+		return threadExecutorName;
 	}
 
-	public void setThreadExecutorClass(String threadExecutorClass) {
-		this.threadExecutorClass = threadExecutorClass;
+	public Condition setThreadExecutorName(String threadExecutorName) {
+		this.threadExecutorName = threadExecutorName;
+		return this;
 	}
 
 	public String getId() {

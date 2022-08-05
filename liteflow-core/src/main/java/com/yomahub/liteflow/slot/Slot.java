@@ -11,15 +11,16 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.yomahub.liteflow.exception.NoSuchContextBeanException;
 import com.yomahub.liteflow.exception.NullParamException;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.entity.CmpStep;
-import com.yomahub.liteflow.flow.id.IdGeneratorHolder;
+import com.yomahub.liteflow.property.LiteflowConfig;
+import com.yomahub.liteflow.thread.ExecutorServiceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
-import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -61,10 +62,18 @@ public class Slot{
 
 	private List<Object> contextBeanList;
 
-	public Slot() {
+	private ExecutorServiceManager executorServiceManager;
+
+	private LiteflowConfig liteflowConfig;
+
+	private FlowConfiguration flowConfiguration;
+
+	public Slot(FlowConfiguration flowConfiguration) {
+		this.flowConfiguration = flowConfiguration;
 	}
 
-	public Slot(List<Object> contextBeanList) {
+	public Slot(FlowConfiguration flowConfiguration, List<Object> contextBeanList) {
+		this.flowConfiguration = flowConfiguration;
 		this.contextBeanList = contextBeanList;
 	}
 
@@ -217,7 +226,11 @@ public class Slot{
 	}
 
 	public void generateRequestId() {
-		metaDataMap.put(REQUEST_ID, IdGeneratorHolder.getInstance().generate());
+		setRequestId(flowConfiguration.getRequestIdGenerator().generate());
+	}
+
+	public void setRequestId(String requestId) {
+		metaDataMap.put(REQUEST_ID, requestId);
 	}
 
 	public String getRequestId() {
@@ -241,7 +254,9 @@ public class Slot{
 	}
 
 	public <T> T getContextBean(Class<T> contextBeanClazz) {
-		T t = (T)contextBeanList.stream().filter(o -> o.getClass().equals(contextBeanClazz)).findFirst().orElse(null);
+		T t = (T)contextBeanList.stream().filter(o -> o.getClass().isAssignableFrom(contextBeanClazz))
+				.findFirst()
+				.orElse(null);
 		if (t == null){
 			throw new NoSuchContextBeanException("this type is not in the context type passed in");
 		}
@@ -251,5 +266,23 @@ public class Slot{
 	public <T> T getFirstContextBean(){
 		Class<T> firstContextBeanClazz = (Class<T>) this.getContextBeanList().get(0).getClass();
 		return this.getContextBean(firstContextBeanClazz);
+	}
+
+	public ExecutorServiceManager getExecutorServiceManager() {
+		return executorServiceManager;
+	}
+
+	public Slot setExecutorServiceManager(ExecutorServiceManager executorServiceManager) {
+		this.executorServiceManager = executorServiceManager;
+		return this;
+	}
+
+	public LiteflowConfig getLiteflowConfig() {
+		return liteflowConfig;
+	}
+
+	public Slot setLiteflowConfig(LiteflowConfig liteflowConfig) {
+		this.liteflowConfig = liteflowConfig;
+		return this;
 	}
 }

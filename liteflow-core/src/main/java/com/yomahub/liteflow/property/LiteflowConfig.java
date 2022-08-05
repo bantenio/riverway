@@ -11,6 +11,8 @@ package com.yomahub.liteflow.property;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
+import java.util.concurrent.ExecutorService;
+
 /**
  * liteflow的配置实体类
  * 这个类中的属性为什么不用基本类型，而用包装类型呢
@@ -75,20 +77,18 @@ public class LiteflowConfig {
     // requestId 生成器
     private String requestIdGeneratorClass;
 
-    //是否打印liteflow banner
-    private Boolean printBanner;
-
     //FlowExecutor的execute2Future的线程数
     private Integer mainExecutorWorks;
 
     //FlowExecutor的execute2Future的自定义线程池
     private String mainExecutorClass;
 
-    //是否打印执行中的日志
-    private Boolean printExecutionLog;
-
     //替补组件class路径
     private String substituteCmpClass;
+
+    private LogProperties logConfig;
+
+    private ExecutorProperties executorProperties;
 
     public Boolean getEnable() {
         if (ObjectUtil.isNull(enable)) {
@@ -254,22 +254,10 @@ public class LiteflowConfig {
         this.zkNode = zkNode;
     }
 
-    public Boolean getPrintBanner() {
-        if (ObjectUtil.isNull(printBanner)) {
-            return Boolean.TRUE;
-        } else {
-            return printBanner;
-        }
-    }
-
-    public void setPrintBanner(Boolean printBanner) {
-        this.printBanner = printBanner;
-    }
-
     public String getThreadExecutorClass() {
-        if (StrUtil.isBlank(threadExecutorClass)){
+        if (StrUtil.isBlank(threadExecutorClass)) {
             return "com.yomahub.liteflow.thread.LiteFlowDefaultWhenExecutorBuilder";
-        }else{
+        } else {
             return threadExecutorClass;
         }
     }
@@ -279,9 +267,9 @@ public class LiteflowConfig {
     }
 
     public String getNodeExecutorClass() {
-        if (StrUtil.isBlank(nodeExecutorClass)){
+        if (StrUtil.isBlank(nodeExecutorClass)) {
             return "com.yomahub.liteflow.flow.executor.DefaultNodeExecutor";
-        }else{
+        } else {
             return nodeExecutorClass;
         }
     }
@@ -291,7 +279,7 @@ public class LiteflowConfig {
     }
 
     public String getRequestIdGeneratorClass() {
-        if(StrUtil.isBlank(this.requestIdGeneratorClass)){
+        if (StrUtil.isBlank(this.requestIdGeneratorClass)) {
             return "com.yomahub.liteflow.flow.id.DefaultRequestIdGenerator";
         }
         return requestIdGeneratorClass;
@@ -302,9 +290,9 @@ public class LiteflowConfig {
     }
 
     public Integer getMainExecutorWorks() {
-        if (ObjectUtil.isNull(mainExecutorWorks)){
+        if (ObjectUtil.isNull(mainExecutorWorks)) {
             return 64;
-        }else{
+        } else {
             return mainExecutorWorks;
         }
     }
@@ -314,9 +302,9 @@ public class LiteflowConfig {
     }
 
     public String getMainExecutorClass() {
-        if (StrUtil.isBlank(mainExecutorClass)){
+        if (StrUtil.isBlank(mainExecutorClass)) {
             return "com.yomahub.liteflow.thread.LiteFlowDefaultMainExecutorBuilder";
-        }else{
+        } else {
             return mainExecutorClass;
         }
     }
@@ -325,17 +313,6 @@ public class LiteflowConfig {
         this.mainExecutorClass = mainExecutorClass;
     }
 
-    public Boolean getPrintExecutionLog() {
-        if (ObjectUtil.isNull(printExecutionLog)){
-            return Boolean.TRUE;
-        }else{
-            return printExecutionLog;
-        }
-    }
-
-    public void setPrintExecutionLog(Boolean printExecutionLog) {
-        this.printExecutionLog = printExecutionLog;
-    }
 
     public String getSubstituteCmpClass() {
         return substituteCmpClass;
@@ -343,5 +320,23 @@ public class LiteflowConfig {
 
     public void setSubstituteCmpClass(String substituteCmpClass) {
         this.substituteCmpClass = substituteCmpClass;
+    }
+
+    public LogProperties getLogConfig() {
+        return logConfig;
+    }
+
+    public LiteflowConfig setLogConfig(LogProperties logConfig) {
+        this.logConfig = logConfig;
+        return this;
+    }
+
+    public ExecutorProperties getExecutorProperties() {
+        return executorProperties;
+    }
+
+    public LiteflowConfig setExecutorProperties(ExecutorProperties executorProperties) {
+        this.executorProperties = executorProperties;
+        return this;
     }
 }

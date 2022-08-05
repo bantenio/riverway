@@ -1,5 +1,6 @@
 package com.yomahub.liteflow.core;
 
+import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.script.ScriptExecutorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ public class ScriptComponent extends NodeComponent{
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public void process() throws Exception {
+    public void process(Node node) throws Exception {
         ScriptExecutorFactory.loadInstance().getScriptExecutor().execute(this.getCurrChainName(), getNodeId(), getSlotIndex());
     }
 

@@ -4,7 +4,9 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.helper.ParserHelper;
+import com.yomahub.liteflow.property.LiteflowConfig;
 
 import java.util.List;
 import java.util.Set;
@@ -18,32 +20,32 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public abstract class BaseJsonFlowParser implements FlowParser {
 
-	private final Set<String> CHAIN_NAME_SET = new CopyOnWriteArraySet<>();
+    private final Set<String> CHAIN_NAME_SET = new CopyOnWriteArraySet<>();
 
-	public void parse(String content) throws Exception {
-		parse(ListUtil.toList(content));
-	}
+    public void parse(String content, LiteflowConfig liteflowConfig) throws Exception {
+        parse(ListUtil.toList(content), liteflowConfig);
+    }
 
-	@Override
-	public void parse(List<String> contentList) throws Exception {
-		if (CollectionUtil.isEmpty(contentList)) {
-			return;
-		}
+    @Override
+    public void parse(List<String> contentList, LiteflowConfig liteflowConfig) throws Exception {
+        if (CollectionUtil.isEmpty(contentList)) {
+            return;
+        }
 
-		List<JSONObject> jsonObjectList = ListUtil.toList();
-		for (String content : contentList) {
-			//把字符串原生转换为json对象，如果不加第二个参数OrderedField，会无序
-			JSONObject flowJsonObject = JSONObject.parseObject(content, Feature.OrderedField);
-			jsonObjectList.add(flowJsonObject);
-		}
-		ParserHelper.parseJsonObject(jsonObjectList, CHAIN_NAME_SET, this::parseOneChain);
-	}
+        List<JSONObject> jsonObjectList = ListUtil.toList();
+        for (String content : contentList) {
+            //把字符串原生转换为json对象，如果不加第二个参数OrderedField，会无序
+            JSONObject flowJsonObject = JSONObject.parseObject(content, Feature.OrderedField);
+            jsonObjectList.add(flowJsonObject);
+        }
+        ParserHelper.parseJsonObject(jsonObjectList, CHAIN_NAME_SET, this::parseOneChain, liteflowConfig);
+    }
 
-	/**
-	 * 解析一个chain的过程
-	 *
-	 * @param chainObject chain 节点
-	 */
-	public abstract void parseOneChain(JSONObject chainObject);
+    /**
+     * 解析一个chain的过程
+     *
+     * @param chainObject chain 节点
+     */
+    public abstract void parseOneChain(FlowConfiguration flowConfiguration, JSONObject chainObject);
 
 }

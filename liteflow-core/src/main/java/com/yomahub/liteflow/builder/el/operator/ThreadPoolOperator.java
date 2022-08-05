@@ -36,15 +36,15 @@ public class ThreadPoolOperator extends Operator {
                 throw new Exception();
             }
 
-            String threadPoolClazz = null;
+            String threadPoolName = null;
             if (objects[1] instanceof String){
-                threadPoolClazz = objects[1].toString();
+                threadPoolName = objects[1].toString();
             }else{
                 LOG.error("the parameter must be String type!");
                 throw new Exception();
             }
 
-            whenCondition.setThreadExecutorClass(threadPoolClazz);
+            whenCondition.setThreadExecutorName(threadPoolName);
 
             return whenCondition;
 

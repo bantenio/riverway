@@ -31,7 +31,7 @@ public interface ChainConstant {
 
     String ANY = "any";
 
-    String THREAD_EXECUTOR_CLASS = "threadExecutorClass";
+    String THREAD_EXECUTOR_NAME = "threadExecutorName";
 
     String CONDITION = "condition";
 

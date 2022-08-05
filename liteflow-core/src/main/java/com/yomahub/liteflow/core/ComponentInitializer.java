@@ -1,17 +1,12 @@
 package com.yomahub.liteflow.core;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.annotation.LiteflowRetry;
 import com.yomahub.liteflow.annotation.util.AnnoUtil;
-import com.yomahub.liteflow.flow.executor.NodeExecutor;
 import com.yomahub.liteflow.enums.NodeTypeEnum;
-import com.yomahub.liteflow.monitor.MonitorBus;
+import com.yomahub.liteflow.flow.element.Node;
+import com.yomahub.liteflow.flow.executor.NodeExecutor;
 import com.yomahub.liteflow.property.LiteflowConfig;
-import com.yomahub.liteflow.property.LiteflowConfigGetter;
-import com.yomahub.liteflow.spi.holder.ContextAwareHolder;
-import com.yomahub.liteflow.spi.holder.LiteflowComponentSupportHolder;
 
 /**
  * 组件初始化器
@@ -29,35 +24,28 @@ public class ComponentInitializer {
         return instance;
     }
 
-    public NodeComponent initComponent(NodeComponent nodeComponent, NodeTypeEnum type, String desc, String nodeId){
+    public NodeComponent initComponent(Node node,
+                                       NodeComponent nodeComponent,
+                                       NodeTypeEnum type,
+                                       String desc,
+                                       String nodeId,
+                                       LiteflowConfig liteflowConfig) {
         nodeComponent.setNodeId(nodeId);
         nodeComponent.setSelf(nodeComponent);
         nodeComponent.setType(type);
 
-        //设置MonitorBus，如果没有就不注入
-        MonitorBus monitorBus = ContextAwareHolder.loadContextAware().getBean(MonitorBus.class);
-        if(ObjectUtil.isNotNull(monitorBus)){
-            nodeComponent.setMonitorBus(monitorBus);
-        }
-
         //先取传进来的name值(配置文件中配置的)，再看有没有配置@LiteflowComponent标注
         //@LiteflowComponent标注只在spring体系下生效，这里用了spi机制取到相应环境下的实现类
         nodeComponent.setName(desc);
-        if (ListUtil.toList(NodeTypeEnum.COMMON, NodeTypeEnum.SWITCH).contains(type)
-                && StrUtil.isBlank(nodeComponent.getName())){
-            String name = LiteflowComponentSupportHolder.loadLiteflowComponentSupport().getCmpName(nodeComponent);
-            nodeComponent.setName(name);
-        }
 
         //先从组件上取@RetryCount标注，如果没有，则看全局配置，全局配置如果不配置的话，默认是0
         //默认retryForExceptions为Exception.class
         LiteflowRetry liteflowRetryAnnotation = AnnoUtil.getAnnotation(nodeComponent.getClass(), LiteflowRetry.class);
-        LiteflowConfig liteflowConfig = LiteflowConfigGetter.get();
         if (ObjectUtil.isNotNull(liteflowRetryAnnotation)) {
-            nodeComponent.setRetryCount(liteflowRetryAnnotation.retry());
+            node.setRetryCount(liteflowRetryAnnotation.retry());
             nodeComponent.setRetryForExceptions(liteflowRetryAnnotation.forExceptions());
         } else {
-            nodeComponent.setRetryCount(liteflowConfig.getRetryCount());
+            node.setRetryCount(liteflowConfig.getRetryCount());
         }
         nodeComponent.setNodeExecutorClass(buildNodeExecutorClass(liteflowConfig));
 

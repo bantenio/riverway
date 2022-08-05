@@ -7,24 +7,23 @@
  */
 package com.yomahub.liteflow.flow.element;
 
-import java.text.MessageFormat;
-
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.core.NodeComponent;
-import com.yomahub.liteflow.property.LiteflowConfig;
-import com.yomahub.liteflow.property.LiteflowConfigGetter;
-import com.yomahub.liteflow.slot.DataBus;
-import com.yomahub.liteflow.slot.Slot;
-import com.yomahub.liteflow.flow.executor.NodeExecutor;
-import com.yomahub.liteflow.flow.executor.NodeExecutorHelper;
 import com.yomahub.liteflow.enums.ExecuteTypeEnum;
 import com.yomahub.liteflow.enums.NodeTypeEnum;
 import com.yomahub.liteflow.exception.ChainEndException;
 import com.yomahub.liteflow.exception.FlowSystemException;
+import com.yomahub.liteflow.flow.FlowConfiguration;
+import com.yomahub.liteflow.flow.LiteflowResponse;
+import com.yomahub.liteflow.flow.executor.NodeExecutor;
+import com.yomahub.liteflow.flow.executor.NodeExecutorHelper;
+import com.yomahub.liteflow.slot.DataBus;
+import com.yomahub.liteflow.slot.Slot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.MessageFormat;
 
 /**
  * Node节点，实现可执行器
@@ -32,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Node implements Executable,Cloneable{
 
-	private static final Logger LOG = LoggerFactory.getLogger(Node.class);
+	private static final Logger log = LoggerFactory.getLogger(Node.class);
 
 	private String id;
 
@@ -48,16 +47,22 @@ public class Node implements Executable,Cloneable{
 
 	private String tag;
 
-	public Node(){
+	//重试次数
+	private int retryCount = 0;
 
+	private FlowConfiguration flowConfiguration;
+
+	public Node() {
 	}
 
-	public Node(NodeComponent instance) {
+	public Node(NodeComponent instance,
+				FlowConfiguration flowConfiguration) {
 		this.id = instance.getNodeId();
 		this.name = instance.getName();
 		this.instance = instance;
 		this.type = instance.getType();
 		this.clazz = instance.getClass().getName();
+		this.flowConfiguration = flowConfiguration;
 	}
 
 	public String getId() {
@@ -102,32 +107,22 @@ public class Node implements Executable,Cloneable{
 
 		Slot slot = DataBus.getSlot(slotIndex);
 		try {
-			//把线程属性赋值给组件对象
-			instance.setSlotIndex(slotIndex);
-			instance.setTag(tag);
-
-			LiteflowConfig liteflowConfig = LiteflowConfigGetter.get();
-
 			//判断是否可执行，所以isAccess经常作为一个组件进入的实际判断要素，用作检查slot里的参数的完备性
 			if (instance.isAccess()) {
 				//根据配置判断是否打印执行中的日志
-				if (BooleanUtil.isTrue(liteflowConfig.getPrintExecutionLog())){
-					LOG.info("[{}]:[O]start component[{}] execution",slot.getRequestId(), instance.getDisplayName());
-				}
+				log.info("[{}]:[O]start component[{}] execution",slot.getRequestId(), instance.getDisplayName());
 
 				//这里开始进行重试的逻辑和主逻辑的运行
 				NodeExecutor nodeExecutor = NodeExecutorHelper.loadInstance().buildNodeExecutor(instance.getNodeExecutorClass());
 				// 调用节点执行器进行执行
-				nodeExecutor.execute(instance);
+				nodeExecutor.execute(this);
 				//如果组件覆盖了isEnd方法，或者在在逻辑中主要调用了setEnd(true)的话，流程就会立马结束
 				if (instance.isEnd()) {
 					String errorInfo = StrUtil.format("[{}]:[{}] lead the chain to end", slot.getRequestId(), instance.getDisplayName());
 					throw new ChainEndException(errorInfo);
 				}
 			} else {
-				if (BooleanUtil.isTrue(liteflowConfig.getPrintExecutionLog())){
-					LOG.info("[{}]:[X]skip component[{}] execution", slot.getRequestId(), instance.getDisplayName());
-				}
+				log.info("[{}]:[X]skip component[{}] execution", slot.getRequestId(), instance.getDisplayName());
 			}
 		} catch (ChainEndException e){
 			throw e;
@@ -135,10 +130,10 @@ public class Node implements Executable,Cloneable{
 			//如果组件覆盖了isContinueOnError方法，返回为true，那即便出了异常，也会继续流程
 			if (instance.isContinueOnError()) {
 				String errorMsg = MessageFormat.format("[{0}]:component[{1}] cause error,but flow is still go on", slot.getRequestId(),id);
-				LOG.error(errorMsg);
+				log.error(errorMsg);
 			} else {
 				String errorMsg = MessageFormat.format("[{0}]:component[{1}] cause error,error:{2}",slot.getRequestId(),id,e.getMessage());
-				LOG.error(errorMsg);
+				log.error(errorMsg);
 				throw e;
 			}
 		} finally {
@@ -206,5 +201,21 @@ public class Node implements Executable,Cloneable{
 	@Override
 	public void setCurrChainName(String currentChainName) {
 		instance.setCurrChainName(currentChainName);
+	}
+
+	public int getRetryCount() {
+		return retryCount;
+	}
+
+	public void setRetryCount(int retryCount) {
+		this.retryCount = retryCount;
+	}
+
+	public void invoke(String chainId, Object param, Integer slotIndex) throws Exception {
+		flowConfiguration.getFlowExecutor().invoke(chainId, slotIndex, param);
+	}
+
+	public LiteflowResponse invoke2Resp(String chainId, Object param, Integer slotIndex) {
+		return flowConfiguration.getFlowExecutor().invoke2Resp(chainId, slotIndex, param);
 	}
 }

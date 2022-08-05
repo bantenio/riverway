@@ -1,5 +1,6 @@
 package com.yomahub.liteflow.core;
 
+import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.script.ScriptExecutorFactory;
 
 /**
@@ -10,7 +11,7 @@ import com.yomahub.liteflow.script.ScriptExecutorFactory;
 public class ScriptSwitchComponent extends NodeSwitchComponent {
 
     @Override
-    public String processSwitch() throws Exception {
+    public String processSwitch(Node node) throws Exception {
         return (String)ScriptExecutorFactory.loadInstance().getScriptExecutor().execute(this.getCurrChainName(), getNodeId(), getSlotIndex());
     }
 
