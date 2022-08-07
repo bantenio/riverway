@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Set;
 
 public class SpringPathContentParser implements PathContentParser {
+
+    private static final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
     @Override
     public List<String> parseContent(List<String> pathList) throws Exception {
         if(CollectionUtil.isEmpty(pathList)){
@@ -39,8 +41,6 @@ public class SpringPathContentParser implements PathContentParser {
                     locationPattern = path;
                 }
             }
-
-            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
             Resource[] resources = resolver.getResources(locationPattern);
             if (ArrayUtil.isEmpty(resources)) {
                 throw new ConfigErrorException("config error,please check rule source property");

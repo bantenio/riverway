@@ -14,7 +14,7 @@ import com.yomahub.liteflow.exception.WhenExecuteException;
 import com.yomahub.liteflow.flow.parallel.CompletableFutureTimeout;
 import com.yomahub.liteflow.flow.parallel.ParallelSupplier;
 import com.yomahub.liteflow.flow.parallel.WhenFutureObj;
-import com.yomahub.liteflow.property.LiteflowConfig;
+import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
 import org.slf4j.Logger;
@@ -35,9 +35,9 @@ public class WhenCondition extends Condition {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    private final LiteflowConfig liteflowConfig;
+    private final LiteFlowConfig liteflowConfig;
 
-    public WhenCondition(LiteflowConfig liteflowConfig) {
+    public WhenCondition(LiteFlowConfig liteflowConfig) {
         this.liteflowConfig = liteflowConfig;
     }
 
@@ -66,7 +66,7 @@ public class WhenCondition extends Condition {
         //这里为什么要定义成数组呢，因为后面lambda要用到，根据final不能修改引用的原则，这里用了数组对象
         final boolean[] interrupted = {false};
 
-        //这里主要是做了封装CompletableFuture对象，用lumbda表达式做了很多事情，这句代码要仔细理清
+        //这里主要是做了封装CompletableFuture对象，用lambda表达式做了很多事情，这句代码要仔细理清
         //1.先进行过滤，前置和后置组件过滤掉，因为在EL Chain处理的时候已经提出来了
         //2.过滤isAccess为false的情况，因为不过滤这个的话，如果加上了any，那么isAccess为false那就是最快的了
         //3.根据condition.getNodeList()的集合进行流处理，用map进行把executable对象转换成List<CompletableFuture<WhenFutureObj>>
@@ -84,7 +84,7 @@ public class WhenCondition extends Condition {
         }).map(executable -> CompletableFutureTimeout.completeOnTimeout(
                 WhenFutureObj.timeOut(executable.getExecuteName(), liteflowConfig),
                 CompletableFuture.supplyAsync(new ParallelSupplier(executable, currChainName, slotIndex), parallelExecutor),
-                liteflowConfig.getWhenMaxWaitSeconds(),
+                liteflowConfig.getNodeComponentProperties().getWhenMaxWaitSeconds(),
                 TimeUnit.SECONDS
         )).collect(Collectors.toList());
 

@@ -1,6 +1,8 @@
 package com.yomahub.liteflow.exception;
 
-public class ELParseException extends RuntimeException {
+import com.yomahub.liteflow.builder.LiteFlowParseException;
+
+public class ELParseException extends LiteFlowParseException {
 
     private static final long serialVersionUID = 1L;
 

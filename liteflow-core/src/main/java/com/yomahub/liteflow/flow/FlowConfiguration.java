@@ -4,9 +4,11 @@ import com.yomahub.liteflow.core.FlowExecutor;
 import com.yomahub.liteflow.core.NodeComponent;
 import com.yomahub.liteflow.flow.element.Chain;
 import com.yomahub.liteflow.flow.element.Node;
+import com.yomahub.liteflow.flow.executor.DefaultNodeExecutor;
+import com.yomahub.liteflow.flow.executor.NodeExecutor;
 import com.yomahub.liteflow.flow.id.DefaultRequestIdGenerator;
 import com.yomahub.liteflow.flow.id.RequestIdGenerator;
-import com.yomahub.liteflow.property.LiteflowConfig;
+import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.thread.ExecutorServiceManager;
 
 import java.util.Map;
@@ -21,13 +23,15 @@ public class FlowConfiguration {
 
     private ExecutorServiceManager executorServiceManager;
 
-    private LiteflowConfig liteflowConfig;
+    private LiteFlowConfig liteflowConfig;
 
     private RequestIdGenerator requestIdGenerator = new DefaultRequestIdGenerator();
 
     private FlowExecutor flowExecutor;
 
-    public FlowConfiguration(LiteflowConfig liteflowConfig) {
+    private NodeExecutor nodeExecutor = new DefaultNodeExecutor();
+
+    public FlowConfiguration(LiteFlowConfig liteflowConfig) {
         this.liteflowConfig = liteflowConfig;
         executorServiceManager = new ExecutorServiceManager(liteflowConfig.getExecutorProperties());
         flowExecutor = new FlowExecutor(liteflowConfig, this);
@@ -121,11 +125,11 @@ public class FlowConfiguration {
         return this;
     }
 
-    public LiteflowConfig getLiteflowConfig() {
+    public LiteFlowConfig getLiteflowConfig() {
         return liteflowConfig;
     }
 
-    public FlowConfiguration setLiteflowConfig(LiteflowConfig liteflowConfig) {
+    public FlowConfiguration setLiteflowConfig(LiteFlowConfig liteflowConfig) {
         this.liteflowConfig = liteflowConfig;
         return this;
     }
@@ -145,6 +149,15 @@ public class FlowConfiguration {
 
     public FlowConfiguration setFlowExecutor(FlowExecutor flowExecutor) {
         this.flowExecutor = flowExecutor;
+        return this;
+    }
+
+    public NodeExecutor getNodeExecutor() {
+        return nodeExecutor;
+    }
+
+    public FlowConfiguration setNodeExecutor(NodeExecutor nodeExecutor) {
+        this.nodeExecutor = nodeExecutor;
         return this;
     }
 }

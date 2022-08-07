@@ -11,7 +11,7 @@ package com.yomahub.liteflow.slot;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.yomahub.liteflow.flow.FlowConfiguration;
-import com.yomahub.liteflow.property.LiteflowConfig;
+import com.yomahub.liteflow.property.LiteFlowConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public class DataBus {
     //这样的改动对项目来说没有什么实际意义，但是在单元测试中，却有意义。
     //因为单元测试中所有的一起跑，jvm是不退出的，所以如果是static块的话，跑多个testsuite只会执行一次。
     //而由FlowExecutor中的init去调用，是会被执行多次的。保证了每个单元测试都能初始化一遍
-    public static void init(LiteflowConfig liteflowConfig) {
+    public static void init(LiteFlowConfig liteflowConfig) {
         if (MapUtil.isEmpty(SLOTS)) {
             currentIndexMaxValue = liteflowConfig.getSlotSize();
 

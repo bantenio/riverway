@@ -20,7 +20,7 @@ import com.yomahub.liteflow.flow.LiteflowResponse;
 import com.yomahub.liteflow.flow.element.Chain;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.property.ExecutorProperties;
-import com.yomahub.liteflow.property.LiteflowConfig;
+import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.property.LogProperties;
 import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.DefaultContext;
@@ -43,11 +43,11 @@ public class FlowExecutor {
 
     private final ExecutorProperties executorProperties;
 
-    private final LiteflowConfig liteflowConfig;
+    private final LiteFlowConfig liteflowConfig;
 
     private final FlowConfiguration flowConfiguration;
 
-    public FlowExecutor(LiteflowConfig liteflowConfig,
+    public FlowExecutor(LiteFlowConfig liteflowConfig,
                         FlowConfiguration flowConfiguration) {
         this.liteflowConfig = liteflowConfig;
         this.logConfig = liteflowConfig.getLogConfig();
@@ -120,7 +120,6 @@ public class FlowExecutor {
         }
 
         Slot slot = DataBus.getSlot(slotIndex);
-        slot.setLiteflowConfig(liteflowConfig);
         if (ObjectUtil.isNull(slot)) {
             throw new NoAvailableSlotException(StrUtil.format("the slot[{}] is not exist", slotIndex));
         }

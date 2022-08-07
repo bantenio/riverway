@@ -6,6 +6,8 @@
 
 rootProject.name = 'riverflow'
 include(':liteflow-core')
+include(':liteflow-qlexpress')
+include(':liteflow-parser')
 include(':liteflow-script-common')
 include(':liteflow-script-groovy')
 include(':liteflow-spring')

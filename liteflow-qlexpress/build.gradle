@@ -1,0 +1,9 @@
+plugins {
+    id 'com.yomahub.java-conventions'
+}
+
+dependencies {
+    api project(":liteflow-core")
+    api project(':liteflow-parser')
+    api 'com.alibaba:QLExpress:3.3.0'
+}
