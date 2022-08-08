@@ -30,7 +30,7 @@ import static com.yomahub.liteflow.common.ChainConstant.VALUE;
  */
 public class JsonFlowELParser extends BaseJsonFlowParser implements UrlFlowParser {
 
-    private static final String URL_PREFIX = "el_json://";
+    private static final String URL_PREFIX = "el:json://";
 
     @Override
     public void parseMain(List<String> pathList,
@@ -49,7 +49,7 @@ public class JsonFlowELParser extends BaseJsonFlowParser implements UrlFlowParse
 
     protected List<String> pathToContent(String path) {
         if (!acceptsURL(path)) {
-            throw new LiteFlowParseException("the path" + path + " was not support el_json:// schema");
+            throw new LiteFlowParseException("the path" + path + " was not support " + URL_PREFIX + " schema");
         }
         try {
             return Arrays.asList(FileUtils.readFileToString(new File(path.substring(URL_PREFIX.length())), StandardCharsets.UTF_8));

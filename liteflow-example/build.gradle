@@ -1,0 +1,14 @@
+plugins {
+    id 'com.yomahub.java-conventions'
+}
+
+dependencies {
+    implementation project(':liteflow-spring')
+    implementation project(':liteflow-qlexpress')
+}
+
+description = 'liteflow-example'
+
+java {
+    withJavadocJar()
+}

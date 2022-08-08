@@ -10,9 +10,9 @@ import com.yomahub.liteflow.flow.FlowConfiguration;
  * @author Bryan.Zhang
  * @since 2.8.0
  */
-public abstract class YmlFlowELParser extends JsonFlowELParser {
+public class YmlFlowELParser extends JsonFlowELParser {
 
-	private static final String URL_PREFIX = "el_yaml://";
+	private static final String URL_PREFIX = "el:yaml://";
 
 	/**
 	 * 解析一个chain的过程
