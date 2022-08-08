@@ -2,7 +2,6 @@ package com.yomahub.liteflow.flow.executor;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.yomahub.liteflow.spi.holder.ContextAwareHolder;
 
 import java.util.Map;
 
@@ -39,8 +38,6 @@ public class NodeExecutorHelper {
         NodeExecutor nodeExecutor = nodeExecutorMap.get(nodeExecutorClass);
         // 此处无需使用同步锁进行同步-因为即使同时创建了两个实例，但是添加到缓存中的只会存在一个且不会存在并发问题-具体是由ConcurrentMap保证
         if (ObjectUtil.isNull(nodeExecutor)) {
-            // 获取重试执行器实例
-            nodeExecutor = ContextAwareHolder.loadContextAware().registerBean(nodeExecutorClass);
             // 缓存
             nodeExecutorMap.put(nodeExecutorClass, nodeExecutor);
         }

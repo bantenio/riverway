@@ -13,6 +13,9 @@ dependencies {
     api 'org.slf4j:slf4j-api:1.7.32'
     api 'com.alibaba:transmittable-thread-local:2.12.3'
     api 'net.bytebuddy:byte-buddy:1.11.13'
+    api group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    api group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+    api group: 'commons-io', name: 'commons-io', version: '2.11.0'
 }
 
 description = 'liteflow-core'

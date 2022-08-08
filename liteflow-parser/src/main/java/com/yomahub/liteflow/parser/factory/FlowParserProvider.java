@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.builder.FlowParser;
 import com.yomahub.liteflow.exception.ErrorSupportPathException;
-import com.yomahub.liteflow.parser.base.BaseFlowParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,21 +20,9 @@ public class FlowParserProvider {
 
     private static final Logger log = LoggerFactory.getLogger(FlowParserProvider.class);
 
-    private static final Set<BaseFlowParser> parsers = new CopyOnWriteArraySet<>();
+    private static final Set<UrlFlowParser> parsers = new CopyOnWriteArraySet<>();
 
-    private static final String FORMAT_EL_XML_CONFIG_REGEX = "el_xml:.+";
-
-    private static final String FORMAT_EL_JSON_CONFIG_REGEX = "el_json:.+";
-
-    private static final String FORMAT_EL_YML_CONFIG_REGEX = "el_yml:.+";
-
-    private static final String FORMAT_XML_CONFIG_REGEX = "xml:.+";
-
-    private static final String FORMAT_JSON_CONFIG_REGEX = "json:.+";
-
-    private static final String FORMAT_YML_CONFIG_REGEX = "yml:.+";
-
-    public static void register(BaseFlowParser parser) {
+    public static void register(UrlFlowParser parser) {
         parsers.add(parser);
     }
 
@@ -50,7 +37,7 @@ public class FlowParserProvider {
         if (CollectionUtil.isEmpty(parsers)) {
             return null;
         }
-        for (BaseFlowParser parser : parsers) {
+        for (UrlFlowParser parser : parsers) {
             if (parser.acceptsURL(path)) {
                 return parser;
             }

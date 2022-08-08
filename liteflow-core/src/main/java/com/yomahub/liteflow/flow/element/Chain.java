@@ -98,14 +98,14 @@ public class Chain implements Executable {
     }
 
     // 执行pre节点
-    private void executePre(Integer slotIndex) throws Exception {
+    protected void executePre(Integer slotIndex) throws Exception {
         for (Condition condition : this.preConditionList){
             condition.execute(slotIndex);
         }
     }
 
     //执行后置
-    private void executeFinally(Integer slotIndex) throws Exception {
+    protected void executeFinally(Integer slotIndex) throws Exception {
         for (Condition condition : this.finallyConditionList){
             condition.execute(slotIndex);
         }

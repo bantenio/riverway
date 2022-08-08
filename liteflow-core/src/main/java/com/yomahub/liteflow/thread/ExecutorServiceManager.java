@@ -49,6 +49,12 @@ public class ExecutorServiceManager {
         return executorService;
     }
 
+    public void shutdownAll() {
+        for (Map.Entry<String, ExecutorService> entry : executorServiceMap.entrySet()) {
+            shutdownAwaitTermination(entry.getValue());
+        }
+    }
+
 
     /**
      * <p>

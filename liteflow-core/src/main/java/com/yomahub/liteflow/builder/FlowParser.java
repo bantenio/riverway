@@ -15,6 +15,4 @@ public interface FlowParser {
     void parseMain(List<String> pathList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException;
 
     void parse(List<String> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException;
-
-    boolean acceptsURL(String url) throws LiteFlowParseException;
 }

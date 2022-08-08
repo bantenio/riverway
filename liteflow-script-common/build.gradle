@@ -10,7 +10,6 @@ plugins {
 
 dependencies {
     api project(":liteflow-core")
-    api 'cn.hutool:hutool-core:5.7.19'
     compileOnly 'org.springframework:spring-beans:5.0.9.RELEASE'
 }
 
