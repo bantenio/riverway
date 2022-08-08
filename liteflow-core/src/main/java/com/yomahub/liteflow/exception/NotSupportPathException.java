@@ -1,13 +1,15 @@
 package com.yomahub.liteflow.exception;
 
-public class ErrorSupportPathException extends RuntimeException {
+import com.yomahub.liteflow.builder.LiteFlowParseException;
+
+public class NotSupportPathException extends LiteFlowParseException {
 
 	private static final long serialVersionUID = 1L;
 
 	/** 异常信息 */
 	private String message;
 
-	public ErrorSupportPathException(String message) {
+	public NotSupportPathException(String message) {
 		this.message = message;
 	}
 

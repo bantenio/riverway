@@ -6,7 +6,7 @@ import com.yomahub.liteflow.builder.LiteFlowParseException;
 import com.yomahub.liteflow.builder.el.LiteFlowChainELBuilder;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.base.BaseXmlFlowParser;
-import com.yomahub.liteflow.parser.factory.UrlFlowParser;
+import com.yomahub.liteflow.builder.UrlFlowParser;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import org.apache.commons.io.FileUtils;
 import org.dom4j.Element;

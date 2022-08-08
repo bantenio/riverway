@@ -10,6 +10,8 @@ package com.yomahub.liteflow.property;
 
 import cn.hutool.core.util.ObjectUtil;
 
+import java.util.List;
+
 /**
  * liteflow的配置实体类
  * 这个类中的属性为什么不用基本类型，而用包装类型呢
@@ -28,6 +30,8 @@ public class LiteFlowConfig {
     //slot的数量
     private Integer slotSize;
 
+    private List<String> flowPaths;
+
     private LogProperties logConfig;
 
     private ExecutorProperties executorProperties;
@@ -35,6 +39,8 @@ public class LiteFlowConfig {
     private MonitorProperties monitorProperties;
 
     private NodeComponentProperties nodeComponentProperties;
+
+
 
     public Boolean getEnable() {
         if (ObjectUtil.isNull(enable)) {
@@ -94,6 +100,15 @@ public class LiteFlowConfig {
 
     public LiteFlowConfig setNodeComponentProperties(NodeComponentProperties nodeComponentProperties) {
         this.nodeComponentProperties = nodeComponentProperties;
+        return this;
+    }
+
+    public List<String> getFlowPaths() {
+        return flowPaths;
+    }
+
+    public LiteFlowConfig setFlowPaths(List<String> flowPaths) {
+        this.flowPaths = flowPaths;
         return this;
     }
 }

@@ -1,12 +1,14 @@
-package com.yomahub.liteflow.parser.factory;
+package com.yomahub.liteflow.builder;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.yomahub.liteflow.builder.FlowParser;
-import com.yomahub.liteflow.exception.ErrorSupportPathException;
+import com.yomahub.liteflow.exception.NoSuchFlowParserException;
+import com.yomahub.liteflow.exception.NotSupportPathException;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -33,9 +35,9 @@ public class FlowParserProvider {
      * @param path
      * @return
      */
-    public static FlowParser lookup(String path) throws Exception {
+    public static FlowParser lookup(String path) throws LiteFlowParseException {
         if (CollectionUtil.isEmpty(parsers)) {
-            return null;
+            throw new NoSuchFlowParserException();
         }
         for (UrlFlowParser parser : parsers) {
             if (parser.acceptsURL(path)) {
@@ -44,6 +46,10 @@ public class FlowParserProvider {
         }
         // not found
         String errorMsg = StrUtil.format("can't find the parser for path:{}", path);
-        throw new ErrorSupportPathException(errorMsg);
+        throw new NotSupportPathException(errorMsg);
+    }
+
+    public static void parse(String path, FlowConfiguration flowConfiguration) {
+        lookup(path).parse(Arrays.asList(path), flowConfiguration.getLiteflowConfig(), flowConfiguration);
     }
 }

@@ -5,15 +5,12 @@ import com.yomahub.liteflow.builder.LiteFlowParseException;
 import com.yomahub.liteflow.builder.el.LiteFlowChainELBuilder;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.base.BaseJsonFlowParser;
-import com.yomahub.liteflow.parser.factory.UrlFlowParser;
+import com.yomahub.liteflow.builder.UrlFlowParser;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.LinkedList;

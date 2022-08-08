@@ -1,4 +1,4 @@
-package com.yomahub.liteflow.parser.factory;
+package com.yomahub.liteflow.builder;
 
 import com.yomahub.liteflow.builder.FlowParser;
 import com.yomahub.liteflow.builder.LiteFlowParseException;

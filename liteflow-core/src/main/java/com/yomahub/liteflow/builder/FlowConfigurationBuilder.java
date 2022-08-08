@@ -8,6 +8,8 @@ import com.yomahub.liteflow.flow.executor.NodeExecutor;
 import com.yomahub.liteflow.flow.id.RequestIdGenerator;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 
+import java.util.List;
+
 public class FlowConfigurationBuilder {
 
     private LiteFlowConfig liteflowConfig;
@@ -72,6 +74,12 @@ public class FlowConfigurationBuilder {
         }
         if (nodeComponentManager != null) {
             flowConfiguration.setNodeComponentManager(nodeComponentManager);
+        }
+        List<String> paths = liteflowConfig.getFlowPaths();
+        if (paths != null) {
+            for (String path : paths) {
+                FlowParserProvider.parse(path, flowConfiguration);
+            }
         }
         return flowConfiguration;
     }
