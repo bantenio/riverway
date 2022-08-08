@@ -10,7 +10,6 @@ import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Chain;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.flow.element.condition.*;
-import com.yomahub.liteflow.builder.RegexNodeEntity;
 
 import java.util.List;
 

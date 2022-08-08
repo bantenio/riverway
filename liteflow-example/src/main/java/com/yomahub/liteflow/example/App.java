@@ -1,6 +1,5 @@
 package com.yomahub.liteflow.example;
 
-import com.yomahub.liteflow.builder.FlowConfigurationBuilder;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.LiteflowResponse;
 import com.yomahub.liteflow.slot.DefaultContext;

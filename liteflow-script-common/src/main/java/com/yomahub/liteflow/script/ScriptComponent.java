@@ -2,7 +2,6 @@ package com.yomahub.liteflow.script;
 
 import com.yomahub.liteflow.core.NodeComponent;
 import com.yomahub.liteflow.flow.element.Node;
-import com.yomahub.liteflow.script.ScriptExecutorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

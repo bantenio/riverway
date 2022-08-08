@@ -8,9 +8,9 @@
 package com.yomahub.liteflow.flow.element.condition;
 
 import com.yomahub.liteflow.common.LocalDefaultFlowConstant;
+import com.yomahub.liteflow.enums.ConditionTypeEnum;
 import com.yomahub.liteflow.enums.ExecuteTypeEnum;
 import com.yomahub.liteflow.flow.element.Executable;
-import com.yomahub.liteflow.enums.ConditionTypeEnum;
 
 import java.util.ArrayList;
 import java.util.List;

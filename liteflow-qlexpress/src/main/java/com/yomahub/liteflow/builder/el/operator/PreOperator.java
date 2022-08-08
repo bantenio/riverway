@@ -4,7 +4,6 @@ import com.ql.util.express.Operator;
 import com.yomahub.liteflow.exception.ELParseException;
 import com.yomahub.liteflow.flow.element.Executable;
 import com.yomahub.liteflow.flow.element.condition.PreCondition;
-import com.yomahub.liteflow.flow.element.condition.ThenCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

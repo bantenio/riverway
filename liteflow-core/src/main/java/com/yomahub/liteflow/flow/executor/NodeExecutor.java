@@ -1,10 +1,10 @@
 package com.yomahub.liteflow.flow.executor;
 
 import com.yomahub.liteflow.core.NodeComponent;
+import com.yomahub.liteflow.exception.ChainEndException;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
-import com.yomahub.liteflow.exception.ChainEndException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

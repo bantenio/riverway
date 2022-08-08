@@ -2,22 +2,13 @@ package com.yomahub.liteflow.parser.el;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
-import com.yomahub.liteflow.builder.LiteFlowParseException;
 import com.yomahub.liteflow.builder.el.LiteFlowChainELBuilder;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.base.BaseXmlFlowParser;
-import com.yomahub.liteflow.property.LiteFlowConfig;
-import org.apache.commons.io.FileUtils;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.yomahub.liteflow.common.ChainConstant.NAME;

@@ -1,6 +1,5 @@
 package com.yomahub.liteflow.thread;
 
-import com.yomahub.liteflow.property.ExecutorProperties;
 import com.yomahub.liteflow.property.ExecutorServiceProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -12,9 +12,7 @@ import com.yomahub.liteflow.thread.ExecutorServiceManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 @Configuration

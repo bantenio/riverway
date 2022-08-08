@@ -3,7 +3,6 @@ package com.yomahub.liteflow.builder.el.operator;
 import cn.hutool.core.util.ArrayUtil;
 import com.ql.util.express.Operator;
 import com.yomahub.liteflow.exception.ELParseException;
-import com.yomahub.liteflow.flow.element.Executable;
 import com.yomahub.liteflow.flow.element.condition.Condition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

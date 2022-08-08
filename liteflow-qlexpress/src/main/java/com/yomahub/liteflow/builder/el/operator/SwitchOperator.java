@@ -5,7 +5,6 @@ import com.ql.util.express.Operator;
 import com.yomahub.liteflow.exception.ELParseException;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.flow.element.condition.SwitchCondition;
-import com.yomahub.liteflow.flow.element.condition.WhenCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

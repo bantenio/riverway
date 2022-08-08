@@ -2,7 +2,6 @@ package com.yomahub.liteflow.script;
 
 import com.yomahub.liteflow.core.NodeSwitchComponent;
 import com.yomahub.liteflow.flow.element.Node;
-import com.yomahub.liteflow.script.ScriptExecutorFactory;
 
 /**
  * 脚本条件节点
