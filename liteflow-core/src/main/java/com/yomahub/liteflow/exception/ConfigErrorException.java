@@ -1,22 +1,22 @@
 package com.yomahub.liteflow.exception;
 
 public class ConfigErrorException extends RuntimeException {
-
-	private static final long serialVersionUID = 1L;
-
-	/** 异常信息 */
-	private String message;
+	public ConfigErrorException() {
+	}
 
 	public ConfigErrorException(String message) {
-		this.message = message;
+		super(message);
 	}
 
-	@Override
-	public String getMessage() {
-		return message;
+	public ConfigErrorException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public ConfigErrorException(Throwable cause) {
+		super(cause);
+	}
+
+	public ConfigErrorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
 	}
 }

@@ -8,7 +8,6 @@ import com.yomahub.liteflow.flow.FlowConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -35,7 +34,7 @@ public class FlowParserProvider {
      * @param path
      * @return
      */
-    public static FlowParser lookup(String path) throws LiteFlowParseException {
+    public static UrlFlowParser lookup(String path) throws LiteFlowParseException {
         if (CollectionUtil.isEmpty(parsers)) {
             throw new NoSuchFlowParserException();
         }
@@ -50,6 +49,6 @@ public class FlowParserProvider {
     }
 
     public static void parse(String path, FlowConfiguration flowConfiguration) {
-        lookup(path).parse(Arrays.asList(path), flowConfiguration.getLiteflowConfig(), flowConfiguration);
+        lookup(path).parseMain(path, flowConfiguration.getLiteflowConfig(), flowConfiguration);
     }
 }

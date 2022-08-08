@@ -30,10 +30,6 @@ public abstract class BaseJsonFlowParser extends BaseFlowParser {
 
     private final Set<String> CHAIN_NAME_SET = new CopyOnWriteArraySet<>();
 
-    public void parse(String content, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
-        parse(ListUtil.toList(content), liteflowConfig, flowConfiguration);
-    }
-
     @Override
     public void parse(List<String> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
         if (CollectionUtil.isEmpty(contentList)) {

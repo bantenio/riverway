@@ -8,6 +8,7 @@ import com.yomahub.liteflow.parser.base.BaseJsonFlowParser;
 import com.yomahub.liteflow.builder.UrlFlowParser;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,35 +26,7 @@ import static com.yomahub.liteflow.common.ChainConstant.VALUE;
  * @author Bryan.Zhang
  * @since 2.8.0
  */
-public class JsonFlowELParser extends BaseJsonFlowParser implements UrlFlowParser {
-
-    private static final String URL_PREFIX = "el:json://";
-
-    @Override
-    public void parseMain(List<String> pathList,
-                          LiteFlowConfig liteflowConfig,
-                          FlowConfiguration flowConfiguration) throws LiteFlowParseException {
-        List<String> contents = new LinkedList<>();
-        for (String path : pathList) {
-            List<String> pathToContents = pathToContent(path);
-            if (pathToContents == null) {
-                throw new LiteFlowParseException("the path" + path + " not read any content");
-            }
-            contents.addAll(pathToContents);
-        }
-        parse(contents, liteflowConfig, flowConfiguration);
-    }
-
-    protected List<String> pathToContent(String path) {
-        if (!acceptsURL(path)) {
-            throw new LiteFlowParseException("the path" + path + " was not support " + URL_PREFIX + " schema");
-        }
-        try {
-            return Arrays.asList(FileUtils.readFileToString(new File(path.substring(URL_PREFIX.length())), StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            throw new LiteFlowParseException(e);
-        }
-    }
+public class JsonELFileFlowParser extends BaseJsonFlowParser {
 
     /**
      * 解析一个chain的过程
@@ -71,10 +44,5 @@ public class JsonFlowELParser extends BaseJsonFlowParser implements UrlFlowParse
         String el = chainObject.getString(VALUE);
         LiteFlowChainELBuilder chainELBuilder = LiteFlowChainELBuilder.createChain(flowConfiguration).setChainName(chainName);
         chainELBuilder.setEL(el).build();
-    }
-
-    @Override
-    public boolean acceptsURL(String url) throws LiteFlowParseException {
-        return false;
     }
 }

@@ -9,7 +9,7 @@ plugins {
 }
 
 dependencies {
-    implementation project(':liteflow-core')
+    implementation project(':liteflow-qlexpress')
     compileOnly 'org.springframework:spring-beans:5.0.9.RELEASE'
     compileOnly 'org.springframework:spring-context:5.0.9.RELEASE'
     compileOnly 'org.springframework:spring-aop:5.0.9.RELEASE'
