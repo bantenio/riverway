@@ -4,7 +4,7 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
-rootProject.name = 'riverflow'
+rootProject.name = 'riverway'
 include(':liteflow-core')
 include(':liteflow-qlexpress')
 include(':liteflow-parser')
