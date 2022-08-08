@@ -69,6 +69,9 @@ public abstract class BaseFlowParser implements FlowParser {
         String type = null;
 
         NodeComponent nodeComponent = flowConfiguration.getNodeComponent(id);
+        if (nodeComponent != null) {
+            type = nodeComponent.getType().getCode();
+        }
         // ! TODO 修改为多种NodeComponent对象创建机制
         //先尝试自动推断类型
         if (nodeComponent == null && StrUtil.isNotBlank(clazz)) {

@@ -31,4 +31,8 @@ public class NodeComponentManager {
             throw new ComponentCannotRegisterException(error);
         }
     }
+
+    public void addAllNodeComponent(Map<String, NodeComponent> nodeComponentMap) {
+        nodeComponentMap.forEach(this::addNodeComponent);
+    }
 }

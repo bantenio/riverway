@@ -89,7 +89,7 @@ public abstract class BaseXmlFlowParser extends BaseFlowParser {
             // 当存在<nodes>节点定义时，解析node节点
             if (ObjectUtil.isNotNull(nodesElement)) {
                 List<Element> nodeList = nodesElement.elements(NODE);
-                String id, name, clazz, type, script, file;
+                String id, name, clazz, type;
                 for (Element e : nodeList) {
                     id = e.attributeValue(ID);
                     name = e.attributeValue(NAME);

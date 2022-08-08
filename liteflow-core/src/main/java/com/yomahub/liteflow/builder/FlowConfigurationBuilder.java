@@ -1,5 +1,6 @@
 package com.yomahub.liteflow.builder;
 
+import com.yomahub.liteflow.core.NodeComponent;
 import com.yomahub.liteflow.flow.ChainManager;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.NodeComponentManager;
@@ -7,8 +8,10 @@ import com.yomahub.liteflow.flow.NodeManager;
 import com.yomahub.liteflow.flow.executor.NodeExecutor;
 import com.yomahub.liteflow.flow.id.RequestIdGenerator;
 import com.yomahub.liteflow.property.LiteFlowConfig;
+import com.yomahub.liteflow.thread.ExecutorServiceManager;
 
 import java.util.List;
+import java.util.Map;
 
 public class FlowConfigurationBuilder {
 
@@ -23,6 +26,10 @@ public class FlowConfigurationBuilder {
     private NodeManager nodeManager;
 
     private NodeComponentManager nodeComponentManager = new NodeComponentManager();
+
+    private ExecutorServiceManager executorServiceManager;
+
+    private Map<String, NodeComponent> nodeComponentMap;
 
     public static FlowConfigurationBuilder create() {
         return new FlowConfigurationBuilder();
@@ -58,6 +65,20 @@ public class FlowConfigurationBuilder {
         return this;
     }
 
+    public ExecutorServiceManager getExecutorServiceManager() {
+        return executorServiceManager;
+    }
+
+    public FlowConfigurationBuilder setExecutorServiceManager(ExecutorServiceManager executorServiceManager) {
+        this.executorServiceManager = executorServiceManager;
+        return this;
+    }
+
+    public FlowConfigurationBuilder setNodeComponentMap(Map<String, NodeComponent> nodeComponentMap) {
+        this.nodeComponentMap = nodeComponentMap;
+        return this;
+    }
+
     public FlowConfiguration build() {
         FlowConfiguration flowConfiguration = new FlowConfiguration(liteflowConfig);
         if (nodeExecutor != null) {
@@ -74,6 +95,12 @@ public class FlowConfigurationBuilder {
         }
         if (nodeComponentManager != null) {
             flowConfiguration.setNodeComponentManager(nodeComponentManager);
+        }
+        if(nodeComponentMap != null) {
+            flowConfiguration.getNodeComponentManager().addAllNodeComponent(nodeComponentMap);
+        }
+        if (executorServiceManager != null) {
+            flowConfiguration.setExecutorServiceManager(executorServiceManager);
         }
         List<String> paths = liteflowConfig.getFlowPaths();
         if (paths != null) {

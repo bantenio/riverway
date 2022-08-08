@@ -127,7 +127,7 @@ public class LiteFlowChainELBuilder {
             for (String scriptErrorMsg : errorList) {
                 log.error("\n{}", scriptErrorMsg);
             }
-            throw new ELParseException(e.getMessage());
+            throw new ELParseException(e);
         }
     }
 

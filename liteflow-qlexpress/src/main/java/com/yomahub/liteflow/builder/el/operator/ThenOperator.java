@@ -9,33 +9,34 @@ import org.slf4j.LoggerFactory;
 
 /**
  * EL规则中的THEN的操作符
+ *
  * @author Bryan.Zhang
  * @since 2.8.0
  */
 public class ThenOperator extends Operator {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public Object executeInner(Object[] objects) throws Exception {
-        try{
-            if (objects.length <= 0){
-                LOG.error("parameter error");
+        try {
+            if (objects.length <= 0) {
+                log.error("parameter error");
                 throw new Exception();
             }
 
             ThenCondition thenCondition = new ThenCondition();
-            for (Object obj : objects){
-                if (obj instanceof Executable){
-                    thenCondition.addExecutable((Executable)obj);
-                }else{
-                    LOG.error("parameter must be executable item!");
+            for (Object obj : objects) {
+                if (obj instanceof Executable) {
+                    thenCondition.addExecutable((Executable) obj);
+                } else {
+                    log.error("parameter must be executable item!");
                     throw new Exception();
                 }
             }
             return thenCondition;
-        }catch (Exception e){
-            throw new ELParseException("errors occurred in EL parsing");
+        } catch (Exception e) {
+            throw new ELParseException("errors occurred in EL parsing", e);
         }
     }
 }

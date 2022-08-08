@@ -92,18 +92,8 @@ public class ResourceELFlowParser implements UrlFlowParser {
     }
 
     protected List<Resource> parseContent(String path) {
-        String locationPattern;
+        String locationPattern = path;
 
-        //如果path是绝对路径且这个文件存在时，我们认为这是一个本地文件路径，而并非classpath路径
-        if (FileUtil.isAbsolutePath(path) && FileUtil.isFile(path)) {
-            locationPattern = ResourceUtils.FILE_URL_PREFIX + path;
-        } else {
-            if (!path.startsWith(ResourceUtils.CLASSPATH_URL_PREFIX)) {
-                locationPattern = ResourceUtils.CLASSPATH_URL_PREFIX + path;
-            } else {
-                locationPattern = path;
-            }
-        }
         try {
             Resource[] resources = resolver.getResources(locationPattern);
             if (ArrayUtil.isEmpty(resources)) {

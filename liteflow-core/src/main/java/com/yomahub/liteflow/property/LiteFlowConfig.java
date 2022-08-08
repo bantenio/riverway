@@ -32,15 +32,13 @@ public class LiteFlowConfig {
 
     private List<String> flowPaths;
 
-    private LogProperties logConfig;
+    private LogProperties logConfig = new LogProperties();
 
     private ExecutorProperties executorProperties;
 
     private MonitorProperties monitorProperties;
 
     private NodeComponentProperties nodeComponentProperties;
-
-
 
     public Boolean getEnable() {
         if (ObjectUtil.isNull(enable)) {

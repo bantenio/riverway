@@ -9,6 +9,8 @@ import com.yomahub.liteflow.parser.base.BaseXmlFlowParser;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import org.apache.commons.io.FileUtils;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +29,7 @@ import static com.yomahub.liteflow.common.ChainConstant.NAME;
  * @since 2.8.0
  */
 public class XmlELFileFlowParser extends BaseXmlFlowParser {
-
+	private static final Logger log = LoggerFactory.getLogger(XmlELFileFlowParser.class);
 	/**
 	 * 解析一个chain的过程
 	 */

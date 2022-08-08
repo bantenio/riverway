@@ -18,17 +18,12 @@ public class ExecutorServiceManager {
 
     private final ExecutorBuilder executorBuilder;
 
-
-    private final ExecutorProperties executorProperties;
-
-    public ExecutorServiceManager(ExecutorProperties executorProperties) {
-        this(new DefaultExecutorBuilder(), executorProperties);
+    public ExecutorServiceManager() {
+        this(new DefaultExecutorBuilder());
     }
 
-    public ExecutorServiceManager(ExecutorBuilder executorBuilder,
-                                  ExecutorProperties executorProperties) {
+    public ExecutorServiceManager(ExecutorBuilder executorBuilder) {
         this.executorBuilder = executorBuilder;
-        this.executorProperties = executorProperties;
     }
 
     public boolean contains(String key) {
@@ -45,9 +40,13 @@ public class ExecutorServiceManager {
             throw new IllegalStateException("the '" + name + "' ExecutorService was conflict name;");
         }
         ExecutorService executorService = executorBuilder.buildExecutor(executorServiceProperties);
-        executorServiceMap.put(name, executorService);
+        registerExecutorService(name, executorService);
         return executorService;
     }
+
+    public void registerExecutorService(String name, ExecutorService executorService) {
+        executorServiceMap.put(name, executorService);}
+
 
     public void shutdownAll() {
         for (Map.Entry<String, ExecutorService> entry : executorServiceMap.entrySet()) {

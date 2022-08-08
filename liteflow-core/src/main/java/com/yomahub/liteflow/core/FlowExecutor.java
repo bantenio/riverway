@@ -77,7 +77,7 @@ public class FlowExecutor {
 
     //调用一个流程并返回LiteflowResponse，上下文为默认的DefaultContext，初始参数为null
     public LiteflowResponse execute2Resp(String chainId) {
-        return this.execute2Resp(chainId);
+        return this.execute2Resp(chainId, new DefaultContext());
     }
 
     //调用一个流程并返回LiteflowResponse，允许多上下文的传入
@@ -93,7 +93,7 @@ public class FlowExecutor {
 
     //调用一个流程，返回默认的上下文，适用于简单的调用
     public DefaultContext execute(String chainId, Object param) throws Exception {
-        LiteflowResponse response = this.execute2Resp(chainId, param, DefaultContext.class);
+        LiteflowResponse response = this.execute2Resp(chainId, param, new DefaultContext());
         if (!response.isSuccess()) {
             throw response.getCause();
         } else {
@@ -132,12 +132,12 @@ public class FlowExecutor {
         }
 
         if (!isInnerChain) {
-            if (ObjectUtil.isNotNull(param)) {
-                slot.setRequestData(param);
+            if (ObjectUtil.isNotNull(param) && param.length > 0) {
+                slot.setRequestData(param[0]);
             }
         } else {
-            if (ObjectUtil.isNotNull(param)) {
-                slot.setChainReqData(chainId, param);
+            if (ObjectUtil.isNotNull(param) && param.length > 0) {
+                slot.setChainReqData(chainId, param[0]);
             }
         }
 

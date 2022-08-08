@@ -21,7 +21,7 @@ public class FlowConfiguration {
 
     private NodeComponentManager nodeComponentManager = new NodeComponentManager();
 
-    private ExecutorServiceManager executorServiceManager;
+    private ExecutorServiceManager executorServiceManager = new ExecutorServiceManager();
 
     private LiteFlowConfig liteflowConfig;
 
@@ -33,7 +33,7 @@ public class FlowConfiguration {
 
     public FlowConfiguration(LiteFlowConfig liteflowConfig) {
         this.liteflowConfig = liteflowConfig;
-        executorServiceManager = new ExecutorServiceManager(liteflowConfig.getExecutorProperties());
+        executorServiceManager = new ExecutorServiceManager();
         flowExecutor = new FlowExecutor(liteflowConfig, this);
     }
 

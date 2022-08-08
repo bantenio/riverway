@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public class ComponentProxy {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final String nodeId;
 
@@ -112,7 +112,7 @@ public class ComponentProxy {
                         && Arrays.asList(liteFlowMethodBean.getMethod().getParameterTypes()).contains(NodeComponent.class);
                 if (!checkFlag) {
                     String errMsg = StrUtil.format("Method[{}.{}] must have NodeComponent parameter(and only one parameter)", bean.getClass().getName(), liteFlowMethodBean.getMethod().getName());
-                    LOG.error(errMsg);
+                    log.error(errMsg);
                     throw new ComponentMethodDefineErrorException(errMsg);
                 }
 

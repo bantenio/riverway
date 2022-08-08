@@ -39,7 +39,7 @@ public class NodeManager {
         try {
             //初始化Node
             Node node = new Node(nodeComponent, flowConfiguration);
-
+            node.setName(name);
             nodeMap.put(nodeId, node);
         } catch (Exception e) {
             String error = StrUtil.format("component[{}] register error", StrUtil.isEmpty(name) ? nodeId : StrUtil.format("{}({})", nodeId, name));

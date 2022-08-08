@@ -3,25 +3,22 @@ package com.yomahub.liteflow.exception;
 import com.yomahub.liteflow.builder.LiteFlowParseException;
 
 public class ELParseException extends LiteFlowParseException {
-
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 异常信息
-     */
-    private String message;
+    public ELParseException() {
+    }
 
     public ELParseException(String message) {
-        this.message = message;
+        super(message);
     }
 
-    @Override
-    public String getMessage() {
-        return message;
+    public ELParseException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public ELParseException(Throwable cause) {
+        super(cause);
     }
 
+    public ELParseException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

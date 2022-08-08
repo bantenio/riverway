@@ -1,0 +1,14 @@
+<flow>
+    <nodes>
+        <node id="loanNodeComponent" class="com.yomahub.liteflow.example.components.LoanNodeComponent" name="a"/>
+        <node id="sendLoanToBigDataNodeComponent"
+              class="com.yomahub.liteflow.example.components.SendLoanToBigDataNodeComponent" name="b"/>
+    </nodes>
+
+    <chain name="chain1">
+        THEN(
+        loanNodeComponent,
+        sendLoanToBigDataNodeComponent
+        );
+    </chain>
+</flow>
