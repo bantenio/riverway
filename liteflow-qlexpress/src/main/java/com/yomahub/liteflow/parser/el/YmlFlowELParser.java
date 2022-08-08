@@ -1,9 +1,8 @@
 package com.yomahub.liteflow.parser.el;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yomahub.liteflow.builder.LiteFlowParseException;
 import com.yomahub.liteflow.flow.FlowConfiguration;
-import com.yomahub.liteflow.parser.base.BaseYmlFlowParser;
-import com.yomahub.liteflow.parser.helper.ParserHelper;
 
 /**
  * yml形式的EL表达式解析抽象引擎
@@ -13,12 +12,19 @@ import com.yomahub.liteflow.parser.helper.ParserHelper;
  */
 public abstract class YmlFlowELParser extends JsonFlowELParser {
 
+	private static final String URL_PREFIX = "el_yaml://";
+
 	/**
 	 * 解析一个chain的过程
 	 */
 	@Override
 	public void parseOneChain(FlowConfiguration flowConfiguration, JSONObject chainObject) {
 		parseOneChainEl(chainObject, flowConfiguration);
+	}
+
+	@Override
+	public boolean acceptsURL(String url) throws LiteFlowParseException {
+		return false;
 	}
 
 }

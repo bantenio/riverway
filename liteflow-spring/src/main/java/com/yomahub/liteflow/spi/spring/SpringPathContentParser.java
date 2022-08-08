@@ -8,7 +8,6 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.exception.ConfigErrorException;
-import com.yomahub.liteflow.spi.PathContentParser;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ResourceUtils;
@@ -18,10 +17,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SpringPathContentParser implements PathContentParser {
+public class SpringPathContentParser {
 
     private static final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-    @Override
     public List<String> parseContent(List<String> pathList) throws Exception {
         if(CollectionUtil.isEmpty(pathList)){
             throw new ConfigErrorException("rule source must not be null");
@@ -67,7 +65,6 @@ public class SpringPathContentParser implements PathContentParser {
         return contentList;
     }
 
-    @Override
     public int priority() {
         return 1;
     }

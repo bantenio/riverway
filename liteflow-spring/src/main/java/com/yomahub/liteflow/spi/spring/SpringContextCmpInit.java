@@ -1,8 +1,8 @@
 package com.yomahub.liteflow.spi.spring;
 
 import com.yomahub.liteflow.core.NodeComponent;
-import com.yomahub.liteflow.flow.FlowBus;
-import com.yomahub.liteflow.spi.ContextCmpInit;
+import com.yomahub.liteflow.flow.FlowConfiguration;
+import com.yomahub.liteflow.flow.NodeComponentManager;
 import com.yomahub.liteflow.spring.ComponentScanner;
 
 import java.util.Map;
@@ -12,17 +12,16 @@ import java.util.Map;
  * @author Bryan.Zhang
  * @since 2.6.11
  */
-public class SpringContextCmpInit implements ContextCmpInit {
-    @Override
-    public void initCmp() {
+public class SpringContextCmpInit {
+    public void initCmp(FlowConfiguration flowConfiguration) {
+        NodeComponentManager nodeComponentManager = flowConfiguration.getNodeComponentManager();
         for (Map.Entry<String, NodeComponent> componentEntry : ComponentScanner.nodeComponentMap.entrySet()) {
-            if (!FlowBus.containNode(componentEntry.getKey())) {
-                FlowBus.addSpringScanNode(componentEntry.getKey(), componentEntry.getValue());
+            if (!nodeComponentManager.hasNodeComponent(componentEntry.getKey())) {
+                nodeComponentManager.addNodeComponent(componentEntry.getKey(), componentEntry.getValue());
             }
         }
     }
 
-    @Override
     public int priority() {
         return 1;
     }

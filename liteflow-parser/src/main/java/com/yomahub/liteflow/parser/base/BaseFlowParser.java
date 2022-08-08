@@ -23,8 +23,8 @@ import com.yomahub.liteflow.flow.element.Chain;
 
 public abstract class BaseFlowParser implements FlowParser {
     public Chain buildChain(ChainPropBean chainPropBean,
-                                   LiteFlowChainBuilder chainBuilder,
-                                   FlowConfiguration flowConfiguration) {
+                            LiteFlowChainBuilder chainBuilder,
+                            FlowConfiguration flowConfiguration) {
         String condValueStr = chainPropBean.getCondValueStr();
         String group = chainPropBean.getGroup();
         String errorResume = chainPropBean.getErrorResume();
@@ -61,25 +61,28 @@ public abstract class BaseFlowParser implements FlowParser {
         }
         return chain;
     }
+
     public void buildNode(NodePropBean nodePropBean, FlowConfiguration flowConfiguration) {
         String id = nodePropBean.getId();
         String name = nodePropBean.getName();
         String clazz = nodePropBean.getClazz();
         String type = null;
 
-        NodeComponent nodeComponent = null;
+        NodeComponent nodeComponent = flowConfiguration.getNodeComponent(id);
         // ! TODO 修改为多种NodeComponent对象创建机制
         //先尝试自动推断类型
-        if (StrUtil.isNotBlank(clazz)) {
+        if (nodeComponent == null && StrUtil.isNotBlank(clazz)) {
             try {
                 //先尝试从继承的类型中推断
                 Class<?> c = Class.forName(clazz);
                 if (NodeSwitchComponent.class.isAssignableFrom(c)) {
                     type = NodeTypeEnum.SWITCH.getCode();
                     nodeComponent = (NodeComponent) ReflectUtil.newInstanceIfPossible(c);
-                } else if(NodeComponent.class.isAssignableFrom(c)) {
+                    flowConfiguration.addNodeComponent(id, nodeComponent);
+                } else if (NodeComponent.class.isAssignableFrom(c)) {
                     type = NodeTypeEnum.COMMON.getCode();
                     nodeComponent = (NodeComponent) ReflectUtil.newInstanceIfPossible(c);
+                    flowConfiguration.addNodeComponent(id, nodeComponent);
                 }
 
                 //再尝试声明式组件这部分的推断
@@ -90,6 +93,7 @@ public abstract class BaseFlowParser implements FlowParser {
                         Object bean = ReflectUtil.newInstanceIfPossible(c);
                         ComponentProxy proxy = new ComponentProxy(id, bean, NodeComponent.class);
                         nodeComponent = (NodeComponent) proxy.getProxy();
+                        flowConfiguration.addNodeComponent(id, nodeComponent);
                     }
                 }
 
@@ -100,6 +104,7 @@ public abstract class BaseFlowParser implements FlowParser {
                         Object bean = ReflectUtil.newInstanceIfPossible(c);
                         ComponentProxy proxy = new ComponentProxy(id, bean, NodeComponent.class);
                         nodeComponent = (NodeComponent) proxy.getProxy();
+                        flowConfiguration.addNodeComponent(id, nodeComponent);
                     }
                 }
             } catch (Exception e) {

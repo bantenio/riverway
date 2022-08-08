@@ -104,6 +104,10 @@ public class FlowConfiguration {
         return nodeComponentManager.getNodeComponent(nodeId);
     }
 
+    public boolean hasNodeComponent(String nodeId) {
+        return nodeComponentManager.hasNodeComponent(nodeId);
+    }
+
     public void addNodeComponent(String nodeId, NodeComponent nodeComponent) {
         nodeComponentManager.addNodeComponent(nodeId, nodeComponent);
     }

@@ -18,6 +18,10 @@ public class NodeComponentManager {
         return nodeComponentMap.get(nodeId);
     }
 
+    public boolean hasNodeComponent(String nodeId) {
+        return nodeComponentMap.containsKey(nodeId);
+    }
+
     public void addNodeComponent(String nodeId, NodeComponent nodeComponent) {
         try {
             nodeComponentMap.put(nodeId, nodeComponent);
