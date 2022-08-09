@@ -1,7 +1,9 @@
 package com.yomahub.liteflow.example.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yomahub.liteflow.builder.FlowConfigurationBuilder;
 import com.yomahub.liteflow.core.NodeComponent;
+import com.yomahub.liteflow.example.jackson.ObjectMapperFactory;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.ResourceELFlowParser;
 import com.yomahub.liteflow.property.ExecutorProperties;
@@ -17,6 +19,12 @@ import java.util.Map;
 
 @Configuration
 public class LiteFlowConfiguration {
+
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return ObjectMapperFactory.objectMapper();
+    }
 
     @Bean
     public LiteFlowConfig liteFlowConfig(ExecutorProperties executorProperties) {
