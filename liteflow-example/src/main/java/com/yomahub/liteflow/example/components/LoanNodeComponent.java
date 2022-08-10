@@ -1,9 +1,9 @@
 package com.yomahub.liteflow.example.components;
 
 import com.yomahub.liteflow.core.NodeComponent;
+import com.yomahub.liteflow.example.context.DataObject;
 import com.yomahub.liteflow.example.service.LoanService;
 import com.yomahub.liteflow.flow.element.Node;
-import com.yomahub.liteflow.slot.DefaultContext;
 import com.yomahub.liteflow.slot.Slot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ public class LoanNodeComponent extends NodeComponent {
         Slot slot = getSlot();
         String name = slot.getRequestData();
         log.info("request data was: {}", name);
-        DefaultContext defaultContext = slot.getContextBean(DefaultContext.class);
+        DataObject dataObject = slot.getContextBean(DataObject.class);
         String result = loanService.loan(node.getId());
-        defaultContext.setData("result", result);
+        dataObject.put("result", result);
     }
 }
