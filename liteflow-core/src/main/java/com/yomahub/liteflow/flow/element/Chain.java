@@ -106,20 +106,20 @@ public class Chain implements Executable {
     }
 
     // 执行pre节点
-    public void executePre(Integer slotIndex) throws Exception {
+    protected void executePre(Integer slotIndex) throws Exception {
         for (Condition condition : this.preConditionList) {
             condition.execute(slotIndex);
         }
     }
 
-    public void executeException(Integer slotIndex, Exception e) throws Exception {
+    protected void executeException(Integer slotIndex, Exception e) throws Exception {
     }
 
-    public void executeAfter(Integer slotIndex) throws Exception {
+    protected void executeAfter(Integer slotIndex) throws Exception {
     }
 
     //执行后置
-    public void executeFinally(Integer slotIndex) throws Exception {
+    protected void executeFinally(Integer slotIndex) throws Exception {
         for (Condition condition : this.finallyConditionList) {
             condition.execute(slotIndex);
         }

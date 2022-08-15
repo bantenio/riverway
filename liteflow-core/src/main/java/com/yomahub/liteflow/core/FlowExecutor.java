@@ -20,6 +20,7 @@ import com.yomahub.liteflow.flow.LiteflowResponse;
 import com.yomahub.liteflow.flow.element.Chain;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.plugins.PluginManager;
+import com.yomahub.liteflow.plugins.support.InterceptorChainProxy;
 import com.yomahub.liteflow.property.ExecutorProperties;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.property.LogProperties;
@@ -152,8 +153,8 @@ public class FlowExecutor {
                 throw new ChainNotFoundException(errorMsg);
             }
             PluginManager pluginManager = flowConfiguration.getPluginManager();
-            if(pluginManager != null) {
-                Collection collection = pluginManager.getRegisters();
+            if (pluginManager != null && !pluginManager.isEmpty()) {
+                chain = new InterceptorChainProxy(chain, flowConfiguration);
             }
             // 执行chain
             chain.execute(slotIndex);
