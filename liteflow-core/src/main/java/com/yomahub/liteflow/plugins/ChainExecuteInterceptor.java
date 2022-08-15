@@ -1,6 +1,6 @@
 package com.yomahub.liteflow.plugins;
 
-public interface ChainExecuteInterceptor {
+public interface ChainExecuteInterceptor extends Interceptor{
 
     default void beforeProcess(InterceptorContext interceptorContext) {
     }

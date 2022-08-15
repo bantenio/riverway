@@ -118,7 +118,7 @@ public class Node implements Executable, Cloneable {
                 // 调用节点执行器进行执行
                 instance.setSlotIndex(slotIndex);
                 instance.setSelf(instance);
-                nodeExecutor.execute(this);
+                nodeExecutor.execute(this, flowConfiguration);
                 //如果组件覆盖了isEnd方法，或者在在逻辑中主要调用了setEnd(true)的话，流程就会立马结束
                 if (instance.isEnd()) {
                     String errorInfo = StrUtil.format("[{}]:[{}] lead the chain to end", slot.getRequestId(), instance.getDisplayName());

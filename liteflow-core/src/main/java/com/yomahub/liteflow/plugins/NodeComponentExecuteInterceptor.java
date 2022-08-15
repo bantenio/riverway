@@ -1,6 +1,6 @@
 package com.yomahub.liteflow.plugins;
 
-public interface NodeComponentExecuteInterceptor {
+public interface NodeComponentExecuteInterceptor extends Interceptor {
 
     void beforeProcess(NodeComponentInterceptorContext interceptorContext);
 

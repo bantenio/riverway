@@ -8,7 +8,9 @@
 package com.yomahub.liteflow.plugins.monitor;
 
 import cn.hutool.core.util.BooleanUtil;
+import com.yomahub.liteflow.plugins.InterceptorContext;
 import com.yomahub.liteflow.plugins.NodeComponentExecuteInterceptor;
+import com.yomahub.liteflow.plugins.NodeComponentInterceptorContext;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.property.MonitorProperties;
 import com.yomahub.liteflow.slot.DataBus;
@@ -104,5 +106,30 @@ public class MonitorBus implements NodeComponentExecuteInterceptor {
 
 	public void closeScheduler(){
 		this.printLogScheduler.shutdown();
+	}
+
+	@Override
+	public Object initContext(InterceptorContext interceptorContext) {
+		return null;
+	}
+
+	@Override
+	public void beforeProcess(NodeComponentInterceptorContext interceptorContext) {
+
+	}
+
+	@Override
+	public void onSuccess(NodeComponentInterceptorContext interceptorContext) {
+
+	}
+
+	@Override
+	public void onError(NodeComponentInterceptorContext interceptorContext) {
+
+	}
+
+	@Override
+	public void onFinally(NodeComponentInterceptorContext interceptorContext) {
+
 	}
 }

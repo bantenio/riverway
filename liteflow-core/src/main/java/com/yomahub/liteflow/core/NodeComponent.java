@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 普通组件抽象类
+ *
  * @author Bryan.Zhang
  */
 public abstract class NodeComponent {
@@ -43,7 +44,9 @@ public abstract class NodeComponent {
     //在目标异常抛出时才重试
     private Class<? extends Exception>[] retryForExceptions = new Class[]{Exception.class};
 
-    /** 节点执行器的类全名 */
+    /**
+     * 节点执行器的类全名
+     */
     private Class<? extends NodeExecutor> nodeExecutorClass = DefaultNodeExecutor.class;
 
     /********************以下的属性为线程附加属性，并非不变属性********************/
@@ -63,7 +66,7 @@ public abstract class NodeComponent {
     public NodeComponent() {
     }
 
-    public void execute(Node node) throws Exception {
+    public void execute(Node node, boolean isRetry) throws Exception {
         Slot slot = this.getSlot();
 
         //在元数据里加入step信息
@@ -98,25 +101,19 @@ public abstract class NodeComponent {
                 self.onError(node);
             } catch (Exception ex) {
                 String errMsg = StrUtil.format("[{}]:component[{}] onError method happens exception", slot.getRequestId(), this.getDisplayName());
-				log.error(errMsg);
+                log.error(errMsg);
             }
             throw e;
         } finally {
             stopWatch.stop();
             final long timeSpent = stopWatch.getTotalTimeMillis();
-			log.debug("[{}]:component[{}] finished in {} milliseconds", slot.getRequestId(), this.getDisplayName(), timeSpent);
+            log.debug("[{}]:component[{}] finished in {} milliseconds", slot.getRequestId(), this.getDisplayName(), timeSpent);
 
             //往CmpStep中放入时间消耗信息
             cmpStep.setTimeSpent(timeSpent);
 
             //后置处理
             self.afterProcess(this.getNodeId(), slot);
-
-            // 性能统计
-//            if (ObjectUtil.isNotNull(monitorBus)) {
-//                CompStatistics statistics = new CompStatistics(this.getClass().getSimpleName(), timeSpent);
-//                monitorBus.addStatistics(statistics);
-//            }
         }
     }
 

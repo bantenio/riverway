@@ -21,6 +21,7 @@ import java.util.Map;
 
 public class InterceptorChainProxy extends Chain {
     private static final Logger log = LoggerFactory.getLogger(InterceptorChainProxy.class);
+
     private final Chain delegate;
 
     private final FlowConfiguration flowConfiguration;
@@ -56,16 +57,14 @@ public class InterceptorChainProxy extends Chain {
         if (pluginManager != null && !pluginManager.isEmpty()) {
             Map<Interceptor, InterceptorContext> interceptorContextMap = new HashMap<>();
             interceptorContextThreadLocal.set(interceptorContextMap);
-            Collection<Interceptor> interceptors = pluginManager.getRegisters();
+            Collection<ChainExecuteInterceptor> interceptors = pluginManager.getChainRegisters();
             try {
-                for (Interceptor interceptor : interceptors) {
-                    if (interceptor instanceof ChainExecuteInterceptor) {
-                        InterceptorContext interceptorContext = new InterceptorContext()
-                                .setChainName(delegate.getChainName()).setFinally(false).setHasError(false);
-                        interceptorContext.setContext(interceptor.initContext(interceptorContext));
-                        interceptorContextMap.put(interceptor, interceptorContext);
-                        ((ChainExecuteInterceptor) interceptor).beforeProcess(interceptorContext);
-                    }
+                for (ChainExecuteInterceptor interceptor : interceptors) {
+                    InterceptorContext interceptorContext = new InterceptorContext()
+                            .setChainName(delegate.getChainName()).setFinally(false).setHasError(false);
+                    interceptorContext.setContext(interceptor.initContext(interceptorContext));
+                    interceptorContextMap.put(interceptor, interceptorContext);
+                    interceptor.beforeProcess(interceptorContext);
                 }
             } catch (Exception ex) {
                 log.error("beforeExecuteForInterceptor on error", ex);
@@ -80,14 +79,12 @@ public class InterceptorChainProxy extends Chain {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
         if (pluginManager != null && !pluginManager.isEmpty()) {
             Map<Interceptor, InterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
-            Collection<Interceptor> interceptors = pluginManager.getRegisters();
+            Collection<ChainExecuteInterceptor> interceptors = pluginManager.getChainRegisters();
             try {
-                for (Interceptor interceptor : interceptors) {
-                    if (interceptor instanceof ChainExecuteInterceptor) {
-                        InterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
-                        interceptorContext.setError(e).setHasError(true);
-                        ((ChainExecuteInterceptor) interceptor).onError(interceptorContext);
-                    }
+                for (ChainExecuteInterceptor interceptor : interceptors) {
+                    InterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
+                    interceptorContext.setError(e).setHasError(true);
+                    interceptor.onError(interceptorContext);
                 }
             } catch (Exception ex) {
                 log.error("beforeExecuteForInterceptor on error", ex);
@@ -101,14 +98,12 @@ public class InterceptorChainProxy extends Chain {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
         if (pluginManager != null && !pluginManager.isEmpty()) {
             Map<Interceptor, InterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
-            Collection<Interceptor> interceptors = pluginManager.getRegisters();
+            Collection<ChainExecuteInterceptor> interceptors = pluginManager.getChainRegisters();
             try {
-                for (Interceptor interceptor : interceptors) {
-                    if (interceptor instanceof ChainExecuteInterceptor) {
-                        InterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
-                        interceptorContext.setHasError(false).setError(null);
-                        ((ChainExecuteInterceptor) interceptor).onSuccess(interceptorContext);
-                    }
+                for (ChainExecuteInterceptor interceptor : interceptors) {
+                    InterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
+                    interceptorContext.setHasError(false).setError(null);
+                    interceptor.onSuccess(interceptorContext);
                 }
             } catch (Exception ex) {
                 log.error("beforeExecuteForInterceptor on error", ex);
@@ -122,14 +117,12 @@ public class InterceptorChainProxy extends Chain {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
         if (pluginManager != null && !pluginManager.isEmpty()) {
             Map<Interceptor, InterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
-            Collection<Interceptor> interceptors = pluginManager.getRegisters();
+            Collection<ChainExecuteInterceptor> interceptors = pluginManager.getChainRegisters();
             try {
-                for (Interceptor interceptor : interceptors) {
-                    if (interceptor instanceof ChainExecuteInterceptor) {
-                        InterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
-                        interceptorContext.setFinally(true);
-                        ((ChainExecuteInterceptor) interceptor).onFinally(interceptorContext);
-                    }
+                for (ChainExecuteInterceptor interceptor : interceptors) {
+                    InterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
+                    interceptorContext.setFinally(true);
+                    interceptor.onFinally(interceptorContext);
                 }
             } catch (Exception ex) {
                 log.error("beforeExecuteForInterceptor on error", ex);
