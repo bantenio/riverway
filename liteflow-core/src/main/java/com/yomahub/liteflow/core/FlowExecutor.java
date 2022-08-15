@@ -19,6 +19,7 @@ import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.LiteflowResponse;
 import com.yomahub.liteflow.flow.element.Chain;
 import com.yomahub.liteflow.flow.element.Node;
+import com.yomahub.liteflow.plugins.PluginManager;
 import com.yomahub.liteflow.property.ExecutorProperties;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.property.LogProperties;
@@ -28,6 +29,7 @@ import com.yomahub.liteflow.slot.Slot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.concurrent.Future;
 
 /**
@@ -148,6 +150,10 @@ public class FlowExecutor {
             if (ObjectUtil.isNull(chain)) {
                 String errorMsg = StrUtil.format("[{}]:couldn't find chain with the id[{}]", slot.getRequestId(), chainId);
                 throw new ChainNotFoundException(errorMsg);
+            }
+            PluginManager pluginManager = flowConfiguration.getPluginManager();
+            if(pluginManager != null) {
+                Collection collection = pluginManager.getRegisters();
             }
             // 执行chain
             chain.execute(slotIndex);

@@ -8,6 +8,7 @@
 package com.yomahub.liteflow.plugins.monitor;
 
 import cn.hutool.core.util.BooleanUtil;
+import com.yomahub.liteflow.plugins.NodeComponentExecuteInterceptor;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.property.MonitorProperties;
 import com.yomahub.liteflow.slot.DataBus;
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  * 监控类元数据，打印执行器类
  * @author Bryan.Zhang
  */
-public class MonitorBus {
+public class MonitorBus implements NodeComponentExecuteInterceptor {
 
 	private LiteFlowConfig liteflowConfig;
 

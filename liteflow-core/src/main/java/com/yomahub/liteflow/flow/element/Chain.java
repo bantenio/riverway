@@ -40,11 +40,12 @@ public class Chain implements Executable {
     //后置处理Condition，用来区别主体的Condition
     private List<Condition> finallyConditionList = new ArrayList<>();
 
-    public Chain(String chainName){
+    public Chain(String chainName) {
         this.chainName = chainName;
     }
 
-    public Chain(){}
+    public Chain() {
+    }
 
     public Chain(String chainName, List<Condition> conditionList) {
         this.chainName = chainName;
@@ -79,35 +80,47 @@ public class Chain implements Executable {
             slot.setChainName(chainName);
             //执行前置
             this.executePre(slotIndex);
-            //执行主体Condition
-            for (Condition condition : conditionList) {
-                condition.setCurrChainName(chainName);
-                condition.execute(slotIndex);
-            }
-        }catch (ChainEndException e){
+            this.executeConditions(slotIndex, conditionList, chainName);
+            this.executeAfter(slotIndex);
+        } catch (ChainEndException e) {
             //这里单独catch ChainEndException是因为ChainEndException是用户自己setIsEnd抛出的异常
             //是属于正常逻辑，所以会在FlowExecutor中判断。这里不作为异常处理
             throw e;
-        }catch (Exception e){
+        } catch (Exception e) {
             //这里事先取到exception set到slot里，为了方便finally取到exception
             slot.setException(e);
+            this.executeException(slotIndex, e);
             throw e;
-        }finally {
+        } finally {
             //执行后置
             this.executeFinally(slotIndex);
         }
     }
 
-    // 执行pre节点
-    protected void executePre(Integer slotIndex) throws Exception {
-        for (Condition condition : this.preConditionList){
+    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName) throws Exception {
+        //执行主体Condition
+        for (Condition condition : conditionList) {
+            condition.setCurrChainName(chainName);
             condition.execute(slotIndex);
         }
     }
 
+    // 执行pre节点
+    public void executePre(Integer slotIndex) throws Exception {
+        for (Condition condition : this.preConditionList) {
+            condition.execute(slotIndex);
+        }
+    }
+
+    public void executeException(Integer slotIndex, Exception e) throws Exception {
+    }
+
+    public void executeAfter(Integer slotIndex) throws Exception {
+    }
+
     //执行后置
-    protected void executeFinally(Integer slotIndex) throws Exception {
-        for (Condition condition : this.finallyConditionList){
+    public void executeFinally(Integer slotIndex) throws Exception {
+        for (Condition condition : this.finallyConditionList) {
             condition.execute(slotIndex);
         }
     }
@@ -121,6 +134,7 @@ public class Chain implements Executable {
     public String getExecuteName() {
         return chainName;
     }
+
     public List<Condition> getPreConditionList() {
         return preConditionList;
     }

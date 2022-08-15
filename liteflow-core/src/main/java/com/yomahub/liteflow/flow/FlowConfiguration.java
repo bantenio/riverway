@@ -8,9 +8,12 @@ import com.yomahub.liteflow.flow.executor.DefaultNodeExecutor;
 import com.yomahub.liteflow.flow.executor.NodeExecutor;
 import com.yomahub.liteflow.flow.id.DefaultRequestIdGenerator;
 import com.yomahub.liteflow.flow.id.RequestIdGenerator;
+import com.yomahub.liteflow.plugins.Interceptor;
+import com.yomahub.liteflow.plugins.PluginManager;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.thread.ExecutorServiceManager;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class FlowConfiguration {
@@ -30,6 +33,8 @@ public class FlowConfiguration {
     private FlowExecutor flowExecutor;
 
     private NodeExecutor nodeExecutor = new DefaultNodeExecutor();
+
+    private PluginManager pluginManager = new PluginManager();
 
     public FlowConfiguration(LiteFlowConfig liteflowConfig) {
         this.liteflowConfig = liteflowConfig;
@@ -163,5 +168,34 @@ public class FlowConfiguration {
     public FlowConfiguration setNodeExecutor(NodeExecutor nodeExecutor) {
         this.nodeExecutor = nodeExecutor;
         return this;
+    }
+
+    public PluginManager getPluginManager() {
+        return pluginManager;
+    }
+
+    public FlowConfiguration setPluginManager(PluginManager pluginManager) {
+        this.pluginManager = pluginManager;
+        return this;
+    }
+
+    public boolean containsInterceptor(String name) {
+        return pluginManager.contains(name);
+    }
+
+    public void register(String name, Interceptor interceptor) {
+        pluginManager.register(name, interceptor);
+    }
+
+    public Interceptor get(String name) {
+        return pluginManager.get(name);
+    }
+
+    public void unregister(String name) {
+        pluginManager.unregister(name);
+    }
+
+    public Collection<Interceptor> getRegisters() {
+        return pluginManager.getRegisters();
     }
 }

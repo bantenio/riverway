@@ -65,7 +65,7 @@ public class LiteFlowConfiguration {
                 .create()
                 .setExecutorServiceManager(executorServiceManager)
                 .setNodeComponentMap(ignores)
-                .setLiteflowConfig(liteFlowConfig)
+                .setLiteFlowConfig(liteFlowConfig)
                 .build();
     }
 
