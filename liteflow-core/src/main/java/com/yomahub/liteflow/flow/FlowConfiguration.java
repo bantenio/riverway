@@ -195,7 +195,4 @@ public class FlowConfiguration {
         pluginManager.unregister(name);
     }
 
-    public Collection<Interceptor> getRegisters() {
-        return pluginManager.getRegisters();
-    }
 }
