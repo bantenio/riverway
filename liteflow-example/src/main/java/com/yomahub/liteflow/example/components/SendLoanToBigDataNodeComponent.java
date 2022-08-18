@@ -13,8 +13,7 @@ public class SendLoanToBigDataNodeComponent extends NodeComponent {
     @Override
     public void process(Node node) throws Exception {
         Slot slot = getSlot();
-        log.info("SendLoanToBigDataNodeComponent.process: {}", node.getId());
+        log.info("SendLoanToBigDataNodeComponent.process variable result: {}", slot.getVariable("result"));
         log.info("SendLoanToBigDataNodeComponent.process param1: {}, param2: {}", slot.getParameter("param1"), slot.getParameter("param2"));
-
     }
 }

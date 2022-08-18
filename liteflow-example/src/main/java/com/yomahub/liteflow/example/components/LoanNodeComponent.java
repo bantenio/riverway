@@ -26,5 +26,6 @@ public class LoanNodeComponent extends NodeComponent {
         DataObject dataObject = slot.getContextBean(DataObject.class);
         String result = loanService.loan(node.getId());
         dataObject.put("result", result);
+        slot.putVariable("result", result);
     }
 }

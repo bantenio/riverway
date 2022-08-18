@@ -8,7 +8,8 @@
     <chain name="chain1">
         THEN(
         loanNodeComponent,
-        node(sendLoanToBigDataNodeComponent).param("param1", 15).param("param2", "hello world")
+        node(sendLoanToBigDataNodeComponent).param("param1", 15).param("param2", "hello world"),
+        sendLoanToBigDataNodeComponent
         );
     </chain>
 </flow>

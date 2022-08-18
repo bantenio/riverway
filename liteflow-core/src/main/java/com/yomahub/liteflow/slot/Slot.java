@@ -301,8 +301,13 @@ public class Slot {
         return variableMap.containsKey(key);
     }
 
-    public <T> T getVariable(String key) {
+    public <T> T getVariableByType(String key) {
         return (T) variableMap.get(key);
+    }
+
+
+    public Object getVariable(String key) {
+        return variableMap.get(key);
     }
 
     public void putVariable(String key, Object value) {
