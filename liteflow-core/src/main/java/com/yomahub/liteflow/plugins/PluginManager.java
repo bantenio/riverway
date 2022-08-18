@@ -3,7 +3,6 @@ package com.yomahub.liteflow.plugins;
 import com.yomahub.liteflow.util.CopyOnWriteHashMap;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 public class PluginManager {

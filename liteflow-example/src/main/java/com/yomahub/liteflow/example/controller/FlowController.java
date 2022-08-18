@@ -24,13 +24,12 @@ public class FlowController {
     public Object doFlow(@PathVariable("chain_id") String chainId,
                          @RequestBody DataObject body,
                          HttpServletRequest request,
-                         HttpServletResponse response,
-                         HttpHeaders headers) throws Exception {
-        LiteflowResponse liteflowResponse = flowConfiguration.getFlowExecutor().execute2Resp(chainId, body, request, response, headers);
+                         HttpServletResponse response) throws Exception {
+        LiteflowResponse liteflowResponse = flowConfiguration.getFlowExecutor().execute2Resp(chainId, body, request, response);
         boolean isSuccessfully = liteflowResponse.isSuccess();
         if (!isSuccessfully) {
             throw liteflowResponse.getCause();
         }
-        return body.getDataObject("result");
+        return body.getValue("result");
     }
 }

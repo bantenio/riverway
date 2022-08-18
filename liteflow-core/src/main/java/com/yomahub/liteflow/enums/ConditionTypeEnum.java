@@ -6,7 +6,9 @@ public enum ConditionTypeEnum {
 
     TYPE_SWITCH("switch", "switch"),
     TYPE_PRE("pre","pre"),
-    TYPE_FINALLY("finally","finally")
+    TYPE_FINALLY("finally","finally"),
+
+    TYPE_NODE("node", "node")
     ;
     private String type;
     private String name;

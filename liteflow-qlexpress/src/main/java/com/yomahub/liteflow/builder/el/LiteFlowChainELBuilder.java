@@ -12,6 +12,7 @@ import com.yomahub.liteflow.flow.element.Chain;
 import com.yomahub.liteflow.flow.element.Executable;
 import com.yomahub.liteflow.flow.element.condition.Condition;
 import com.yomahub.liteflow.flow.element.condition.FinallyCondition;
+import com.yomahub.liteflow.flow.element.condition.NodeCondition;
 import com.yomahub.liteflow.flow.element.condition.PreCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,7 @@ public class LiteFlowChainELBuilder {
         expressRunner.addFunctionAndClassMethod("tag", Object.class, new TagOperator(flowConfiguration));
         expressRunner.addFunctionAndClassMethod("any", Object.class, new AnyOperator());
         expressRunner.addFunctionAndClassMethod("id", Object.class, new IdOperator());
+        expressRunner.addFunctionAndClassMethod("param", NodeCondition.class, new NodeParamOperator());
         expressRunner.addFunctionAndClassMethod("ignoreError", Object.class, new IgnoreErrorOperator());
         expressRunner.addFunctionAndClassMethod("threadPool", Object.class, new ThreadPoolOperator());
         expressRunner.addFunction("node", new NodeOperator(flowConfiguration));

@@ -21,7 +21,7 @@ public class LoanNodeComponent extends NodeComponent {
     @Override
     public void process(Node node) throws Exception {
         Slot slot = getSlot();
-        String name = slot.getRequestData();
+        DataObject name = slot.getRequestData();
         log.info("request data was: {}", name);
         DataObject dataObject = slot.getContextBean(DataObject.class);
         String result = loanService.loan(node.getId());

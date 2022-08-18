@@ -105,8 +105,15 @@ public class FlowExecutor {
     }
 
     protected LiteflowResponse execute2Resp(String chainId, Object[] param, Integer slotIndex, boolean isInnerChain) {
-        Slot slot = doExecute(chainId, param, slotIndex, isInnerChain);
-        return new LiteflowResponse(slot);
+        Slot slot = null;
+        try {
+            slot = doExecute(chainId, param, slotIndex, isInnerChain);
+            return new LiteflowResponse(slot);
+        } finally {
+            if (slot != null) {
+                slot.clearVariable();
+            }
+        }
     }
 
     protected Slot doExecute(String chainId, Object[] param, Integer slotIndex, boolean isInnerChain) {

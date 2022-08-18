@@ -35,7 +35,9 @@ public class XmlELFileFlowParser extends BaseXmlFlowParser {
 		String chainName = e.attributeValue(NAME);
 		String text = e.getText();
 		String el = RegexUtil.removeComments(text);
-		LiteFlowChainELBuilder chainELBuilder = LiteFlowChainELBuilder.createChain(flowConfiguration).setChainName(chainName);
+		LiteFlowChainELBuilder chainELBuilder = LiteFlowChainELBuilder
+				.createChain(flowConfiguration)
+				.setChainName(chainName);
 		chainELBuilder.setEL(el).build();
 	}
 

@@ -13,7 +13,6 @@ import com.yomahub.liteflow.plugins.PluginManager;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.thread.ExecutorServiceManager;
 
-import java.util.Collection;
 import java.util.Map;
 
 public class FlowConfiguration {

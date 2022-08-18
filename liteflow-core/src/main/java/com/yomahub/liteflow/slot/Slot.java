@@ -19,16 +19,14 @@ import com.yomahub.liteflow.thread.ExecutorServiceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Slot的抽象类实现
+ *
  * @author Bryan.Zhang
  * @author LeoLee
  */
@@ -62,6 +60,11 @@ public class Slot {
     private String executeStepsStr;
 
     protected ConcurrentHashMap<String, Object> metaDataMap = new ConcurrentHashMap<>();
+
+
+    protected ConcurrentHashMap<String, Object> variableMap = new ConcurrentHashMap<>();
+
+    protected ConcurrentHashMap<String, Object> parameter = new ConcurrentHashMap<>();
 
     private List<Object> contextBeanList;
 
@@ -292,5 +295,41 @@ public class Slot {
 
     public LiteFlowConfig getLiteflowConfig() {
         return liteflowConfig;
+    }
+
+    public boolean hasVariable(String key) {
+        return variableMap.containsKey(key);
+    }
+
+    public <T> T getVariable(String key) {
+        return (T) variableMap.get(key);
+    }
+
+    public void putVariable(String key, Object value) {
+        variableMap.put(key, value);
+    }
+
+    public void removeVariable(String key) {
+        variableMap.remove(key);
+    }
+
+    public void clearVariable() {
+        variableMap.clear();
+    }
+
+    public void putParameter(Map<String, Object> parameter) {
+        this.parameter.putAll(parameter);
+    }
+
+    public Object getParameter(String key) {
+        return parameter.get(key);
+    }
+
+    public <T> T getParameterByType(String key) {
+        return (T) parameter.get(key);
+    }
+
+    public void clearParameter() {
+        this.parameter.clear();
     }
 }
