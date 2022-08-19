@@ -13,6 +13,7 @@ temp/
 tmp/
 buildinfo.properties
 tool/data-importer/*.out
+maven_cert.properties
 
 ### STS ###
 .apt_generated

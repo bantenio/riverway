@@ -16,8 +16,37 @@ dependencies {
     api 'org.dom4j:dom4j:2.1.3'
 }
 
-description = 'liteflow-parse'
+ext {
+    project_name = 'parser'
+}
+
+description = "${project_root_name}-${project_name}"
 
 java {
     withJavadocJar()
+}
+
+jar {
+    baseName "${project_root_name}-${project_name}"
+}
+
+publishing {
+    repositories {
+        maven {
+            allowInsecureProtocol = true
+            name "zzMaven"
+            url = version.endsWith('SNAPSHOT') ? "${zzMavenSnapshotsUrl}" : "${zzMavenReleaseUrl}"
+
+            credentials {
+                username "${zz_maven_repository_username}"
+                password "${zz_maven_repository_password}"
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId = "${project_group}"
+            artifactId = "${project_root_name}-${project_name}"
+        }
+    }
 }

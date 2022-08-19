@@ -1,8 +1,10 @@
 package com.yomahub.liteflow.parser;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.builder.FlowParser;
 import com.yomahub.liteflow.builder.FlowParserProvider;
 import com.yomahub.liteflow.builder.LiteFlowParseException;
@@ -14,8 +16,6 @@ import com.yomahub.liteflow.parser.el.JsonELFileFlowParser;
 import com.yomahub.liteflow.parser.el.XmlELFileFlowParser;
 import com.yomahub.liteflow.parser.el.YamlELFileFlowParser;
 import com.yomahub.liteflow.property.LiteFlowConfig;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -67,7 +67,7 @@ public class ResourceELFlowParser implements UrlFlowParser {
     }
 
     public void parseContent(String path, FlowParser flowParser, FlowConfiguration flowConfiguration, LiteFlowConfig liteFlowConfig) {
-        if (StringUtils.isEmpty(path)) {
+        if (StrUtil.isEmpty(path)) {
             throw new ConfigErrorException("rule source must not be null");
         }
 
@@ -82,7 +82,7 @@ public class ResourceELFlowParser implements UrlFlowParser {
 
         List<String> contents = allResource.stream().map(resource -> {
             try {
-                return IOUtils.toString(resource.getInputStream(), CharsetUtil.CHARSET_UTF_8);
+                return IoUtil.read(resource.getInputStream(), CharsetUtil.CHARSET_UTF_8);
             } catch (IOException e) {
                 throw new ConfigErrorException("config error,please check rule source property", e);
             }
@@ -108,7 +108,7 @@ public class ResourceELFlowParser implements UrlFlowParser {
     public void parseMain(String path, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
         String prefix = getType(path);
         String[] parts = prefix.split(":");
-        if (parts.length < 3 || StringUtils.isBlank(prefix)) {
+        if (parts.length < 3 || StrUtil.isBlank(prefix)) {
             throw new LiteFlowParseException("path was not support format: " + path);
         }
         FlowParser parser = parserMap.get(parts[1]);
@@ -133,7 +133,7 @@ public class ResourceELFlowParser implements UrlFlowParser {
             return null;
         }
         for (String searchString : searchStrings) {
-            if (StringUtils.startsWithIgnoreCase(str, searchString)) {
+            if (StrUtil.startWithIgnoreCase(str, searchString)) {
                 return searchString;
             }
         }

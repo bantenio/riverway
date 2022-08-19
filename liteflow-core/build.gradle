@@ -8,18 +8,44 @@ plugins {
     id 'com.yomahub.java-conventions'
 }
 
+ext {
+    project_name = 'core'
+}
+
+description = "${project_root_name}-${project_name}"
+
+java {
+    withJavadocJar()
+}
+
+jar {
+    baseName "${project_root_name}-${project_name}"
+}
+
+publishing {
+    repositories {
+        maven {
+            allowInsecureProtocol = true
+            name "zzMaven"
+            url = version.endsWith('SNAPSHOT') ? "${zzMavenSnapshotsUrl}" : "${zzMavenReleaseUrl}"
+
+            credentials {
+                username "${zz_maven_repository_username}"
+                password "${zz_maven_repository_password}"
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId = "${project_group}"
+            artifactId = "${project_root_name}-${project_name}"
+        }
+    }
+}
+
 dependencies {
     api 'cn.hutool:hutool-core:5.7.19'
     api 'org.slf4j:slf4j-api:1.7.32'
     api 'com.alibaba:transmittable-thread-local:2.12.3'
     api 'net.bytebuddy:byte-buddy:1.11.13'
-    api group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
-    api group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
-    api group: 'commons-io', name: 'commons-io', version: '2.11.0'
-}
-
-description = 'liteflow-core'
-
-java {
-    withJavadocJar()
 }
