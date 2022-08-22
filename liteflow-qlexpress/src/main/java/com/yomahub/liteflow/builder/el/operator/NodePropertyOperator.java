@@ -6,7 +6,7 @@ import com.yomahub.liteflow.flow.element.condition.NodeCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NodeParamOperator extends Operator {
+public class NodePropertyOperator extends Operator {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -30,7 +30,7 @@ public class NodeParamOperator extends Operator {
                 throw new Exception();
             }
             String paramName = objects[1].toString();
-            target.addParam(paramName, objects[2]);
+            target.addProperty(paramName, objects[2]);
 
             return target;
         } catch (Exception e) {

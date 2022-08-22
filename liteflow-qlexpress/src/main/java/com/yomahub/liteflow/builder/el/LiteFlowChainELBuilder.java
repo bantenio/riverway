@@ -72,7 +72,7 @@ public class LiteFlowChainELBuilder {
         expressRunner.addFunctionAndClassMethod("tag", Object.class, new TagOperator(flowConfiguration));
         expressRunner.addFunctionAndClassMethod("any", Object.class, new AnyOperator());
         expressRunner.addFunctionAndClassMethod("id", Object.class, new IdOperator());
-        expressRunner.addFunctionAndClassMethod("param", NodeCondition.class, new NodeParamOperator());
+        expressRunner.addFunctionAndClassMethod("property", NodeCondition.class, new NodePropertyOperator());
         expressRunner.addFunctionAndClassMethod("ignoreError", Object.class, new IgnoreErrorOperator());
         expressRunner.addFunctionAndClassMethod("threadPool", Object.class, new ThreadPoolOperator());
         expressRunner.addFunction("node", new NodeOperator(flowConfiguration));

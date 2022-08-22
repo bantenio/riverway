@@ -114,6 +114,7 @@ public abstract class NodeComponent {
 
             //后置处理
             self.afterProcess(this.getNodeId(), slot);
+            slot.swapParameter();
         }
     }
 

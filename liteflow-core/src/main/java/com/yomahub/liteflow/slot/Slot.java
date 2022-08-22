@@ -64,7 +64,11 @@ public class Slot {
 
     protected ConcurrentHashMap<String, Object> variableMap = new ConcurrentHashMap<>();
 
-    protected ConcurrentHashMap<String, Object> parameter = new ConcurrentHashMap<>();
+    protected ConcurrentHashMap<String, Object> inParameter = new ConcurrentHashMap<>();
+
+    protected ConcurrentHashMap<String, Object> outParameter = new ConcurrentHashMap<>();
+
+    protected ConcurrentHashMap<String, Object> properties = new ConcurrentHashMap<>();
 
     private List<Object> contextBeanList;
 
@@ -322,19 +326,54 @@ public class Slot {
         variableMap.clear();
     }
 
-    public void putParameter(Map<String, Object> parameter) {
-        this.parameter.putAll(parameter);
+    public Map<String, Object> putParameter(String key, Object value) {
+        this.outParameter.put(key, value);
+        return this.outParameter;
     }
 
     public Object getParameter(String key) {
-        return parameter.get(key);
+        return inParameter.get(key);
     }
 
     public <T> T getParameterByType(String key) {
-        return (T) parameter.get(key);
+        return (T) inParameter.get(key);
     }
 
-    public void clearParameter() {
-        this.parameter.clear();
+    public void removeParameter(String key) {
+        outParameter.remove(key);
+    }
+
+    public boolean hasParameter(String key) {
+        return inParameter.containsKey(key);
+    }
+
+    public void swapParameter() {
+        if (!inParameter.isEmpty()) {
+            inParameter.clear();
+        }
+        if (!outParameter.isEmpty()) {
+            inParameter.putAll(outParameter);
+            outParameter.clear();
+        }
+    }
+
+    public void putProperties(Map<String, Object> properties) {
+        this.properties.putAll(properties);
+    }
+
+    public Object getProperty(String key) {
+        return properties.get(key);
+    }
+
+    public <T> T getPropertyByType(String key) {
+        return (T) properties.get(key);
+    }
+
+    public void clearProperties() {
+        this.properties.clear();
+    }
+
+    public boolean hasProperty(String key) {
+        return this.properties.containsKey(key);
     }
 }

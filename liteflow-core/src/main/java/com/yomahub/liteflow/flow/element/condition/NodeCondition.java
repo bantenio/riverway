@@ -11,7 +11,7 @@ import java.util.Map;
 public class NodeCondition extends Condition {
     private final Node node;
 
-    private final Map<String, Object> params = new HashMap<>();
+    private final Map<String, Object> properties = new HashMap<>();
 
     public NodeCondition(Node node) {
         this.node = node;
@@ -20,11 +20,11 @@ public class NodeCondition extends Condition {
     @Override
     public void execute(Integer slotIndex) throws Exception {
         Slot slot = DataBus.getSlot(slotIndex);
-        slot.putParameter(params);
+        slot.putProperties(properties);
         try {
             node.execute(slotIndex);
         } finally {
-            slot.clearParameter();
+            slot.clearProperties();
         }
     }
 
@@ -33,7 +33,7 @@ public class NodeCondition extends Condition {
         return ConditionTypeEnum.TYPE_NODE;
     }
 
-    public void addParam(String key, Object value) {
-        params.put(key, value);
+    public void addProperty(String key, Object value) {
+        properties.put(key, value);
     }
 }
