@@ -3,13 +3,16 @@
         <node id="loanNodeComponent" class="com.yomahub.liteflow.example.components.LoanNodeComponent" name="a"/>
         <node id="sendLoanToBigDataNodeComponent"
               class="com.yomahub.liteflow.example.components.SendLoanToBigDataNodeComponent" name="b"/>
+        <node id="displayMapComponent"
+              class="com.yomahub.liteflow.example.components.DisplayMapComponent" name="c"/>
     </nodes>
 
     <chain name="chain1">
         THEN(
         loanNodeComponent,
-        node(sendLoanToBigDataNodeComponent).param("param1", 15).param("param2", "hello world"),
-        sendLoanToBigDataNodeComponent
+        node(sendLoanToBigDataNodeComponent).property("param1", 15).property("param2", "hello world"),
+        sendLoanToBigDataNodeComponent,
+        node(displayMapComponent).property("newMap", map().add("1","2").add("3","4"))
         );
     </chain>
 </flow>

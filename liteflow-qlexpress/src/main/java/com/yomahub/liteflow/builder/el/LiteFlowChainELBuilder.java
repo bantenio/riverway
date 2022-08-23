@@ -5,6 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.yomahub.liteflow.builder.el.operator.*;
+import com.yomahub.liteflow.builder.el.operator.ext.CreateMapOperator;
+import com.yomahub.liteflow.builder.el.operator.ext.PutInMapOperator;
 import com.yomahub.liteflow.exception.ELParseException;
 import com.yomahub.liteflow.exception.FlowSystemException;
 import com.yomahub.liteflow.flow.FlowConfiguration;
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Chain基于代码形式的组装器
@@ -76,6 +79,9 @@ public class LiteFlowChainELBuilder {
         expressRunner.addFunctionAndClassMethod("ignoreError", Object.class, new IgnoreErrorOperator());
         expressRunner.addFunctionAndClassMethod("threadPool", Object.class, new ThreadPoolOperator());
         expressRunner.addFunction("node", new NodeOperator(flowConfiguration));
+        expressRunner.addFunction("map", new CreateMapOperator());
+        expressRunner.addFunctionAndClassMethod("add", Object.class, new PutInMapOperator());
+
     }
 
     //在parser中chain的build是2段式的，因为涉及到依赖问题，以前是递归parser
