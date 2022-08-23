@@ -7,6 +7,7 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.tenio.interstellar.context.spring.DataObjectAccessor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,6 +29,7 @@ public class SPELRefValueExpressionRunner implements RefValueExpressionRunner {
         }
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
         evaluationContext.addPropertyAccessor(new MapAccessor());
+        evaluationContext.addPropertyAccessor(new DataObjectAccessor());
         evaluationContext.setVariables(slot.getContextBeanMap());
         evaluationContext.setVariables(slot.variables());
         return expression.getValue();

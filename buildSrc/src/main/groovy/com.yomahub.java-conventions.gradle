@@ -11,9 +11,12 @@ plugins {
 
 repositories {
     mavenLocal()
+    maven { url "$aliyunMavenPublicUrl" }
     maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
+        url "$zzMavenPublicUrl"
+        allowInsecureProtocol = true
     }
+    mavenCentral()
 }
 
 group = 'org.tenio.riverway'
