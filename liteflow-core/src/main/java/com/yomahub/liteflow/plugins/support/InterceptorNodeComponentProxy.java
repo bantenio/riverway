@@ -316,16 +316,6 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
     }
 
     @Override
-    public <T> T getRequestData() {
-        return delegate.getRequestData();
-    }
-
-    @Override
-    public <T> T getSubChainReqData() {
-        return delegate.getSubChainReqData();
-    }
-
-    @Override
     public String getChainName() {
         return delegate.getChainName();
     }

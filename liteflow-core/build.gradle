@@ -14,12 +14,12 @@ ext {
 
 description = "${project_root_name}-${project_name}"
 
-java {
-    withJavadocJar()
-}
-
 jar {
     baseName "${project_root_name}-${project_name}"
+}
+
+java {
+    withJavadocJar()
 }
 
 publishing {

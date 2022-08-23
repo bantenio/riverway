@@ -33,7 +33,7 @@ public class NullBeanSerializerModifier extends BeanSerializerModifier {
     }
 
     protected boolean isArrayType(BeanPropertyWriter writer) {
-        Class<?> clazz = writer.getPropertyType();
+        Class<?> clazz = writer.getType().getRawClass();
         return clazz.isArray() || clazz.equals(List.class) || clazz.equals(Set.class);
     }
 

@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
+import java.util.Map;
 
 /**
  * Node节点，实现可执行器
@@ -214,11 +215,11 @@ public class Node implements Executable, Cloneable {
         this.retryCount = retryCount;
     }
 
-    public void invoke(String chainId, Object param, Integer slotIndex) throws Exception {
-        flowConfiguration.getFlowExecutor().invoke(chainId, slotIndex, param);
+    public void invoke(String chainId, Map<String, Object> params, Integer slotIndex) throws Exception {
+        flowConfiguration.getFlowExecutor().invoke(chainId, slotIndex, params);
     }
 
-    public LiteflowResponse invoke2Resp(String chainId, Object param, Integer slotIndex) {
-        return flowConfiguration.getFlowExecutor().invoke2Resp(chainId, slotIndex, param);
+    public LiteflowResponse invoke2Resp(String chainId, Map<String, Object> params, Integer slotIndex) {
+        return flowConfiguration.getFlowExecutor().invoke2Resp(chainId, slotIndex, params);
     }
 }

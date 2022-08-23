@@ -70,7 +70,7 @@ public class Slot {
 
     protected ConcurrentHashMap<String, Object> properties = new ConcurrentHashMap<>();
 
-    private List<Object> contextBeanList;
+    private Map<String, Object> contextBeanMap = new LinkedHashMap<>();
 
     private ExecutorServiceManager executorServiceManager;
 
@@ -83,9 +83,11 @@ public class Slot {
         this.liteflowConfig = flowConfiguration.getLiteflowConfig();
     }
 
-    public Slot(FlowConfiguration flowConfiguration, List<Object> contextBeanList) {
+    public Slot(FlowConfiguration flowConfiguration, Map<String, Object> contextBeanMap) {
         this.flowConfiguration = flowConfiguration;
-        this.contextBeanList = contextBeanList;
+        if (contextBeanMap != null && !contextBeanMap.isEmpty()) {
+            this.contextBeanMap.putAll(contextBeanMap);
+        }
         this.liteflowConfig = flowConfiguration.getLiteflowConfig();
     }
 
@@ -117,13 +119,6 @@ public class Slot {
         putMetaDataMap(NODE_OUTPUT_PREFIX + nodeId, t);
     }
 
-    public <T> T getRequestData() {
-        return (T) metaDataMap.get(REQUEST);
-    }
-
-    public <T> void setRequestData(T t) {
-        putMetaDataMap(REQUEST, t);
-    }
 
     public <T> T getResponseData() {
         return (T) metaDataMap.get(RESPONSE);
@@ -131,26 +126,6 @@ public class Slot {
 
     public <T> void setResponseData(T t) {
         putMetaDataMap(RESPONSE, t);
-    }
-
-    public <T> T getChainReqData(String chainId) {
-        String key = CHAIN_REQ_PREFIX + chainId;
-        if (hasMetaData(key)) {
-            Queue<Object> queue = (Queue<Object>) metaDataMap.get(key);
-            return (T) queue.poll();
-        } else {
-            return null;
-        }
-    }
-
-    public synchronized <T> void setChainReqData(String chainId, T t) {
-        String key = CHAIN_REQ_PREFIX + chainId;
-        if (hasMetaData(key)) {
-            Queue<Object> queue = (Queue<Object>) metaDataMap.get(key);
-            queue.offer(t);
-        } else {
-            putMetaDataMap(key, new ConcurrentLinkedQueue<>(ListUtil.toList(t)));
-        }
     }
 
     public <T> void setPrivateDeliveryData(String nodeId, T t) {
@@ -269,12 +244,19 @@ public class Slot {
         putMetaDataMap(EXCEPTION, e);
     }
 
-    public List<Object> getContextBeanList() {
-        return this.contextBeanList;
+    public Map<String, Object> getContextBeanMap() {
+        return this.contextBeanMap;
+    }
+
+    public <T> T getContentBean(String key) {
+        if (!contextBeanMap.containsKey(key)) {
+            throw new NoSuchContextBeanException("this type is not in the context type passed in");
+        }
+        return (T) contextBeanMap.get(key);
     }
 
     public <T> T getContextBean(Class<T> contextBeanClazz) {
-        T t = (T) contextBeanList.stream().filter(o -> o.getClass().isAssignableFrom(contextBeanClazz))
+        T t = (T) contextBeanMap.values().stream().filter(o -> o.getClass().isAssignableFrom(contextBeanClazz))
                 .findFirst()
                 .orElse(null);
         if (t == null) {
@@ -284,8 +266,12 @@ public class Slot {
     }
 
     public <T> T getFirstContextBean() {
-        Class<T> firstContextBeanClazz = (Class<T>) this.getContextBeanList().get(0).getClass();
-        return this.getContextBean(firstContextBeanClazz);
+        if (contextBeanMap.isEmpty()) {
+            return null;
+        }
+        Optional<Map.Entry<String, Object>> firstKey = this.contextBeanMap.entrySet().stream().findFirst();
+
+        return (T) firstKey.get().getValue();
     }
 
     public ExecutorServiceManager getExecutorServiceManager() {
@@ -309,6 +295,10 @@ public class Slot {
         return (T) variableMap.get(key);
     }
 
+
+    public Map<String, Object> variables() {
+        return variableMap;
+    }
 
     public Object getVariable(String key) {
         return variableMap.get(key);

@@ -256,14 +256,6 @@ public abstract class NodeComponent {
         this.tagTL.remove();
     }
 
-    public <T> T getRequestData() {
-        return getSlot().getRequestData();
-    }
-
-    public <T> T getSubChainReqData() {
-        return getSlot().getChainReqData(this.getCurrChainName());
-    }
-
     public String getChainName() {
         return getSlot().getChainName();
     }

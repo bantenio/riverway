@@ -31,6 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
@@ -61,15 +63,15 @@ public class FlowExecutor {
     }
 
     //隐式流程的调用方法
-    public void invoke(String chainId, Integer slotIndex, Object... param) throws Exception {
-        LiteflowResponse response = this.execute2Resp(chainId, param, slotIndex, true);
+    public void invoke(String chainId, Integer slotIndex, Map<String, Object> params) throws Exception {
+        LiteflowResponse response = this.execute2Resp(chainId, params, slotIndex, true);
         if (!response.isSuccess()) {
             throw response.getCause();
         }
     }
 
-    public LiteflowResponse invoke2Resp(String chainId, Integer slotIndex, Object... param) {
-        return this.execute2Resp(chainId, param, slotIndex, true);
+    public LiteflowResponse invoke2Resp(String chainId, Integer slotIndex, Map<String, Object> params) {
+        return this.execute2Resp(chainId, params, slotIndex, true);
     }
 
     //单独调用某一个node
@@ -80,23 +82,23 @@ public class FlowExecutor {
 
     //调用一个流程并返回LiteflowResponse，上下文为默认的DefaultContext，初始参数为null
     public LiteflowResponse execute2Resp(String chainId) {
-        return this.execute2Resp(chainId, new DefaultContext());
+        return this.execute2Resp(chainId, new HashMap<>());
     }
 
     //调用一个流程并返回LiteflowResponse，允许多上下文的传入
-    public LiteflowResponse execute2Resp(String chainId, Object... params) {
+    public LiteflowResponse execute2Resp(String chainId, Map<String, Object> params) {
         return this.execute2Resp(chainId, params, null, false);
     }
 
     //调用一个流程并返回Future<LiteflowResponse>，允许多上下文的传入
-    public Future<LiteflowResponse> execute2Future(String chainId, Object... param) {
+    public Future<LiteflowResponse> execute2Future(String chainId, Map<String, Object> params) {
         return flowConfiguration.getExecutorServiceManager().get(executorProperties.getMainExecutorServiceName()).submit(()
-                -> this.execute2Resp(chainId, param, null, false));
+                -> this.execute2Resp(chainId, params, null, false));
     }
 
     //调用一个流程，返回默认的上下文，适用于简单的调用
-    public DefaultContext execute(String chainId, Object param) throws Exception {
-        LiteflowResponse response = this.execute2Resp(chainId, param, new DefaultContext());
+    public DefaultContext execute(String chainId, Map<String, Object> params) throws Exception {
+        LiteflowResponse response = this.execute2Resp(chainId, params);
         if (!response.isSuccess()) {
             throw response.getCause();
         } else {
@@ -104,10 +106,10 @@ public class FlowExecutor {
         }
     }
 
-    protected LiteflowResponse execute2Resp(String chainId, Object[] param, Integer slotIndex, boolean isInnerChain) {
+    protected LiteflowResponse execute2Resp(String chainId, Map<String, Object> params, Integer slotIndex, boolean isInnerChain) {
         Slot slot = null;
         try {
-            slot = doExecute(chainId, param, slotIndex, isInnerChain);
+            slot = doExecute(chainId, params, slotIndex, isInnerChain);
             return new LiteflowResponse(slot);
         } finally {
             if (slot != null) {
@@ -116,10 +118,10 @@ public class FlowExecutor {
         }
     }
 
-    protected Slot doExecute(String chainId, Object[] param, Integer slotIndex, boolean isInnerChain) {
+    protected Slot doExecute(String chainId, Map<String, Object> params, Integer slotIndex, boolean isInnerChain) {
 
         if (!isInnerChain && ObjectUtil.isNull(slotIndex)) {
-            slotIndex = DataBus.offerSlot(ListUtil.toList(param), flowConfiguration);
+            slotIndex = DataBus.offerSlot(params, flowConfiguration);
             if (BooleanUtil.isTrue(logConfig.getPrintExecutionLog())) {
                 log.info("slot[{}] offered", slotIndex);
             }
@@ -138,16 +140,6 @@ public class FlowExecutor {
             slot.generateRequestId();
             if (BooleanUtil.isTrue(logConfig.getPrintExecutionLog())) {
                 log.info("requestId[{}] has generated", slot.getRequestId());
-            }
-        }
-
-        if (!isInnerChain) {
-            if (ObjectUtil.isNotNull(param) && param.length > 0) {
-                slot.setRequestData(param[0]);
-            }
-        } else {
-            if (ObjectUtil.isNotNull(param) && param.length > 0) {
-                slot.setChainReqData(chainId, param[0]);
             }
         }
 

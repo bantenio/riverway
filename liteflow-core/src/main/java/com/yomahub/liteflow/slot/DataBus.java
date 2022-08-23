@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,13 +57,12 @@ public class DataBus {
         }
     }
 
-    public static int offerSlot(List<?> params, FlowConfiguration flowConfiguration) {
+    public static int offerSlot(Map<String, Object> params, FlowConfiguration flowConfiguration) {
         try {
             //把classList通过反射初始化成对象列表
             //这里用newInstanceIfPossible这个方法，是为了兼容当没有无参构造方法所报的错
-            List<Object> contextBeanList = params.stream().collect(Collectors.toList());
 
-            Slot slot = new Slot(flowConfiguration, contextBeanList);
+            Slot slot = new Slot(flowConfiguration, params);
 
             //这里有没有并发问题？
             //没有，因为QUEUE的类型为ConcurrentLinkedQueue，并发情况下，每次取到的index不会相同
@@ -99,11 +99,6 @@ public class DataBus {
 
     public static Slot getSlot(int slotIndex) {
         return SLOTS.get(slotIndex);
-    }
-
-    public static List<Object> getContextBeanList(int slotIndex) {
-        Slot slot = getSlot(slotIndex);
-        return slot.getContextBeanList();
     }
 
     public static void releaseSlot(int slotIndex) {
