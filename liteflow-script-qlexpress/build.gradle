@@ -8,6 +8,9 @@ plugins {
     id 'com.yomahub.java-conventions'
 }
 
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 dependencies {
     implementation project(':liteflow-script-common')
     implementation project(':liteflow-core')

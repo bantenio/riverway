@@ -2,6 +2,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 subprojects {
+
     def localProperties = new Properties()
     if (Files.exists(Paths.get("$project.rootDir/maven_cert.properties"))) {
         localProperties.load(new FileInputStream("$project.rootDir/maven_cert.properties"))

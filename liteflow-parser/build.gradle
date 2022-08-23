@@ -8,6 +8,9 @@ plugins {
     id 'com.yomahub.java-conventions'
 }
 
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 dependencies {
     api project(':liteflow-core')
     api 'org.slf4j:slf4j-api:1.7.32'
