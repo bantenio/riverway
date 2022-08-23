@@ -14,10 +14,16 @@ public class VariableSwapParameterComponent extends NodeComponent {
     public void process(Node node) throws Exception {
         Slot slot = getSlot();
         if (slot.hasProperty(PROPERTY_NAME_VAR_TO_PARAMETER)) {
-            Map<String, String> variableToParameterMapping = slot.getPropertyByType("varToParam");
+            Map<String, Object> variableToParameterMapping = slot.getPropertyByType("varToParam");
             if (!variableToParameterMapping.isEmpty()) {
-                for (Map.Entry<String, String> entry : variableToParameterMapping.entrySet()) {
-                    slot.putParameter(entry.getKey(), slot.getVariable(entry.getValue()));
+                for (Map.Entry<String, Object> entry : variableToParameterMapping.entrySet()) {
+                    Object valRef = entry.getValue();
+                    if (valRef instanceof String) {
+                        slot.putParameter(entry.getKey(), slot.getVariable(valRef.toString()));
+                    } else if (valRef instanceof ValueHandler) {
+                        Object val = ((ValueHandler) valRef).getValue(slot, node);
+                        slot.putParameter(entry.getKey(), val);
+                    }
                 }
             }
         }

@@ -2,12 +2,12 @@ package com.yomahub.liteflow.example.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yomahub.liteflow.example.context.DataArray;
-import com.yomahub.liteflow.example.context.DataObject;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.tenio.interstellar.context.DataArray;
+import org.tenio.interstellar.context.DataObject;
 
 @RestController
 @RequestMapping("/test")

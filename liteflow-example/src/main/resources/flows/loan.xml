@@ -5,6 +5,7 @@
               class="com.yomahub.liteflow.example.components.SendLoanToBigDataNodeComponent" name="b"/>
         <node id="displayMapComponent"
               class="com.yomahub.liteflow.example.components.DisplayMapComponent" name="c"/>
+        <node id="varToParam" class="com.yomahub.liteflow.components.VariableSwapParameterComponent" name="d"/>
     </nodes>
 
     <chain name="chain1">
@@ -12,7 +13,8 @@
         loanNodeComponent,
         node(sendLoanToBigDataNodeComponent).property("param1", 15).property("param2", "hello world"),
         sendLoanToBigDataNodeComponent,
-        node(displayMapComponent).property("newMap", map().add("1","2").add("3","4"))
+        node(varToParam).property("varToParam", map().add("newParam", ref("#body.d", "spel"))),
+        displayMapComponent
         );
     </chain>
 </flow>

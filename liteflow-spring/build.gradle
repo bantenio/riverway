@@ -10,7 +10,7 @@ plugins {
 
 dependencies {
     api project(':liteflow-qlexpress')
-    api 'org.tenio.interstellar:interstellar-ext-spring:0.0.1'
+    api 'org.tenio.interstellar:interstellar-ext-spring:0.0.2'
     compileOnly 'org.springframework:spring-beans:5.0.9.RELEASE'
     compileOnly 'org.springframework:spring-context:5.0.9.RELEASE'
     compileOnly 'org.springframework:spring-aop:5.0.9.RELEASE'

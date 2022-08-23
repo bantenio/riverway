@@ -30,10 +30,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: "com.fasterxml.jackson.core", module: "jackson-databind"
     }
-    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2'
-    api group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.13.2'
-    api group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.13.2'
-    api group: 'io.netty', name: 'netty-buffer', version: '4.1.75.Final'
+    implementation 'org.tenio.interstellar:interstellar-ext-jackson:0.0.2'
 }
 
 description = 'liteflow-example'

@@ -2,8 +2,9 @@ package com.yomahub.liteflow.example.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yomahub.liteflow.builder.FlowConfigurationBuilder;
+import com.yomahub.liteflow.components.SPELRefValueExpressionRunner;
+import com.yomahub.liteflow.components.VariableSwapParameterComponent;
 import com.yomahub.liteflow.core.NodeComponent;
-import com.yomahub.liteflow.example.jackson.ObjectMapperFactory;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.ResourceELFlowParser;
 import com.yomahub.liteflow.property.ExecutorProperties;
@@ -13,6 +14,7 @@ import com.yomahub.liteflow.spring.ComponentScanner;
 import com.yomahub.liteflow.thread.ExecutorServiceManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.tenio.interstellar.jackson.ObjectMapperFactory;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -20,7 +22,10 @@ import java.util.Map;
 @Configuration
 public class LiteFlowConfiguration {
 
-
+    @Bean
+    public VariableSwapParameterComponent varToSwap() {
+        return new VariableSwapParameterComponent();
+    }
     @Bean
     public ObjectMapper objectMapper() {
         return ObjectMapperFactory.objectMapper();
@@ -61,6 +66,7 @@ public class LiteFlowConfiguration {
     @Bean
     public FlowConfiguration flowConfiguration(LiteFlowConfig liteFlowConfig, ExecutorServiceManager executorServiceManager, Map<String, NodeComponent> ignores) {
         ResourceELFlowParser.register();
+        SPELRefValueExpressionRunner.registerSelf();
         return FlowConfigurationBuilder
                 .create()
                 .setExecutorServiceManager(executorServiceManager)

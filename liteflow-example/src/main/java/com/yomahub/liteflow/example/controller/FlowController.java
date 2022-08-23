@@ -1,16 +1,13 @@
 package com.yomahub.liteflow.example.controller;
 
 import cn.hutool.core.map.MapBuilder;
-import cn.hutool.core.map.MapUtil;
-import com.yomahub.liteflow.example.context.DataObject;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.LiteflowResponse;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
+import org.tenio.interstellar.context.DataObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController

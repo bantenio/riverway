@@ -22,17 +22,17 @@ public class SPELRefValueExpressionRunner implements RefValueExpressionRunner {
         Integer hash = strExpression.hashCode();
         Expression expression;
         if (spelExpressionMap.containsKey(hash)) {
+            expression = spelExpressionMap.get(hash);
+        } else {
             expression = parser.parseExpression(strExpression);
             spelExpressionMap.put(hash, expression);
-        } else {
-            expression = spelExpressionMap.get(hash);
         }
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
         evaluationContext.addPropertyAccessor(new MapAccessor());
         evaluationContext.addPropertyAccessor(new DataObjectAccessor());
         evaluationContext.setVariables(slot.getContextBeanMap());
         evaluationContext.setVariables(slot.variables());
-        return expression.getValue();
+        return expression.getValue(evaluationContext);
     }
 
     public static void registerSelf() {

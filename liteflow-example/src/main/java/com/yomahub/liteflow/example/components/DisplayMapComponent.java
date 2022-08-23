@@ -13,6 +13,6 @@ public class DisplayMapComponent extends NodeComponent {
     @Override
     public void process(Node node) throws Exception {
         Slot slot = getSlot();
-        log.info("DisplayMapComponent newMap property: {}", slot.getProperty("newMap"));
+        log.info("DisplayMapComponent newParam param: {}", slot.getParameter("newParam"));
     }
 }

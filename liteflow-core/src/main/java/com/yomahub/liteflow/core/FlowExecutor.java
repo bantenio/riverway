@@ -8,7 +8,6 @@
  */
 package com.yomahub.liteflow.core;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -30,7 +29,6 @@ import com.yomahub.liteflow.slot.Slot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
