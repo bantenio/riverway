@@ -1,5 +1,6 @@
 package com.yomahub.liteflow.flow.element.condition;
 
+import com.yomahub.liteflow.components.ValueHandler;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.slot.DataBus;
@@ -13,6 +14,8 @@ public class NodeCondition extends Condition {
 
     private final Map<String, Object> properties = new HashMap<>();
 
+    private final Map<String, Object> swaps = new HashMap<>();
+
     public NodeCondition(Node node) {
         this.node = node;
     }
@@ -21,10 +24,27 @@ public class NodeCondition extends Condition {
     public void execute(Integer slotIndex) throws Exception {
         Slot slot = DataBus.getSlot(slotIndex);
         slot.putProperties(properties);
+        processSwap(node, slot);
         try {
             node.execute(slotIndex);
         } finally {
             slot.clearProperties();
+        }
+    }
+
+    public void processSwap(Node node, Slot slot) throws Exception {
+        if (swaps.isEmpty()) {
+            return;
+        }
+
+        for (Map.Entry<String, Object> entry : swaps.entrySet()) {
+            Object valRef = entry.getValue();
+            if (valRef instanceof String) {
+                slot._putInParameter(entry.getKey(), slot.getVariable(valRef.toString()));
+            } else if (valRef instanceof ValueHandler) {
+                Object val = ((ValueHandler) valRef).getValue(slot, node);
+                slot._putInParameter(entry.getKey(), val);
+            }
         }
     }
 
@@ -35,5 +55,9 @@ public class NodeCondition extends Condition {
 
     public void addProperty(String key, Object value) {
         properties.put(key, value);
+    }
+
+    public void addSwapHandler(String key, Object valSwap) {
+        swaps.put(key, valSwap);
     }
 }

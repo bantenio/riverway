@@ -3,7 +3,6 @@ package com.yomahub.liteflow.example.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yomahub.liteflow.builder.FlowConfigurationBuilder;
 import com.yomahub.liteflow.components.SPELRefValueExpressionRunner;
-import com.yomahub.liteflow.components.VariableSwapParameterComponent;
 import com.yomahub.liteflow.core.NodeComponent;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.ResourceELFlowParser;
@@ -22,10 +21,6 @@ import java.util.Map;
 @Configuration
 public class LiteFlowConfiguration {
 
-    @Bean
-    public VariableSwapParameterComponent varToSwap() {
-        return new VariableSwapParameterComponent();
-    }
     @Bean
     public ObjectMapper objectMapper() {
         return ObjectMapperFactory.objectMapper();

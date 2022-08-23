@@ -8,6 +8,7 @@ import com.yomahub.liteflow.builder.el.operator.*;
 import com.yomahub.liteflow.builder.el.operator.ext.CreateMapOperator;
 import com.yomahub.liteflow.builder.el.operator.ext.PutInMapOperator;
 import com.yomahub.liteflow.builder.el.operator.ext.RefOperator;
+import com.yomahub.liteflow.builder.el.operator.ext.SwapOperator;
 import com.yomahub.liteflow.exception.ELParseException;
 import com.yomahub.liteflow.exception.FlowSystemException;
 import com.yomahub.liteflow.flow.FlowConfiguration;
@@ -79,6 +80,7 @@ public class LiteFlowChainELBuilder {
         expressRunner.addFunctionAndClassMethod("property", NodeCondition.class, new NodePropertyOperator());
         expressRunner.addFunctionAndClassMethod("ignoreError", Object.class, new IgnoreErrorOperator());
         expressRunner.addFunctionAndClassMethod("threadPool", Object.class, new ThreadPoolOperator());
+        expressRunner.addFunctionAndClassMethod("swap", NodeCondition.class, new SwapOperator());
         expressRunner.addFunction("node", new NodeOperator(flowConfiguration));
         expressRunner.addFunction("ref", new RefOperator());
         expressRunner.addFunction("map", new CreateMapOperator());

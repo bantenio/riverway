@@ -1,11 +1,8 @@
 <flow>
     <nodes>
-        <node id="loanNodeComponent" class="com.yomahub.liteflow.example.components.LoanNodeComponent" name="a"/>
-        <node id="sendLoanToBigDataNodeComponent"
-              class="com.yomahub.liteflow.example.components.SendLoanToBigDataNodeComponent" name="b"/>
-        <node id="displayMapComponent"
-              class="com.yomahub.liteflow.example.components.DisplayMapComponent" name="c"/>
-        <node id="varToParam" class="com.yomahub.liteflow.components.VariableSwapParameterComponent" name="d"/>
+        <node id="loanNodeComponent" name="a"/>
+        <node id="sendLoanToBigDataNodeComponent" name="b"/>
+        <node id="displayMapComponent" name="c"/>
     </nodes>
 
     <chain name="chain1">
@@ -13,8 +10,7 @@
         loanNodeComponent,
         node(sendLoanToBigDataNodeComponent).property("param1", 15).property("param2", "hello world"),
         sendLoanToBigDataNodeComponent,
-        node(varToParam).property("varToParam", map().add("newParam", ref("#body.d", "spel"))),
-        displayMapComponent
+        node(displayMapComponent).swap("newParam", ref("#body.d", "spel"))
         );
     </chain>
 </flow>

@@ -14,6 +14,6 @@ public class SendLoanToBigDataNodeComponent extends NodeComponent {
     public void process(Node node) throws Exception {
         Slot slot = getSlot();
         log.info("SendLoanToBigDataNodeComponent.process variable result: {}", slot.getVariable("result"));
-        log.info("SendLoanToBigDataNodeComponent.process param1: {}, param2: {}", slot.getParameter("param1"), slot.getParameter("param2"));
+        log.info("SendLoanToBigDataNodeComponent.process param1: {}, param2: {}", slot.getProperty("param1"), slot.getProperty("param2"));
     }
 }

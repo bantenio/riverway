@@ -8,7 +8,6 @@
  */
 package com.yomahub.liteflow.slot;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.yomahub.liteflow.exception.NoSuchContextBeanException;
 import com.yomahub.liteflow.exception.NullParamException;
@@ -316,6 +315,11 @@ public class Slot {
         variableMap.clear();
     }
 
+    public Map<String, Object> _putInParameter(String key, Object value) {
+        this.inParameter.put(key, value);
+        return inParameter;
+    }
+
     public Map<String, Object> putParameter(String key, Object value) {
         this.outParameter.put(key, value);
         return this.outParameter;
@@ -337,7 +341,7 @@ public class Slot {
         return inParameter.containsKey(key);
     }
 
-    public void swapParameter() {
+    public void _swapParameter() {
         if (!inParameter.isEmpty()) {
             inParameter.clear();
         }
