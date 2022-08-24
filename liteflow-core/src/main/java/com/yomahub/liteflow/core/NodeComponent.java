@@ -12,6 +12,7 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.yomahub.liteflow.core.ext.NodeProcessor;
 import com.yomahub.liteflow.enums.CmpStepTypeEnum;
 import com.yomahub.liteflow.enums.NodeTypeEnum;
 import com.yomahub.liteflow.flow.element.Node;
@@ -28,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Bryan.Zhang
  */
-public abstract class NodeComponent {
+public abstract class NodeComponent implements NodeProcessor {
     private static final Logger log = LoggerFactory.getLogger(NodeComponent.class);
 
     private String nodeId;
@@ -121,10 +122,11 @@ public abstract class NodeComponent {
         }
     }
 
-    public <T> void beforeProcess(String nodeId, Slot slot) {
+    public void process(Node node, Slot slot) throws Exception {
     }
 
-    public abstract void process(Node node) throws Exception;
+    public <T> void beforeProcess(String nodeId, Slot slot) {
+    }
 
     public void onSuccess(Node node) throws Exception {
         //如果需要在成功后回调某一个方法，请覆盖这个方法
@@ -179,6 +181,7 @@ public abstract class NodeComponent {
         this.slotIndexTL.remove();
     }
 
+    @Override
     public Slot getSlot() {
         return DataBus.getSlot(this.slotIndexTL.get());
     }
