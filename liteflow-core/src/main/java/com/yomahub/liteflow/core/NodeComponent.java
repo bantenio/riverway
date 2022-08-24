@@ -66,14 +66,17 @@ public abstract class NodeComponent {
     public NodeComponent() {
     }
 
-    public final void execute(Node node, boolean isRetry) throws Exception {
+    public void execute(Node node, boolean isRetry) throws Exception {
+        executeInner(node, isRetry);
+    }
+
+    protected void executeInner(Node node, boolean isRetry) throws Exception {
         Slot slot = this.getSlot();
 
         //在元数据里加入step信息
         CmpStep cmpStep = new CmpStep(slot.getChainName(), nodeId, name, CmpStepTypeEnum.SINGLE);
         cmpStep.setTag(tagTL.get());
         slot.addStep(cmpStep);
-
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
