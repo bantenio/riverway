@@ -60,4 +60,8 @@ public class NodeCondition extends Condition {
     public void addSwapHandler(String key, Object valSwap) {
         swaps.put(key, valSwap);
     }
+
+    public Node getNode() {
+        return this.node;
+    }
 }

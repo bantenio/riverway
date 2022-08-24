@@ -66,7 +66,7 @@ public abstract class NodeComponent {
     public NodeComponent() {
     }
 
-    public void execute(Node node, boolean isRetry) throws Exception {
+    public final void execute(Node node, boolean isRetry) throws Exception {
         Slot slot = this.getSlot();
 
         //在元数据里加入step信息

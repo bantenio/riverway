@@ -1,0 +1,30 @@
+<flow>
+    <nodes>
+        <node id="preProcessNodeComponent"/>
+        <node id="channelSwitchComponent"/>
+        <node id="sendVerifyCodeSmsRequestComponent"/>
+    </nodes>
+
+    <chain name="send_verify_code">
+        // 整个流程模拟不同channel发送不同长度验证码短信的示例
+        THEN(
+            // 请求前置处理
+            preProcessNodeComponent,
+            // 判断channel 是2，流程将走len4分支（验证码长度为4）；如果是21，流程走len6分支（验证码长度为6）；
+            SWITCH(node(channelSwitchComponent)
+                        .property("channel.logic.mapping", map().add("2", "len4").add("21", "len6"))).to(
+                node(sendVerifyCodeSmsRequestComponent)
+                    // 从请求体中获取mobile值，放置组件的参数数据区
+                    .swap("mobile", ref("#body.mobile", "spel"))
+                    // 配置该步骤发送验证码长度为4
+                    .property("sms.len", 4)
+                    // 为SWITCH设置分支逻辑名
+                    .id("len4"),
+                node(sendVerifyCodeSmsRequestComponent)
+                    .swap("mobile", ref("#body.mobile", "spel"))
+                    .property("sms.len", 6)
+                    .id("len6")
+            )
+        );
+    </chain>
+</flow>
