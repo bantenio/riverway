@@ -8,6 +8,7 @@
 package com.yomahub.liteflow.core;
 
 import com.yomahub.liteflow.flow.element.Node;
+import com.yomahub.liteflow.slot.Slot;
 
 /**
  * 条件路由节点抽象类
@@ -16,12 +17,12 @@ import com.yomahub.liteflow.flow.element.Node;
 public abstract class NodeSwitchComponent extends NodeComponent {
 
 	@Override
-	public void process(Node node) throws Exception {
-		String nodeId = this.processSwitch(node);
+	public void process(Node node, Slot slot) throws Exception {
+		String nodeId = this.processSwitch(node, slot);
 		this.getSlot().setSwitchResult(this.getClass().getName(), nodeId);
 	}
 
 	//用以返回路由节点的beanId
-	public abstract String processSwitch(Node node) throws Exception;
+	public abstract String processSwitch(Node node, Slot slot) throws Exception;
 
 }

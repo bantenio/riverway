@@ -17,8 +17,7 @@ public abstract class OutResultComponent extends NodeComponent {
     public static final String DEFAULT_SCOPE = SlotScope.SCOPE_PARAMETER;
 
     @Override
-    public void process(Node node) throws Exception {
-        Slot slot = getSlot();
+    public void process(Node node, Slot slot) throws Exception {
         Object result = innerProcess(node);
         String resultName = DEFAULT_RESULT_NAME;
         if (slot.hasProperty(PROPERTY_NAME_RESULT_NAME)) {
@@ -39,7 +38,7 @@ public abstract class OutResultComponent extends NodeComponent {
         } else if (StrUtil.equals(scope, SlotScope.SCOPE_VARIABLE)) {
             slot.putVariable(resultName, result);
         } else if (StrUtil.equals(scope, SlotScope.SCOPE_RESPONSE)) {
-            slot.putVariable(resultName, result);
+            slot.setResponseData(result);
         }
     }
 

@@ -10,9 +10,8 @@ import java.util.Map;
 @Component
 public class ChannelSwitchComponent extends NodeSwitchComponent {
     @Override
-    public String processSwitch(Node node) throws Exception {
+    public String processSwitch(Node node, Slot slot) throws Exception {
         String channel = getCurrentRequestChannel();
-        Slot slot = getSlot();
         Map<String, String> channelLogicMapping = slot.getPropertyByType("channel.logic.mapping");
         if(!channelLogicMapping.containsKey(channel)) {
             throw new RuntimeException("未知的channel请求");

@@ -2,6 +2,7 @@ package com.yomahub.liteflow.script;
 
 import com.yomahub.liteflow.core.NodeSwitchComponent;
 import com.yomahub.liteflow.flow.element.Node;
+import com.yomahub.liteflow.slot.Slot;
 
 /**
  * 脚本条件节点
@@ -11,7 +12,7 @@ import com.yomahub.liteflow.flow.element.Node;
 public class ScriptSwitchComponent extends NodeSwitchComponent {
 
     @Override
-    public String processSwitch(Node node) throws Exception {
+    public String processSwitch(Node node, Slot slot) throws Exception {
         return (String)ScriptExecutorFactory.loadInstance().getScriptExecutor().execute(this.getCurrChainName(), getNodeId(), getSlotIndex());
     }
 
