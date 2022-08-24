@@ -18,6 +18,7 @@ import com.yomahub.liteflow.flow.element.condition.Condition;
 import com.yomahub.liteflow.flow.element.condition.FinallyCondition;
 import com.yomahub.liteflow.flow.element.condition.NodeCondition;
 import com.yomahub.liteflow.flow.element.condition.PreCondition;
+import com.yomahub.liteflow.slot.SlotScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,6 +117,10 @@ public class LiteFlowChainELBuilder {
 
             //往上下文里放入所有的node，使得el表达式可以直接引用到nodeId
             flowConfiguration.getNodeMap().keySet().forEach(nodeId -> context.put(nodeId, flowConfiguration.getNode(nodeId)));
+
+            context.put("SCOPE_VARIABLE", SlotScope.SCOPE_VARIABLE);
+            context.put("SCOPE_PARAMETER", SlotScope.SCOPE_PARAMETER);
+            context.put("SCOPE_RESPONSE", SlotScope.SCOPE_RESPONSE);
 
             //解析el成为一个Condition
             //为什么这里只是一个Condition，而不是一个List<Condition>呢

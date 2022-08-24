@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.core.NodeComponent;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.slot.Slot;
+import com.yomahub.liteflow.slot.SlotScope;
 
 public abstract class OutResultComponent extends NodeComponent {
 
@@ -13,7 +14,7 @@ public abstract class OutResultComponent extends NodeComponent {
 
     public static final String PROPERTY_NAME_SCOPE = "scope";
 
-    public static final String DEFAULT_SCOPE = "param";
+    public static final String DEFAULT_SCOPE = SlotScope.SCOPE_PARAMETER;
 
     @Override
     public void process(Node node) throws Exception {
@@ -35,7 +36,9 @@ public abstract class OutResultComponent extends NodeComponent {
         }
         if (StrUtil.equals(scope, DEFAULT_SCOPE)) {
             slot.putParameter(resultName, result);
-        } else {
+        } else if (StrUtil.equals(scope, SlotScope.SCOPE_VARIABLE)) {
+            slot.putVariable(resultName, result);
+        } else if (StrUtil.equals(scope, SlotScope.SCOPE_RESPONSE)) {
             slot.putVariable(resultName, result);
         }
     }
