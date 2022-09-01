@@ -8,8 +8,6 @@ import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.flow.entity.CmpStep;
 import com.yomahub.liteflow.flow.executor.NodeExecutor;
 import com.yomahub.liteflow.plugins.Interceptor;
-import com.yomahub.liteflow.plugins.NodeComponentExecuteInterceptor;
-import com.yomahub.liteflow.plugins.NodeComponentInterceptorContext;
 import com.yomahub.liteflow.plugins.PluginManager;
 import com.yomahub.liteflow.slot.Slot;
 import org.slf4j.Logger;
@@ -33,7 +31,7 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
     }
 
     @Override
-    public void execute(Node node, boolean isRetry) throws Exception {
+    public void execute(Node node, boolean isRetry) throws Throwable {
         Slot slot = delegate.getSlot();
         String chainName = slot.getChainName();
         beforeExecuteForInterceptor(chainName, node, delegate, slot, flowConfiguration, isRetry);
@@ -61,11 +59,12 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
         if (pluginManager != null && !pluginManager.isEmpty()) {
             Map<Interceptor, NodeComponentInterceptorContext> interceptorContextMap = new HashMap<>();
             interceptorContextThreadLocal.set(interceptorContextMap);
-            Collection<NodeComponentExecuteInterceptor> interceptors = pluginManager.getNodeComponentRegisters();
+            Collection<NodeComponentExecuteInterceptor> interceptors = pluginManager
+                    .getPluginManage(NodeComponentExecutorPluginManage.PLUGIN_MANAGE_NAME)
+                    .getRegisters();
             try {
                 for (NodeComponentExecuteInterceptor interceptor : interceptors) {
-                    NodeComponentInterceptorContext interceptorContext =
-                            (NodeComponentInterceptorContext) new NodeComponentInterceptorContext()
+                    NodeComponentInterceptorContext interceptorContext = new NodeComponentInterceptorContext()
                                     .setNode(node)
                                     .setRetry(isRetry)
                                     .setNodeComponent(delegate)
@@ -92,7 +91,9 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
         if (pluginManager != null && !pluginManager.isEmpty()) {
             Map<Interceptor, NodeComponentInterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
-            Collection<NodeComponentExecuteInterceptor> interceptors = pluginManager.getNodeComponentRegisters();
+            Collection<NodeComponentExecuteInterceptor> interceptors = pluginManager
+                    .getPluginManage(NodeComponentExecutorPluginManage.PLUGIN_MANAGE_NAME)
+                    .getRegisters();
             try {
                 for (NodeComponentExecuteInterceptor interceptor : interceptors) {
                     NodeComponentInterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
@@ -114,7 +115,9 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
         if (pluginManager != null && !pluginManager.isEmpty()) {
             Map<Interceptor, NodeComponentInterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
-            Collection<NodeComponentExecuteInterceptor> interceptors = pluginManager.getNodeComponentRegisters();
+            Collection<NodeComponentExecuteInterceptor> interceptors = pluginManager
+                    .getPluginManage(NodeComponentExecutorPluginManage.PLUGIN_MANAGE_NAME)
+                    .getRegisters();
             try {
                 for (NodeComponentExecuteInterceptor interceptor : interceptors) {
                     NodeComponentInterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
@@ -135,7 +138,9 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
         if (pluginManager != null && !pluginManager.isEmpty()) {
             Map<Interceptor, NodeComponentInterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
-            Collection<NodeComponentExecuteInterceptor> interceptors = pluginManager.getNodeComponentRegisters();
+            Collection<NodeComponentExecuteInterceptor> interceptors = pluginManager
+                    .getPluginManage(NodeComponentExecutorPluginManage.PLUGIN_MANAGE_NAME)
+                    .getRegisters();
             try {
                 for (NodeComponentExecuteInterceptor interceptor : interceptors) {
                     NodeComponentInterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
@@ -151,7 +156,7 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
     }
 
     @Override
-    public void process(Node node) throws Exception {
+    public void process(Node node) throws Throwable {
         delegate.process(node);
     }
 
@@ -161,12 +166,12 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
     }
 
     @Override
-    public void onSuccess(Node node) throws Exception {
+    public void onSuccess(Node node) throws Throwable {
         delegate.onSuccess(node);
     }
 
     @Override
-    public void onError(Node node) throws Exception {
+    public void onError(Node node) throws Throwable {
         delegate.onError(node);
     }
 

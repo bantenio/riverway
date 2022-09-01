@@ -33,7 +33,7 @@ public class ParallelSupplier implements Supplier<WhenFutureObj> {
             executableItem.setCurrChainName(currChainName);
             executableItem.execute(slotIndex);
             return WhenFutureObj.success(executableItem.getExecuteName());
-        } catch (Exception e){
+        } catch (Throwable e){
             return WhenFutureObj.fail(executableItem.getExecuteName(), e);
         }
     }

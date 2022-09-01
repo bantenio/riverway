@@ -178,20 +178,4 @@ public class FlowConfiguration {
         return this;
     }
 
-    public boolean containsInterceptor(String name) {
-        return pluginManager.contains(name);
-    }
-
-    public void register(String name, Interceptor interceptor) {
-        pluginManager.register(name, interceptor);
-    }
-
-    public Interceptor get(String name) {
-        return pluginManager.get(name);
-    }
-
-    public void unregister(String name) {
-        pluginManager.unregister(name);
-    }
-
 }

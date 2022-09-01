@@ -67,11 +67,11 @@ public abstract class NodeComponent implements NodeProcessor {
     public NodeComponent() {
     }
 
-    public void execute(Node node, boolean isRetry) throws Exception {
+    public void execute(Node node, boolean isRetry) throws Throwable {
         executeInner(node, isRetry);
     }
 
-    protected void executeInner(Node node, boolean isRetry) throws Exception {
+    protected void executeInner(Node node, boolean isRetry) throws Throwable {
         Slot slot = this.getSlot();
 
         //在元数据里加入step信息
@@ -122,17 +122,17 @@ public abstract class NodeComponent implements NodeProcessor {
         }
     }
 
-    public void process(Node node, Slot slot) throws Exception {
+    public void process(Node node, Slot slot) throws Throwable {
     }
 
     public <T> void beforeProcess(String nodeId, Slot slot) {
     }
 
-    public void onSuccess(Node node) throws Exception {
+    public void onSuccess(Node node) throws Throwable {
         //如果需要在成功后回调某一个方法，请覆盖这个方法
     }
 
-    public void onError(Node node) throws Exception {
+    public void onError(Node node) throws Throwable {
         //如果需要在抛错后回调某一段逻辑，请覆盖这个方法
     }
 

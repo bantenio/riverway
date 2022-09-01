@@ -1,10 +1,12 @@
-package com.yomahub.liteflow.plugins;
+package com.yomahub.liteflow.plugins.support;
 
 import com.yomahub.liteflow.core.NodeComponent;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.flow.entity.CmpStep;
 
-public class NodeComponentInterceptorContext extends InterceptorContext {
+public class NodeComponentInterceptorContext extends ChainInterceptorContext<NodeComponentInterceptorContext> {
+
+
     private Node node;
 
     private NodeComponent nodeComponent;

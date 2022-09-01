@@ -18,7 +18,7 @@ import com.yomahub.liteflow.flow.element.Executable;
 public class PreCondition extends Condition {
 
 	@Override
-	public void execute(Integer slotIndex) throws Exception {
+	public void execute(Integer slotIndex) throws Throwable {
 		for(Executable executableItem : this.getExecutableList()){
 			executableItem.setCurrChainName(this.getCurrChainName());
 			executableItem.execute(slotIndex);

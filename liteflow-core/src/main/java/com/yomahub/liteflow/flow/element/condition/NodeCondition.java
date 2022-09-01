@@ -21,7 +21,7 @@ public class NodeCondition extends Condition {
     }
 
     @Override
-    public void execute(Integer slotIndex) throws Exception {
+    public void execute(Integer slotIndex) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
         slot.putProperties(properties);
         processSwap(node, slot);
@@ -32,7 +32,7 @@ public class NodeCondition extends Condition {
         }
     }
 
-    public void processSwap(Node node, Slot slot) throws Exception {
+    public void processSwap(Node node, Slot slot) throws Throwable {
         if (swaps.isEmpty()) {
             return;
         }

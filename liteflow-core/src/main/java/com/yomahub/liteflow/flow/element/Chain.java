@@ -70,7 +70,7 @@ public class Chain implements Executable {
 
     //执行chain的主方法
     @Override
-    public void execute(Integer slotIndex) throws Exception {
+    public void execute(Integer slotIndex) throws Throwable {
         if (CollUtil.isEmpty(conditionList)) {
             throw new FlowSystemException("no conditionList in this chain[" + chainName + "]");
         }
@@ -86,7 +86,7 @@ public class Chain implements Executable {
             //这里单独catch ChainEndException是因为ChainEndException是用户自己setIsEnd抛出的异常
             //是属于正常逻辑，所以会在FlowExecutor中判断。这里不作为异常处理
             throw e;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             //这里事先取到exception set到slot里，为了方便finally取到exception
             slot.setException(e);
             this.executeException(slotIndex, e);
@@ -97,7 +97,7 @@ public class Chain implements Executable {
         }
     }
 
-    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName) throws Exception {
+    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName) throws Throwable {
         //执行主体Condition
         for (Condition condition : conditionList) {
             condition.setCurrChainName(chainName);
@@ -106,20 +106,20 @@ public class Chain implements Executable {
     }
 
     // 执行pre节点
-    protected void executePre(Integer slotIndex) throws Exception {
+    protected void executePre(Integer slotIndex) throws Throwable {
         for (Condition condition : this.preConditionList) {
             condition.execute(slotIndex);
         }
     }
 
-    protected void executeException(Integer slotIndex, Exception e) throws Exception {
+    protected void executeException(Integer slotIndex, Throwable e) throws Throwable {
     }
 
-    protected void executeAfter(Integer slotIndex) throws Exception {
+    protected void executeAfter(Integer slotIndex) throws Throwable {
     }
 
     //执行后置
-    protected void executeFinally(Integer slotIndex) throws Exception {
+    protected void executeFinally(Integer slotIndex) throws Throwable {
         for (Condition condition : this.finallyConditionList) {
             condition.execute(slotIndex);
         }

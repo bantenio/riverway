@@ -5,10 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.yomahub.liteflow.builder.el.operator.*;
-import com.yomahub.liteflow.builder.el.operator.ext.CreateMapOperator;
-import com.yomahub.liteflow.builder.el.operator.ext.PutInMapOperator;
-import com.yomahub.liteflow.builder.el.operator.ext.RefOperator;
-import com.yomahub.liteflow.builder.el.operator.ext.SwapOperator;
+import com.yomahub.liteflow.builder.el.operator.ext.*;
 import com.yomahub.liteflow.exception.ELParseException;
 import com.yomahub.liteflow.exception.FlowSystemException;
 import com.yomahub.liteflow.flow.FlowConfiguration;
@@ -18,11 +15,17 @@ import com.yomahub.liteflow.flow.element.condition.Condition;
 import com.yomahub.liteflow.flow.element.condition.FinallyCondition;
 import com.yomahub.liteflow.flow.element.condition.NodeCondition;
 import com.yomahub.liteflow.flow.element.condition.PreCondition;
+import com.yomahub.liteflow.plugins.SubPluginManage;
+import com.yomahub.liteflow.plugins.el.AddFuncOrOperationInterceptorContext;
+import com.yomahub.liteflow.plugins.el.AddImportsInterceptorContext;
+import com.yomahub.liteflow.plugins.el.ChainBuilderInterceptor;
+import com.yomahub.liteflow.plugins.el.ChainBuilderSubPluginManage;
 import com.yomahub.liteflow.slot.SlotScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -85,8 +88,18 @@ public class LiteFlowChainELBuilder {
         expressRunner.addFunction("node", new NodeOperator(flowConfiguration));
         expressRunner.addFunction("ref", new RefOperator());
         expressRunner.addFunction("map", new CreateMapOperator());
-        expressRunner.addFunctionAndClassMethod("add", Object.class, new PutInMapOperator());
+        expressRunner.addFunction("throw", new ThrowOperator());
+        expressRunner.addFunctionAndClassMethod("add", Map.class, new PutInMapOperator());
 
+        SubPluginManage<?> subPluginManage = flowConfiguration.getPluginManager().getPluginManage(ChainBuilderSubPluginManage.PLUGIN_MANAGE_NAME);
+        if (subPluginManage == null || subPluginManage.isEmpty()) {
+            return;
+        }
+        AddFuncOrOperationInterceptorContext interceptorContext = new AddFuncOrOperationInterceptorContext(expressRunner);
+        ChainBuilderSubPluginManage chainBuilderSubPluginManage = (ChainBuilderSubPluginManage) subPluginManage;
+        for (ChainBuilderInterceptor register : chainBuilderSubPluginManage.getRegisters()) {
+            register.addFuncOrOperation(interceptorContext);
+        }
     }
 
     //在parser中chain的build是2段式的，因为涉及到依赖问题，以前是递归parser
@@ -121,6 +134,19 @@ public class LiteFlowChainELBuilder {
             context.put("SCOPE_VARIABLE", SlotScope.SCOPE_VARIABLE);
             context.put("SCOPE_PARAMETER", SlotScope.SCOPE_PARAMETER);
             context.put("SCOPE_RESPONSE", SlotScope.SCOPE_RESPONSE);
+
+            SubPluginManage<?> subPluginManage = flowConfiguration.getPluginManager().getPluginManage(ChainBuilderSubPluginManage.PLUGIN_MANAGE_NAME);
+            if (subPluginManage != null && !subPluginManage.isEmpty()) {
+                AddImportsInterceptorContext interceptorContext = new AddImportsInterceptorContext(context);
+                ChainBuilderSubPluginManage chainBuilderSubPluginManage = (ChainBuilderSubPluginManage) subPluginManage;
+                for (ChainBuilderInterceptor register : chainBuilderSubPluginManage.getRegisters()) {
+                    register.addImports(interceptorContext);
+                }
+                Collection<String> imports = interceptorContext.getImports();
+                if (!imports.isEmpty()) {
+                    elStr = CollUtil.join(imports, "\n") + elStr;
+                }
+            }
 
             //解析el成为一个Condition
             //为什么这里只是一个Condition，而不是一个List<Condition>呢

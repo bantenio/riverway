@@ -17,7 +17,7 @@ public class WhenFutureObj {
 
     private String executorName;
 
-    private Exception ex;
+    private Throwable ex;
 
     public static WhenFutureObj success(String executorName){
         WhenFutureObj result = new WhenFutureObj();
@@ -27,7 +27,7 @@ public class WhenFutureObj {
         return result;
     }
 
-    public static WhenFutureObj fail(String executorName, Exception ex){
+    public static WhenFutureObj fail(String executorName, Throwable ex){
         WhenFutureObj result = new WhenFutureObj();
         result.setSuccess(false);
         result.setTimeout(false);
@@ -65,11 +65,11 @@ public class WhenFutureObj {
         this.executorName = executorName;
     }
 
-    public Exception getEx() {
+    public Throwable getEx() {
         return ex;
     }
 
-    public void setEx(Exception ex) {
+    public void setEx(Throwable ex) {
         this.ex = ex;
     }
 

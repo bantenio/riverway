@@ -5,10 +5,7 @@ import com.yomahub.liteflow.exception.ChainEndException;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Chain;
 import com.yomahub.liteflow.flow.element.condition.Condition;
-import com.yomahub.liteflow.plugins.ChainExecuteInterceptor;
-import com.yomahub.liteflow.plugins.Interceptor;
-import com.yomahub.liteflow.plugins.InterceptorContext;
-import com.yomahub.liteflow.plugins.PluginManager;
+import com.yomahub.liteflow.plugins.*;
 import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
 import org.slf4j.Logger;
@@ -26,7 +23,7 @@ public class InterceptorChainProxy extends Chain {
 
     private final FlowConfiguration flowConfiguration;
 
-    private final ThreadLocal<Map<Interceptor, InterceptorContext>> interceptorContextThreadLocal = new ThreadLocal<>();
+    private final ThreadLocal<Map<Interceptor, ChainInterceptorContext>> interceptorContextThreadLocal = new ThreadLocal<>();
 
     public InterceptorChainProxy(Chain delegate, FlowConfiguration flowConfiguration) {
         this.delegate = delegate;
@@ -34,7 +31,7 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void execute(Integer slotIndex) throws Exception {
+    public void execute(Integer slotIndex) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
         beforeExecuteForInterceptor(delegate, slot, flowConfiguration);
         try {
@@ -55,12 +52,14 @@ public class InterceptorChainProxy extends Chain {
                                             FlowConfiguration flowConfiguration) throws Exception {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
         if (pluginManager != null && !pluginManager.isEmpty()) {
-            Map<Interceptor, InterceptorContext> interceptorContextMap = new HashMap<>();
+            Map<Interceptor, ChainInterceptorContext> interceptorContextMap = new HashMap<>();
             interceptorContextThreadLocal.set(interceptorContextMap);
-            Collection<ChainExecuteInterceptor> interceptors = pluginManager.getChainRegisters();
+            Collection<ChainExecuteInterceptor> interceptors = pluginManager
+                    .getPluginManage(ChainExecutorPluginManage.PLUGIN_MANAGE_NAME)
+                    .getRegisters();
             try {
                 for (ChainExecuteInterceptor interceptor : interceptors) {
-                    InterceptorContext interceptorContext = new InterceptorContext()
+                    ChainInterceptorContext interceptorContext = new ChainInterceptorContext()
                             .setChainName(delegate.getChainName()).setFinally(false).setHasError(false);
                     interceptorContext.setContext(interceptor.initContext(interceptorContext));
                     interceptorContextMap.put(interceptor, interceptorContext);
@@ -78,11 +77,13 @@ public class InterceptorChainProxy extends Chain {
                                              Exception e) throws Exception {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
         if (pluginManager != null && !pluginManager.isEmpty()) {
-            Map<Interceptor, InterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
-            Collection<ChainExecuteInterceptor> interceptors = pluginManager.getChainRegisters();
+            Map<Interceptor, ChainInterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
+            Collection<ChainExecuteInterceptor> interceptors = pluginManager
+                    .getPluginManage(ChainExecutorPluginManage.PLUGIN_MANAGE_NAME)
+                    .getRegisters();
             try {
                 for (ChainExecuteInterceptor interceptor : interceptors) {
-                    InterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
+                    ChainInterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
                     interceptorContext.setError(e).setHasError(true);
                     interceptor.onError(interceptorContext);
                 }
@@ -97,11 +98,13 @@ public class InterceptorChainProxy extends Chain {
                                            FlowConfiguration flowConfiguration) throws Exception {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
         if (pluginManager != null && !pluginManager.isEmpty()) {
-            Map<Interceptor, InterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
-            Collection<ChainExecuteInterceptor> interceptors = pluginManager.getChainRegisters();
+            Map<Interceptor, ChainInterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
+            Collection<ChainExecuteInterceptor> interceptors = pluginManager
+                    .getPluginManage(ChainExecutorPluginManage.PLUGIN_MANAGE_NAME)
+                    .getRegisters();
             try {
                 for (ChainExecuteInterceptor interceptor : interceptors) {
-                    InterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
+                    ChainInterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
                     interceptorContext.setHasError(false).setError(null);
                     interceptor.onSuccess(interceptorContext);
                 }
@@ -116,11 +119,13 @@ public class InterceptorChainProxy extends Chain {
                                            FlowConfiguration flowConfiguration) throws Exception {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
         if (pluginManager != null && !pluginManager.isEmpty()) {
-            Map<Interceptor, InterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
-            Collection<ChainExecuteInterceptor> interceptors = pluginManager.getChainRegisters();
+            Map<Interceptor, ChainInterceptorContext> interceptorContextMap = interceptorContextThreadLocal.get();
+            Collection<ChainExecuteInterceptor> interceptors = pluginManager
+                    .getPluginManage(ChainExecutorPluginManage.PLUGIN_MANAGE_NAME)
+                    .getRegisters();
             try {
                 for (ChainExecuteInterceptor interceptor : interceptors) {
-                    InterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
+                    ChainInterceptorContext interceptorContext = interceptorContextMap.get(interceptor);
                     interceptorContext.setFinally(true);
                     interceptor.onFinally(interceptorContext);
                 }
@@ -153,7 +158,7 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName) throws Exception {
+    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName) throws Throwable {
         delegate.executeConditions(slotIndex, conditionList, chainName);
     }
 
@@ -188,7 +193,7 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public boolean isAccess(Integer slotIndex) throws Exception {
+    public boolean isAccess(Integer slotIndex) throws Throwable {
         return delegate.isAccess(slotIndex);
     }
 

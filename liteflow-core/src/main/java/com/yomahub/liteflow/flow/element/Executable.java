@@ -10,9 +10,9 @@ import com.yomahub.liteflow.enums.ExecuteTypeEnum;
  */
 public interface Executable{
 
-    void execute(Integer slotIndex) throws Exception;
+    void execute(Integer slotIndex) throws Throwable;
 
-    default boolean isAccess(Integer slotIndex) throws Exception{
+    default boolean isAccess(Integer slotIndex) throws Throwable{
         return true;
     }
 

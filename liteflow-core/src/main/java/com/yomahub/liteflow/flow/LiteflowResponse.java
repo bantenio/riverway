@@ -23,7 +23,7 @@ public class LiteflowResponse implements Serializable {
 
     private String message;
     
-    private Exception cause;
+    private Throwable cause;
     
     private Slot slot;
     
@@ -66,7 +66,7 @@ public class LiteflowResponse implements Serializable {
         this.code = code;
     }
 
-    public Exception getCause() {
+    public Throwable getCause() {
         return cause;
     }
     

@@ -6,6 +6,7 @@ import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.plugins.PluginManager;
 import com.yomahub.liteflow.plugins.support.InterceptorNodeComponentProxy;
+import com.yomahub.liteflow.plugins.support.NodeComponentExecutorPluginManage;
 import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public abstract class NodeExecutor {
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     //执行器执行入口-若需要更大维度的执行方式可以重写该方法
-    public void execute(Node node, FlowConfiguration flowConfiguration) throws Exception {
+    public void execute(Node node, FlowConfiguration flowConfiguration) throws Throwable {
         NodeComponent instance = node.getInstance();
         int retryCount = node.getRetryCount();
         List<Class<? extends Exception>> forExceptions = Arrays.asList(instance.getRetryForExceptions());
@@ -33,7 +34,7 @@ public abstract class NodeExecutor {
                 // 先执行一次
                 if (i == 0) {
                     PluginManager pluginManager = flowConfiguration.getPluginManager();
-                    if (pluginManager != null && !pluginManager.nodeComponentIsEmpty()) {
+                    if (pluginManager != null && !pluginManager.getPluginManage(NodeComponentExecutorPluginManage.PLUGIN_MANAGE_NAME).isEmpty()) {
                         instance = new InterceptorNodeComponentProxy(instance, flowConfiguration);
                     }
                     instance.execute(node, false);
@@ -57,11 +58,11 @@ public abstract class NodeExecutor {
     }
 
     //执行重试逻辑 - 子类通过实现该方法进行重试逻辑的控制
-    protected void retry(NodeComponent instance, int currentRetryCount, Node node, FlowConfiguration flowConfiguration) throws Exception {
+    protected void retry(NodeComponent instance, int currentRetryCount, Node node, FlowConfiguration flowConfiguration) throws Throwable {
         Slot slot = DataBus.getSlot(instance.getSlotIndex());
         log.info("[{}]:component[{}] performs {} retry", slot.getRequestId(), instance.getDisplayName(), currentRetryCount + 1);
         PluginManager pluginManager = flowConfiguration.getPluginManager();
-        if (pluginManager != null && !pluginManager.nodeComponentIsEmpty()) {
+        if (pluginManager != null && !pluginManager.getPluginManage(NodeComponentExecutorPluginManage.PLUGIN_MANAGE_NAME).isEmpty()) {
             instance = new InterceptorNodeComponentProxy(instance, flowConfiguration);
         }
         //执行业务逻辑的主要入口

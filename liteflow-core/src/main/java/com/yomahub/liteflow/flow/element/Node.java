@@ -102,7 +102,7 @@ public class Node implements Executable, Cloneable {
     //node的执行主要逻辑
     //所有的可执行节点，其实最终都会落到node上来，因为chain中包含的也是node
     @Override
-    public void execute(Integer slotIndex) throws Exception {
+    public void execute(Integer slotIndex) throws Throwable {
         if (ObjectUtil.isNull(instance)) {
             throw new FlowSystemException("there is no instance for node id " + id);
         }
@@ -215,7 +215,7 @@ public class Node implements Executable, Cloneable {
         this.retryCount = retryCount;
     }
 
-    public void invoke(String chainId, Map<String, Object> params, Integer slotIndex) throws Exception {
+    public void invoke(String chainId, Map<String, Object> params, Integer slotIndex) throws Throwable {
         flowConfiguration.getFlowExecutor().invoke(chainId, slotIndex, params);
     }
 

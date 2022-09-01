@@ -61,7 +61,7 @@ public class FlowExecutor {
     }
 
     //隐式流程的调用方法
-    public void invoke(String chainId, Integer slotIndex, Map<String, Object> params) throws Exception {
+    public void invoke(String chainId, Integer slotIndex, Map<String, Object> params) throws Throwable {
         LiteflowResponse response = this.execute2Resp(chainId, params, slotIndex, true);
         if (!response.isSuccess()) {
             throw response.getCause();
@@ -73,7 +73,7 @@ public class FlowExecutor {
     }
 
     //单独调用某一个node
-    public void invoke(String nodeId, Integer slotIndex) throws Exception {
+    public void invoke(String nodeId, Integer slotIndex) throws Throwable {
         Node node = flowConfiguration.getNode(nodeId);
         node.execute(slotIndex);
     }
@@ -95,7 +95,7 @@ public class FlowExecutor {
     }
 
     //调用一个流程，返回默认的上下文，适用于简单的调用
-    public DefaultContext execute(String chainId, Map<String, Object> params) throws Exception {
+    public DefaultContext execute(String chainId, Map<String, Object> params) throws Throwable {
         LiteflowResponse response = this.execute2Resp(chainId, params);
         if (!response.isSuccess()) {
             throw response.getCause();
@@ -160,7 +160,7 @@ public class FlowExecutor {
                 String warnMsg = StrUtil.format("[{}]:chain[{}] execute end on slot[{}]", slot.getRequestId(), chain.getChainName(), slotIndex);
                 log.warn(warnMsg);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             if (ObjectUtil.isNotNull(chain)) {
                 String errMsg = StrUtil.format("[{}]:chain[{}] execute error on slot[{}]", slot.getRequestId(), chain.getChainName(), slotIndex);
                 log.error(errMsg, e);

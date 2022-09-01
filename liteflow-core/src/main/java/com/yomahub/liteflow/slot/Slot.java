@@ -235,11 +235,11 @@ public class Slot {
         return executeSteps;
     }
 
-    public Exception getException() {
-        return (Exception) this.metaDataMap.get(EXCEPTION);
+    public Throwable getException() {
+        return (Throwable) this.metaDataMap.get(EXCEPTION);
     }
 
-    public void setException(Exception e) {
+    public void setException(Throwable e) {
         putMetaDataMap(EXCEPTION, e);
     }
 

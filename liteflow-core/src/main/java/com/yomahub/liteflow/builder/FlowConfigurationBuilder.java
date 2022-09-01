@@ -7,7 +7,11 @@ import com.yomahub.liteflow.flow.NodeComponentManager;
 import com.yomahub.liteflow.flow.NodeManager;
 import com.yomahub.liteflow.flow.executor.NodeExecutor;
 import com.yomahub.liteflow.flow.id.RequestIdGenerator;
+import com.yomahub.liteflow.plugins.Interceptor;
 import com.yomahub.liteflow.plugins.PluginManager;
+import com.yomahub.liteflow.plugins.SubPluginManage;
+import com.yomahub.liteflow.plugins.support.ChainExecutorPluginManage;
+import com.yomahub.liteflow.plugins.support.NodeComponentExecutorPluginManage;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.thread.ExecutorServiceManager;
 
@@ -32,7 +36,9 @@ public class FlowConfigurationBuilder {
 
     private Map<String, NodeComponent> nodeComponentMap;
 
-    private PluginManager pluginManager;
+    private PluginManager pluginManager = new PluginManager()
+            .registerPluginManage(new ChainExecutorPluginManage())
+            .registerPluginManage(new NodeComponentExecutorPluginManage());
 
     public static FlowConfigurationBuilder create() {
         return new FlowConfigurationBuilder();
@@ -87,6 +93,11 @@ public class FlowConfigurationBuilder {
         return this;
     }
 
+    public FlowConfigurationBuilder addSubManage(SubPluginManage<? extends Interceptor> subPluginManage) {
+        this.pluginManager.registerPluginManage(subPluginManage);
+        return this;
+    }
+
     public FlowConfiguration build() {
         FlowConfiguration flowConfiguration = new FlowConfiguration(liteflowConfig);
         if (nodeExecutor != null) {
@@ -104,7 +115,7 @@ public class FlowConfigurationBuilder {
         if (nodeComponentManager != null) {
             flowConfiguration.setNodeComponentManager(nodeComponentManager);
         }
-        if(nodeComponentMap != null) {
+        if (nodeComponentMap != null) {
             flowConfiguration.getNodeComponentManager().addAllNodeComponent(nodeComponentMap);
         }
         if (executorServiceManager != null) {

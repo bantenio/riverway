@@ -26,7 +26,7 @@ public class SwitchCondition extends Condition{
     private final Map<String, Executable> targetMap = new HashMap<>();
 
     @Override
-    public void execute(Integer slotIndex) throws Exception {
+    public void execute(Integer slotIndex) throws Throwable {
         if (ListUtil.toList(NodeTypeEnum.SWITCH, NodeTypeEnum.SWITCH_SCRIPT).contains(this.getSwitchNode().getType())){
             //先执行switch节点
             this.getSwitchNode().setCurrChainName(this.getCurrChainName());

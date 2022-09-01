@@ -43,7 +43,7 @@ public class WhenCondition extends Condition {
 
 
     @Override
-    public void execute(Integer slotIndex) throws Exception {
+    public void execute(Integer slotIndex) throws Throwable {
         executeAsyncCondition(slotIndex);
     }
 
@@ -54,7 +54,7 @@ public class WhenCondition extends Condition {
 
     //使用线程池执行when并发流程
     //这块涉及到挺多的多线程逻辑，所以注释比较详细，看到这里的童鞋可以仔细阅读
-    private void executeAsyncCondition(Integer slotIndex) throws Exception {
+    private void executeAsyncCondition(Integer slotIndex) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
 
         String currChainName = this.getCurrChainName();
@@ -77,7 +77,7 @@ public class WhenCondition extends Condition {
         ).filter(executable -> {
             try {
                 return executable.isAccess(slotIndex);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 LOG.error("there was an error when executing the when component isAccess", e);
                 return false;
             }
