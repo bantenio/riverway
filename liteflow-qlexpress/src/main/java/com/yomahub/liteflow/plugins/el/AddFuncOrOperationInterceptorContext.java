@@ -2,6 +2,7 @@ package com.yomahub.liteflow.plugins.el;
 
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.instruction.op.OperatorBase;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.flow.element.condition.NodeCondition;
 import com.yomahub.liteflow.plugins.InterceptorContext;
@@ -9,7 +10,9 @@ import com.yomahub.liteflow.plugins.InterceptorContext;
 public class AddFuncOrOperationInterceptorContext extends InterceptorContext<AddFuncOrOperationInterceptorContext> {
     private final ExpressRunner expressRunner;
 
-    public AddFuncOrOperationInterceptorContext(ExpressRunner expressRunner) {
+    public AddFuncOrOperationInterceptorContext(FlowConfiguration flowConfiguration,
+                                                ExpressRunner expressRunner) {
+        super(flowConfiguration);
         this.expressRunner = expressRunner;
     }
 

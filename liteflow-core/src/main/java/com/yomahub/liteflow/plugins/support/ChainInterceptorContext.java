@@ -1,5 +1,6 @@
 package com.yomahub.liteflow.plugins.support;
 
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.plugins.InterceptorContext;
 
 public class ChainInterceptorContext<Sub extends ChainInterceptorContext<Sub>> extends InterceptorContext<Sub> {
@@ -11,6 +12,10 @@ public class ChainInterceptorContext<Sub extends ChainInterceptorContext<Sub>> e
 
     private Exception error;
     private Object context;
+
+    public ChainInterceptorContext(FlowConfiguration flowConfiguration) {
+        super(flowConfiguration);
+    }
 
     public <T> T getContext() {
         return (T) context;

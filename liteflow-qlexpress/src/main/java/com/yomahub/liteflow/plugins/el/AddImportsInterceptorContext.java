@@ -3,6 +3,7 @@ package com.yomahub.liteflow.plugins.el;
 import cn.hutool.core.collection.CollUtil;
 import com.ql.util.express.DefaultContext;
 import com.yomahub.liteflow.core.NodeComponent;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.plugins.InterceptorContext;
 
 import java.util.Collection;
@@ -14,7 +15,9 @@ public class AddImportsInterceptorContext extends InterceptorContext<AddImportsI
 
     private final Set<String> imports = new LinkedHashSet<>();
 
-    public AddImportsInterceptorContext(DefaultContext<String, Object> context) {
+    public AddImportsInterceptorContext(FlowConfiguration flowConfiguration,
+                                        DefaultContext<String, Object> context) {
+        super(flowConfiguration);
         this.context = context;
     }
 

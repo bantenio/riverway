@@ -95,7 +95,7 @@ public class LiteFlowChainELBuilder {
         if (subPluginManage == null || subPluginManage.isEmpty()) {
             return;
         }
-        AddFuncOrOperationInterceptorContext interceptorContext = new AddFuncOrOperationInterceptorContext(expressRunner);
+        AddFuncOrOperationInterceptorContext interceptorContext = new AddFuncOrOperationInterceptorContext(flowConfiguration, expressRunner);
         ChainBuilderSubPluginManage chainBuilderSubPluginManage = (ChainBuilderSubPluginManage) subPluginManage;
         for (ChainBuilderInterceptor register : chainBuilderSubPluginManage.getRegisters()) {
             register.addFuncOrOperation(interceptorContext);
@@ -137,7 +137,7 @@ public class LiteFlowChainELBuilder {
 
             SubPluginManage<?> subPluginManage = flowConfiguration.getPluginManager().getPluginManage(ChainBuilderSubPluginManage.PLUGIN_MANAGE_NAME);
             if (subPluginManage != null && !subPluginManage.isEmpty()) {
-                AddImportsInterceptorContext interceptorContext = new AddImportsInterceptorContext(context);
+                AddImportsInterceptorContext interceptorContext = new AddImportsInterceptorContext(flowConfiguration, context);
                 ChainBuilderSubPluginManage chainBuilderSubPluginManage = (ChainBuilderSubPluginManage) subPluginManage;
                 for (ChainBuilderInterceptor register : chainBuilderSubPluginManage.getRegisters()) {
                     register.addImports(interceptorContext);

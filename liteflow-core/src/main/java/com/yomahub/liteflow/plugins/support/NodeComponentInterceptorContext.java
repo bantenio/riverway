@@ -1,6 +1,7 @@
 package com.yomahub.liteflow.plugins.support;
 
 import com.yomahub.liteflow.core.NodeComponent;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.flow.entity.CmpStep;
 
@@ -14,6 +15,10 @@ public class NodeComponentInterceptorContext extends ChainInterceptorContext<Nod
     private boolean retry;
 
     private CmpStep cmpStep;
+
+    public NodeComponentInterceptorContext(FlowConfiguration flowConfiguration) {
+        super(flowConfiguration);
+    }
 
     public Node getNode() {
         return node;

@@ -64,13 +64,13 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
                     .getRegisters();
             try {
                 for (NodeComponentExecuteInterceptor interceptor : interceptors) {
-                    NodeComponentInterceptorContext interceptorContext = new NodeComponentInterceptorContext()
-                                    .setNode(node)
-                                    .setRetry(isRetry)
-                                    .setNodeComponent(delegate)
-                                    .setChainName(chainName)
-                                    .setFinally(false)
-                                    .setHasError(false);
+                    NodeComponentInterceptorContext interceptorContext = new NodeComponentInterceptorContext(flowConfiguration)
+                            .setNode(node)
+                            .setRetry(isRetry)
+                            .setNodeComponent(delegate)
+                            .setChainName(chainName)
+                            .setFinally(false)
+                            .setHasError(false);
                     interceptorContext.setContext(interceptor.initContext(interceptorContext));
                     interceptorContextMap.put(interceptor, interceptorContext);
                     interceptor.beforeProcess(interceptorContext);

@@ -59,7 +59,7 @@ public class InterceptorChainProxy extends Chain {
                     .getRegisters();
             try {
                 for (ChainExecuteInterceptor interceptor : interceptors) {
-                    ChainInterceptorContext interceptorContext = new ChainInterceptorContext()
+                    ChainInterceptorContext interceptorContext = new ChainInterceptorContext(flowConfiguration)
                             .setChainName(delegate.getChainName()).setFinally(false).setHasError(false);
                     interceptorContext.setContext(interceptor.initContext(interceptorContext));
                     interceptorContextMap.put(interceptor, interceptorContext);
