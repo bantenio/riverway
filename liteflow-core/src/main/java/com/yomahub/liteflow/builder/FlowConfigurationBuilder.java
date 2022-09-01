@@ -98,6 +98,11 @@ public class FlowConfigurationBuilder {
         return this;
     }
 
+    public FlowConfigurationBuilder registerInterceptor(String name, Interceptor interceptor) {
+        this.pluginManager.register(name, interceptor);
+        return this;
+    }
+
     public FlowConfiguration build() {
         FlowConfiguration flowConfiguration = new FlowConfiguration(liteflowConfig);
         if (nodeExecutor != null) {
