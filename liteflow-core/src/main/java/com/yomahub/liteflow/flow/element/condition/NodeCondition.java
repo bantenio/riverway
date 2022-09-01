@@ -1,5 +1,6 @@
 package com.yomahub.liteflow.flow.element.condition;
 
+import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.components.ValueHandler;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
 import com.yomahub.liteflow.flow.element.Node;
@@ -63,5 +64,10 @@ public class NodeCondition extends Condition {
 
     public Node getNode() {
         return this.node;
+    }
+
+    @Override
+    public String getExecuteName() {
+        return StrUtil.blankToDefault(this.getId(), node.getExecuteName());
     }
 }
