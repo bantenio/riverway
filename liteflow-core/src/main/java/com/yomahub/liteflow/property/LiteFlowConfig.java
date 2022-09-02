@@ -30,6 +30,8 @@ public class LiteFlowConfig {
     //slot的数量
     private Integer slotSize;
 
+    private String refType = "ql";
+
     private List<String> flowPaths;
 
     private LogProperties logConfig = new LogProperties();
@@ -62,6 +64,15 @@ public class LiteFlowConfig {
 
     public void setSlotSize(Integer slotSize) {
         this.slotSize = slotSize;
+    }
+
+    public String getRefType() {
+        return refType;
+    }
+
+    public LiteFlowConfig setRefType(String refType) {
+        this.refType = refType;
+        return this;
     }
 
 

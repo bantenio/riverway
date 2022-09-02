@@ -23,11 +23,9 @@ import com.yomahub.liteflow.plugins.el.ChainBuilderSubPluginManage;
 import com.yomahub.liteflow.slot.SlotScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Chain基于代码形式的组装器
@@ -85,8 +83,10 @@ public class LiteFlowChainELBuilder {
         expressRunner.addFunctionAndClassMethod("ignoreError", Object.class, new IgnoreErrorOperator());
         expressRunner.addFunctionAndClassMethod("threadPool", Object.class, new ThreadPoolOperator());
         expressRunner.addFunctionAndClassMethod("swap", NodeCondition.class, new SwapOperator());
+        expressRunner.addFunctionAndClassMethod("strFmt", NodeCondition.class, new StringFormatOperator());
+        expressRunner.addFunctionAndClassMethod("log", NodeCondition.class, new LogOperator());
         expressRunner.addFunction("node", new NodeOperator(flowConfiguration));
-        expressRunner.addFunction("ref", new RefOperator());
+        expressRunner.addFunction("ref", new RefOperator(flowConfiguration));
         expressRunner.addFunction("map", new CreateMapOperator());
         expressRunner.addFunction("throw", new ThrowOperator());
         expressRunner.addFunctionAndClassMethod("add", Map.class, new PutInMapOperator());
@@ -121,6 +121,8 @@ public class LiteFlowChainELBuilder {
         }
 
         List<String> errorList = new ArrayList<>();
+        List<String> importClasses = new LinkedList<>();
+        importClasses.add("import " + Level.class.getName() + ';');
         try {
             DefaultContext<String, Object> context = new DefaultContext<>();
 
@@ -144,9 +146,10 @@ public class LiteFlowChainELBuilder {
                 }
                 Collection<String> imports = interceptorContext.getImports();
                 if (!imports.isEmpty()) {
-                    elStr = CollUtil.join(imports, "\n") + elStr;
+                    importClasses.addAll(imports);
                 }
             }
+            elStr = CollUtil.join(importClasses, "\n") + elStr;
 
             //解析el成为一个Condition
             //为什么这里只是一个Condition，而不是一个List<Condition>呢

@@ -12,5 +12,5 @@ package com.yomahub.liteflow.enums;
  * @author Bryan.Zhang
  */
 public enum ExecuteTypeEnum {
-    CHAIN,CONDITION,NODE
+    CHAIN,CONDITION,NODE,AROUND
 }

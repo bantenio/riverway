@@ -3,11 +3,16 @@ package com.yomahub.liteflow.flow.element.condition;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.components.ValueHandler;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
+import com.yomahub.liteflow.flow.element.Executable;
 import com.yomahub.liteflow.flow.element.Node;
+import com.yomahub.liteflow.flow.element.condition.ext.NodeAround;
+import com.yomahub.liteflow.flow.element.condition.ext.NodeAroundCondition;
 import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class NodeCondition extends Condition {
@@ -25,6 +30,7 @@ public class NodeCondition extends Condition {
     public void execute(Integer slotIndex) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
         slot.putProperties(properties);
+        executeBefore(node, slot, slotIndex);
         processSwap(node, slot);
         try {
             node.execute(slotIndex);
@@ -49,6 +55,30 @@ public class NodeCondition extends Condition {
         }
     }
 
+    protected void executeBefore(Node node, Slot slot, Integer slotIndex) throws Throwable {
+        List<Executable> list = this.getExecutableList();
+        if (list.isEmpty()) {
+            return;
+        }
+        for (Executable executable : list) {
+            if (executable instanceof NodeAroundCondition) {
+                executable.execute(slotIndex);
+            }
+        }
+    }
+
+    protected void executeAfter(Node node, Slot slot, Integer slotIndex) throws Throwable {
+        List<Executable> list = this.getExecutableList();
+        if (list.isEmpty()) {
+            return;
+        }
+        for (Executable executable : list) {
+            if (executable instanceof NodeAroundCondition) {
+                ((NodeAroundCondition) executable).executeAfter(slotIndex);
+            }
+        }
+    }
+
     @Override
     public ConditionTypeEnum getConditionType() {
         return ConditionTypeEnum.TYPE_NODE;
@@ -69,5 +99,13 @@ public class NodeCondition extends Condition {
     @Override
     public String getExecuteName() {
         return StrUtil.blankToDefault(this.getId(), node.getExecuteName());
+    }
+
+    public void addNodeAroundCondition(NodeAroundCondition nodeAroundCondition) {
+        this.getExecutableList().add(nodeAroundCondition);
+    }
+
+    public void addNodeAroundCondition(NodeAround nodeAround) {
+        this.getExecutableList().add(new NodeAroundCondition(this, nodeAround));
     }
 }

@@ -2,12 +2,19 @@ package com.yomahub.liteflow.builder.el.operator.ext;
 
 import com.ql.util.express.Operator;
 import com.yomahub.liteflow.components.RefValueHandler;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RefOperator extends Operator {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    private final FlowConfiguration flowConfiguration;
+
+    public RefOperator(FlowConfiguration flowConfiguration) {
+        this.flowConfiguration = flowConfiguration;
+    }
 
     @Override
     public Object executeInner(Object[] objects) throws Exception {
@@ -20,9 +27,9 @@ public class RefOperator extends Operator {
             log.error("parameter 0 must be String");
             throw new Exception("parameter 0 must be String");
         }
-        String type = "ql";
+        String type = flowConfiguration.getLiteflowConfig().getRefType();
         if (objects.length >= 2) {
-            if(!(objects[1] instanceof String)) {
+            if (!(objects[1] instanceof String)) {
                 log.error("parameter 1 must be String");
                 throw new Exception("parameter 1 must be String");
             }

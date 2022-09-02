@@ -17,7 +17,7 @@ public abstract class OutResultComponent extends NodeComponent {
     public static final String DEFAULT_SCOPE = SlotScope.SCOPE_PARAMETER;
 
     @Override
-    public void process(Node node, Slot slot) throws Exception {
+    public void process(Node node, Slot slot) throws Throwable {
         Object result = innerProcess(node, slot);
         String resultName = DEFAULT_RESULT_NAME;
         if (slot.hasProperty(PROPERTY_NAME_RESULT_NAME)) {
@@ -42,5 +42,5 @@ public abstract class OutResultComponent extends NodeComponent {
         }
     }
 
-    public abstract Object innerProcess(Node node, Slot slot) throws Exception;
+    public abstract Object innerProcess(Node node, Slot slot) throws Throwable;
 }
