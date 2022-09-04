@@ -33,6 +33,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: "com.fasterxml.jackson.core", module: "jackson-databind"
     }
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
     implementation 'org.tenio.interstellar:interstellar-ext-jackson:0.0.2'
 }
 

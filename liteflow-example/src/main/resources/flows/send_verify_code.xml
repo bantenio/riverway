@@ -15,7 +15,7 @@
                         .property("channel.logic.mapping", map().add("2", "len4").add("21", "len6"))).to(
                 node(sendVerifyCodeSmsRequestComponent)
                     // 从请求体中获取mobile值，放置组件的参数数据区
-                    .swap("mobile", ref("#body.mobile", "spel"))
+                    .swap("mobile", ref("#body.zuid", "spel"))
                     // 配置该步骤发送验证码长度为4
                     .property("sms.len", 4)
                     // 为SWITCH设置分支逻辑名

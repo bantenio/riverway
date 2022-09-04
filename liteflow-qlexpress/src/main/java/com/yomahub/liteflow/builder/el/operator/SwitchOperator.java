@@ -31,18 +31,15 @@ public class SwitchOperator extends Operator {
                 throw new Exception("parameter error");
             }
 
-            Node switchNode;
+            SwitchCondition switchCondition = new SwitchCondition();
             if (objects[0] instanceof Node) {
-                switchNode = (Node) objects[0];
+                switchCondition.setSwitchNode((Node) objects[0]);
             } else if (objects[0] instanceof NodeCondition) {
-                switchNode = ((NodeCondition) objects[0]).getNode();
+                switchCondition.setSwitchNode((NodeCondition) objects[0]);
             } else {
                 LOG.error("The caller must be Node or NodeCondition item!");
                 throw new Exception("The caller must be Node or NodeCondition item!");
             }
-
-            SwitchCondition switchCondition = new SwitchCondition();
-            switchCondition.setSwitchNode(switchNode);
 
             return switchCondition;
         } catch (Exception e) {

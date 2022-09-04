@@ -25,7 +25,7 @@ public class FlowController {
     public Object doFlow(@PathVariable("chain_id") String chainId,
                          @RequestBody DataObject body,
                          HttpServletRequest request,
-                         HttpServletResponse response) throws Exception {
+                         HttpServletResponse response) throws Throwable {
         MapBuilder<String, Object> builder = MapBuilder.create(true);
         Map<String, Object> map = builder.put("body", body).put("request", request).put("response", response).build();
         LiteflowResponse liteflowResponse = flowConfiguration.getFlowExecutor().execute2Resp(chainId, map);

@@ -33,6 +33,7 @@ public class NodeCondition extends Condition {
         executeBefore(node, slot, slotIndex);
         processSwap(node, slot);
         try {
+            node.setCurrChainName(this.getCurrChainName());
             node.execute(slotIndex);
         } finally {
             slot.clearProperties();
