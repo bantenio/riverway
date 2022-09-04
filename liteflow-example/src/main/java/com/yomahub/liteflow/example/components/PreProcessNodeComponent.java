@@ -16,6 +16,7 @@ public class PreProcessNodeComponent extends NodeComponent {
 
     @Override
     public void process(Node node) throws Exception {
+        System.out.println(config.getPort());
         log.info("短信发送前数据处理: {}", config.getUrl());
     }
 }

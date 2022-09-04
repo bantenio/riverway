@@ -11,7 +11,14 @@ public class IsolationConfig {
     @ValueRef("${app.config.url}")
     private String url;
 
+    @ValueRef("${app.config.port}")
+    private int port;
+
     public String getUrl() {
         return url;
+    }
+
+    public int getPort() {
+        return port;
     }
 }
