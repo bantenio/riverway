@@ -5,10 +5,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
-import com.yomahub.liteflow.builder.FlowParser;
-import com.yomahub.liteflow.builder.FlowParserProvider;
-import com.yomahub.liteflow.builder.LiteFlowParseException;
-import com.yomahub.liteflow.builder.UrlFlowParser;
+import com.yomahub.liteflow.builder.*;
 import com.yomahub.liteflow.exception.ConfigErrorException;
 import com.yomahub.liteflow.exception.NotSupportParseWayException;
 import com.yomahub.liteflow.flow.FlowConfiguration;
@@ -80,9 +77,11 @@ public class ResourceELFlowParser implements UrlFlowParser {
             throw new ConfigErrorException("config error,please use the same type of configuration");
         }
 
-        List<String> contents = allResource.stream().map(resource -> {
+        List<ParseResource> contents = allResource.stream().map(resource -> {
             try {
-                return IoUtil.read(resource.getInputStream(), CharsetUtil.CHARSET_UTF_8);
+                return new ParseResource()
+                        .setResource(resource.getFilename())
+                        .setContent(IoUtil.read(resource.getInputStream(), CharsetUtil.CHARSET_UTF_8));
             } catch (IOException e) {
                 throw new ConfigErrorException("config error,please check rule source property", e);
             }
@@ -100,7 +99,7 @@ public class ResourceELFlowParser implements UrlFlowParser {
             }
             return Arrays.asList(resources);
         } catch (IOException e) {
-            throw new ConfigErrorException("config error,please check the path");
+            throw new ConfigErrorException("config error,please check the path", e);
         }
     }
 
@@ -141,7 +140,7 @@ public class ResourceELFlowParser implements UrlFlowParser {
     }
 
     @Override
-    public void parse(List<String> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
+    public void parse(List<ParseResource> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
         throw new NotSupportParseWayException();
     }
 }

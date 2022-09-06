@@ -37,6 +37,8 @@ public class ChainPropBean {
 	 */
 	ConditionTypeEnum conditionType;
 
+	String chainName;
+
 	public String getCondValueStr() {
 		return condValueStr;
 	}
@@ -88,6 +90,15 @@ public class ChainPropBean {
 
 	public ChainPropBean setConditionType(ConditionTypeEnum conditionType) {
 		this.conditionType = conditionType;
+		return this;
+	}
+
+	public String getChainName() {
+		return chainName;
+	}
+
+	public ChainPropBean setChainName(String chainName) {
+		this.chainName = chainName;
 		return this;
 	}
 }

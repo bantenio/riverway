@@ -1,10 +1,11 @@
 package com.yomahub.liteflow.parser.base;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.yomahub.liteflow.builder.LiteFlowChainBuilder;
 import com.yomahub.liteflow.builder.LiteFlowParseException;
+import com.yomahub.liteflow.builder.ParseResource;
 import com.yomahub.liteflow.builder.prop.ChainPropBean;
 import com.yomahub.liteflow.builder.prop.NodePropBean;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
@@ -29,34 +30,33 @@ import static com.yomahub.liteflow.common.ChainConstant.*;
  *
  * @author tangkc
  */
-public abstract class BaseXmlFlowParser extends BaseFlowParser {
+public abstract class BaseXmlFlowParser extends BaseFlowParser<Document> {
     private final Set<String> CHAIN_NAME_SET = new HashSet<>();
 
     @Override
-    public void parse(List<String> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
-        if (CollectionUtil.isEmpty(contentList)) {
-            return;
-        }
-        List<Document> documentList = ListUtil.toList();
+    protected ObjectResource<Document> resourceToObjectResource(ParseResource parseResource) {
         try {
-            for (String content : contentList) {
-                Document document = DocumentHelper.parseText(content);
-                documentList.add(document);
-            }
+            ObjectResource<Document> objectResource = new ObjectResource<>();
+            objectResource.setContent(parseResource.getContent())
+                    .setResource(parseResource.getResource());
+            return objectResource.setObject(DocumentHelper.parseText(parseResource.getContent()));
         } catch (DocumentException e) {
-            throw new LiteFlowParseException("parse xml error", e);
+            throw new LiteFlowParseException(StrUtil.format("parse xml {} error", parseResource.getResource()), e);
         }
+    }
 
-        parseDocument(documentList, CHAIN_NAME_SET, liteflowConfig, flowConfiguration);
+    @Override
+    public void parseObject(List<ObjectResource<Document>> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
+        parseDocument(contentList, CHAIN_NAME_SET, liteflowConfig, flowConfiguration);
     }
 
     /**
      * xml 形式的主要解析过程
      *
-     * @param documentList          documentList
-     * @param chainNameSet          用于去重
+     * @param documentList documentList
+     * @param chainNameSet 用于去重
      */
-    public FlowConfiguration parseDocument(List<Document> documentList,
+    public FlowConfiguration parseDocument(List<ObjectResource<Document>> documentList,
                                            Set<String> chainNameSet,
                                            LiteFlowConfig liteflowConfig,
                                            FlowConfiguration flowConfiguration) throws LiteFlowParseException {
@@ -64,12 +64,11 @@ public abstract class BaseXmlFlowParser extends BaseFlowParser {
         //先放有一个好处，可以在parse的时候先映射到FlowBus的chainMap，然后再去解析
         //这样就不用去像之前的版本那样回归调用
         //同时也解决了不能循环依赖的问题
-        documentList.forEach(document -> {
+        for (ObjectResource<Document> objectResource : documentList) {
+            Document document = objectResource.getObject();
             // 解析chain节点
             List<Element> chainList = document.getRootElement().elements(CHAIN);
-
-            //先在元数据里放上chain
-            chainList.forEach(e -> {
+            for (Element e : chainList) {
                 //校验加载的 chainName 是否有重复的
                 //TODO 这里是否有个问题，当混合格式加载的时候，2个同名的Chain在不同的文件里，就不行了
                 String chainName = e.attributeValue(NAME);
@@ -78,12 +77,13 @@ public abstract class BaseXmlFlowParser extends BaseFlowParser {
                 }
 
                 flowConfiguration.addChain(chainName);
-            });
-        });
+            }
+        }
         // 清空
         chainNameSet.clear();
 
-        for (Document document : documentList) {
+        for (ObjectResource<Document> objectResource : documentList) {
+            Document document = objectResource.getObject();
             Element rootElement = document.getRootElement();
             Element nodesElement = rootElement.element(NODES);
             // 当存在<nodes>节点定义时，解析node节点
@@ -109,12 +109,14 @@ public abstract class BaseXmlFlowParser extends BaseFlowParser {
 
             //解析每一个chain
             List<Element> chainList = rootElement.elements(CHAIN);
-            chainList.forEach(element -> parseOneChain(flowConfiguration, element));
+            for (Element element : chainList) {
+                parseOneChain(flowConfiguration, element, objectResource);
+            }
         }
         return flowConfiguration;
     }
 
-    public void parseOneChain(FlowConfiguration flowConfiguration, Element e) {
+    public void parseOneChain(FlowConfiguration flowConfiguration, Element e, ObjectResource<Document> objectResource) {
         String condValueStr;
         String group;
         String errorResume;
@@ -144,7 +146,7 @@ public abstract class BaseXmlFlowParser extends BaseFlowParser {
                     .setConditionType(conditionType);
 
             // 构建 chain
-            buildChain(chainPropBean, chainBuilder, flowConfiguration);
+            buildChain(chainPropBean, chainBuilder, flowConfiguration, objectResource);
         }
     }
 

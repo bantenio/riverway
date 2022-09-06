@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
+import com.yomahub.liteflow.builder.ParseResource;
 import com.yomahub.liteflow.builder.el.operator.*;
 import com.yomahub.liteflow.builder.el.operator.ext.*;
 import com.yomahub.liteflow.exception.ELParseException;
@@ -114,7 +115,7 @@ public class LiteFlowChainELBuilder {
         return this;
     }
 
-    public LiteFlowChainELBuilder setEL(String elStr) {
+    public LiteFlowChainELBuilder setEL(String elStr, ParseResource parseResource) {
         if (StrUtil.isBlank(elStr)) {
             String errMsg = StrUtil.format("no conditionList in this chain[{}]", chain.getChainName());
             throw new FlowSystemException(errMsg);
@@ -173,7 +174,7 @@ public class LiteFlowChainELBuilder {
             return this;
         } catch (Exception e) {
             for (String scriptErrorMsg : errorList) {
-                log.error("\n{}", scriptErrorMsg);
+                log.error("\n{} in {} of {}", scriptErrorMsg, chain.getChainName(), parseResource.getResource());
             }
             throw new ELParseException(e);
         }

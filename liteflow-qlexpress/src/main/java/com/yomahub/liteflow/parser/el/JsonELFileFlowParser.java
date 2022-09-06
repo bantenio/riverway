@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yomahub.liteflow.builder.el.LiteFlowChainELBuilder;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.base.BaseJsonFlowParser;
+import com.yomahub.liteflow.parser.base.ObjectResource;
 
 import static com.yomahub.liteflow.common.ChainConstant.NAME;
 import static com.yomahub.liteflow.common.ChainConstant.VALUE;
@@ -22,15 +23,15 @@ public class JsonELFileFlowParser extends BaseJsonFlowParser {
      * @param chainObject chain 节点
      */
     @Override
-    public void parseOneChain(FlowConfiguration flowConfiguration, JSONObject chainObject) {
-        parseOneChainEl(chainObject, flowConfiguration);
+    public void parseOneChain(FlowConfiguration flowConfiguration, JSONObject chainObject, ObjectResource<JSONObject> objectResource) {
+        parseOneChainEl(chainObject, flowConfiguration, objectResource);
     }
 
-    public void parseOneChainEl(JSONObject chainObject, FlowConfiguration flowConfiguration) {
+    public void parseOneChainEl(JSONObject chainObject, FlowConfiguration flowConfiguration, ObjectResource<JSONObject> objectResource) {
         //构建chainBuilder
         String chainName = chainObject.getString(NAME);
         String el = chainObject.getString(VALUE);
         LiteFlowChainELBuilder chainELBuilder = LiteFlowChainELBuilder.createChain(flowConfiguration).setChainName(chainName);
-        chainELBuilder.setEL(el).build();
+        chainELBuilder.setEL(el, objectResource).build();
     }
 }

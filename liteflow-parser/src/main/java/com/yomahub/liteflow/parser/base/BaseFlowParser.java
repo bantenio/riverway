@@ -6,10 +6,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.annotation.LiteflowCmpDefine;
 import com.yomahub.liteflow.annotation.LiteflowSwitchCmpDefine;
-import com.yomahub.liteflow.builder.FlowParser;
-import com.yomahub.liteflow.builder.LiteFlowChainBuilder;
-import com.yomahub.liteflow.builder.LiteFlowConditionBuilder;
-import com.yomahub.liteflow.builder.LiteFlowNodeBuilder;
+import com.yomahub.liteflow.builder.*;
 import com.yomahub.liteflow.builder.prop.ChainPropBean;
 import com.yomahub.liteflow.builder.prop.NodePropBean;
 import com.yomahub.liteflow.core.NodeComponent;
@@ -20,11 +17,30 @@ import com.yomahub.liteflow.enums.NodeTypeEnum;
 import com.yomahub.liteflow.exception.*;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Chain;
+import com.yomahub.liteflow.property.LiteFlowConfig;
 
-public abstract class BaseFlowParser implements FlowParser {
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class BaseFlowParser<T> implements FlowParser {
+
+    @Override
+    public void parse(List<ParseResource> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
+        List<ObjectResource<T>> objectResources = new ArrayList<>(contentList.size());
+        for (ParseResource parseResource : contentList) {
+            objectResources.add(resourceToObjectResource(parseResource));
+        }
+        parseObject(objectResources, liteflowConfig, flowConfiguration);
+    }
+
+    abstract protected ObjectResource<T> resourceToObjectResource(ParseResource parseResource);
+
+    abstract public void parseObject(List<ObjectResource<T>> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException;
+
     public Chain buildChain(ChainPropBean chainPropBean,
                             LiteFlowChainBuilder chainBuilder,
-                            FlowConfiguration flowConfiguration) {
+                            FlowConfiguration flowConfiguration,
+                            ObjectResource<T> objectResource) {
         String condValueStr = chainPropBean.getCondValueStr();
         String group = chainPropBean.getGroup();
         String errorResume = chainPropBean.getErrorResume();
@@ -33,7 +49,7 @@ public abstract class BaseFlowParser implements FlowParser {
         ConditionTypeEnum conditionType = chainPropBean.getConditionType();
 
         if (ObjectUtil.isNull(conditionType)) {
-            throw new NotSupportConditionException("ConditionType is not supported");
+            throw new NotSupportConditionException(StrUtil.format("ConditionType is not supported in {} of {}", chainPropBean.getChainName(), objectResource));
         }
 
         if (StrUtil.isBlank(condValueStr)) {
