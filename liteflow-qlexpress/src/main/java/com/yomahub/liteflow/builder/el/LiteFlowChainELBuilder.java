@@ -20,7 +20,7 @@ import com.yomahub.liteflow.plugins.SubPluginManage;
 import com.yomahub.liteflow.plugins.el.AddFuncOrOperationInterceptorContext;
 import com.yomahub.liteflow.plugins.el.AddImportsInterceptorContext;
 import com.yomahub.liteflow.plugins.el.ChainBuilderInterceptor;
-import com.yomahub.liteflow.plugins.el.ChainBuilderSubPluginManage;
+import com.yomahub.liteflow.plugins.el.ELChainBuilderSubPluginManage;
 import com.yomahub.liteflow.slot.SlotScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,13 +92,13 @@ public class LiteFlowChainELBuilder {
         expressRunner.addFunction("throw", new ThrowOperator());
         expressRunner.addFunctionAndClassMethod("add", Map.class, new PutInMapOperator());
 
-        SubPluginManage<?> subPluginManage = flowConfiguration.getPluginManager().getPluginManage(ChainBuilderSubPluginManage.PLUGIN_MANAGE_NAME);
+        SubPluginManage<?> subPluginManage = flowConfiguration.getPluginManager().getPluginManage(ELChainBuilderSubPluginManage.PLUGIN_MANAGE_NAME);
         if (subPluginManage == null || subPluginManage.isEmpty()) {
             return;
         }
         AddFuncOrOperationInterceptorContext interceptorContext = new AddFuncOrOperationInterceptorContext(flowConfiguration, expressRunner);
-        ChainBuilderSubPluginManage chainBuilderSubPluginManage = (ChainBuilderSubPluginManage) subPluginManage;
-        for (ChainBuilderInterceptor register : chainBuilderSubPluginManage.getRegisters()) {
+        ELChainBuilderSubPluginManage ELChainBuilderSubPluginManage = (ELChainBuilderSubPluginManage) subPluginManage;
+        for (ChainBuilderInterceptor register : ELChainBuilderSubPluginManage.getRegisters()) {
             register.addFuncOrOperation(interceptorContext);
         }
     }
@@ -138,11 +138,11 @@ public class LiteFlowChainELBuilder {
             context.put("SCOPE_PARAMETER", SlotScope.SCOPE_PARAMETER);
             context.put("SCOPE_RESPONSE", SlotScope.SCOPE_RESPONSE);
 
-            SubPluginManage<?> subPluginManage = flowConfiguration.getPluginManager().getPluginManage(ChainBuilderSubPluginManage.PLUGIN_MANAGE_NAME);
+            SubPluginManage<?> subPluginManage = flowConfiguration.getPluginManager().getPluginManage(ELChainBuilderSubPluginManage.PLUGIN_MANAGE_NAME);
             if (subPluginManage != null && !subPluginManage.isEmpty()) {
                 AddImportsInterceptorContext interceptorContext = new AddImportsInterceptorContext(flowConfiguration, context);
-                ChainBuilderSubPluginManage chainBuilderSubPluginManage = (ChainBuilderSubPluginManage) subPluginManage;
-                for (ChainBuilderInterceptor register : chainBuilderSubPluginManage.getRegisters()) {
+                ELChainBuilderSubPluginManage ELChainBuilderSubPluginManage = (ELChainBuilderSubPluginManage) subPluginManage;
+                for (ChainBuilderInterceptor register : ELChainBuilderSubPluginManage.getRegisters()) {
                     register.addImports(interceptorContext);
                 }
                 Collection<String> imports = interceptorContext.getImports();

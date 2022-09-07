@@ -3,6 +3,8 @@ package com.yomahub.liteflow.builder.el.operator.ext;
 import com.ql.util.express.Operator;
 import com.yomahub.liteflow.components.ThrowComponent;
 import com.yomahub.liteflow.components.ValueHandler;
+import com.yomahub.liteflow.flow.element.Node;
+import com.yomahub.liteflow.flow.element.condition.NodeCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +22,12 @@ public class ThrowOperator extends Operator {
             log.error("parameter 0 must be Throwable or ValueHandler");
             throw new Exception("parameter 0 must be Throwable or ValueHandler");
         }
+        Node node = new Node();
         if (val instanceof Throwable) {
-            return new ThrowComponent((Throwable) val);
+            node.setInstance(new ThrowComponent((Throwable) val));
         } else {
-            return new ThrowComponent((ValueHandler) val);
+            node.setInstance(new ThrowComponent((ValueHandler) val));
         }
+        return new NodeCondition(node);
     }
 }

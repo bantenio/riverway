@@ -5,59 +5,59 @@ package com.yomahub.liteflow.builder.prop;
  */
 public class NodePropBean {
 
-	/**
-	 * id
-	 */
-	String id;
+    /**
+     * id
+     */
+    private String id;
 
-	/**
-	 * 名称
-	 */
-	String name;
+    /**
+     * 名称
+     */
+    private String name;
 
-	/**
-	 * 类
-	 */
-	String clazz;
+    /**
+     * 类
+     */
+    private String clazz;
 
-	/**
-	 * 类型
-	 */
-	String type;
+    /**
+     * 类型
+     */
+    private String type;
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public NodePropBean setId(String id) {
-		this.id = id;
-		return this;
-	}
+    public NodePropBean setId(String id) {
+        this.id = id;
+        return this;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public NodePropBean setName(String name) {
-		this.name = name;
-		return this;
-	}
+    public NodePropBean setName(String name) {
+        this.name = name;
+        return this;
+    }
 
-	public String getClazz() {
-		return clazz;
-	}
+    public String getClazz() {
+        return clazz;
+    }
 
-	public NodePropBean setClazz(String clazz) {
-		this.clazz = clazz;
-		return this;
-	}
+    public NodePropBean setClazz(String clazz) {
+        this.clazz = clazz;
+        return this;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public NodePropBean setType(String type) {
-		this.type = type;
-		return this;
-	}
+    public NodePropBean setType(String type) {
+        this.type = type;
+        return this;
+    }
 }

@@ -30,7 +30,7 @@ import static com.yomahub.liteflow.common.ChainConstant.*;
  *
  * @author tangkc
  */
-public abstract class BaseXmlFlowParser extends BaseFlowParser<Document> {
+public abstract class BaseXmlFlowParser extends ObjectResourceFlowParser<Document> {
     private final Set<String> CHAIN_NAME_SET = new HashSet<>();
 
     @Override

@@ -1,0 +1,27 @@
+package gyfs.register
+
+import com.yomahub.liteflow.parser.dsl.ChainDslScript
+import groovy.transform.BaseScript
+
+@BaseScript ChainDslScript _
+
+__init__()
+
+THEN(
+        preProcessNodeComponent,
+        SWITCH(
+                node(channelSwitchComponent)
+                        .swap("channel", ref("#body.channel"))
+                        .property("channel.logic.mapping", map().add("2", "len4").add("21", "len6"))
+        ).to(
+                node(sendVerifyCodeSmsRequestComponent)
+                        .swap("mobile", ref("#body.zuid"))
+                        .property("sms.len", 4)
+                        .id("len4"),
+                node(sendVerifyCodeSmsRequestComponent)
+                        .swap("mobile", ref("#body.mobile"))
+                        .property("sms.len", 6)
+                        .id("len6"),
+                Throw(w_BizErr(Result.UNKNOWN)).id("other")
+        )
+)

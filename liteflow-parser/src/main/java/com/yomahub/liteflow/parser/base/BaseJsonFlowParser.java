@@ -28,7 +28,7 @@ import static com.yomahub.liteflow.common.ChainConstant.*;
  *
  * @author tangkc
  */
-public abstract class BaseJsonFlowParser extends BaseFlowParser<JSONObject> {
+public abstract class BaseJsonFlowParser extends ObjectResourceFlowParser<JSONObject> {
 
     private final Set<String> CHAIN_NAME_SET = new CopyOnWriteArraySet<>();
 

@@ -2,10 +2,14 @@ package com.yomahub.liteflow.example.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yomahub.liteflow.builder.FlowConfigurationBuilder;
+import com.yomahub.liteflow.components.QLRefValueExpressionRunner;
 import com.yomahub.liteflow.components.SPELRefValueExpressionRunner;
 import com.yomahub.liteflow.core.NodeComponent;
+import com.yomahub.liteflow.example.ext.flow.gyf.ExtFuncInterceptor;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.parser.ResourceELFlowParser;
+import com.yomahub.liteflow.parser.ResourceGyfFlowParser;
+import com.yomahub.liteflow.plugins.gyf.GyfChainBuilderSubPluginManage;
 import com.yomahub.liteflow.property.ExecutorProperties;
 import com.yomahub.liteflow.property.ExecutorServiceProperties;
 import com.yomahub.liteflow.property.LiteFlowConfig;
@@ -28,7 +32,8 @@ public class LiteFlowConfiguration {
 
     @Bean
     public LiteFlowConfig liteFlowConfig(ExecutorProperties executorProperties) {
-        return new LiteFlowConfig().setFlowPaths(Arrays.asList("el:xml:classpath*://flows/*.xml"))
+        return new LiteFlowConfig().setFlowPaths(Arrays.asList("gyf:classpath*://gyfs/main.gyf"))
+                .setRefType(SPELRefValueExpressionRunner.REF_VALUE_TYPE)
                 .setExecutorProperties(executorProperties);
     }
 
@@ -60,13 +65,16 @@ public class LiteFlowConfiguration {
 
     @Bean
     public FlowConfiguration flowConfiguration(LiteFlowConfig liteFlowConfig, ExecutorServiceManager executorServiceManager, Map<String, NodeComponent> ignores) {
-        ResourceELFlowParser.register();
+        ResourceGyfFlowParser.register();
         SPELRefValueExpressionRunner.registerSelf();
+        QLRefValueExpressionRunner.registerSelf();
         return FlowConfigurationBuilder
                 .create()
                 .setExecutorServiceManager(executorServiceManager)
                 .setNodeComponentMap(ignores)
                 .setLiteFlowConfig(liteFlowConfig)
+                .addSubManage(new GyfChainBuilderSubPluginManage())
+                .registerInterceptor("extFunc", new ExtFuncInterceptor())
                 .build();
     }
 

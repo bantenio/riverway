@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SPELRefValueExpressionRunner implements RefValueExpressionRunner {
+    public static final String REF_VALUE_TYPE = "spel";
     private Map<Integer, Expression> spelExpressionMap = new ConcurrentHashMap<>();
     private SpelParserConfiguration config = new SpelParserConfiguration(true, true);
     private SpelExpressionParser parser = new SpelExpressionParser(config);
@@ -36,6 +37,6 @@ public class SPELRefValueExpressionRunner implements RefValueExpressionRunner {
     }
 
     public static void registerSelf() {
-        RefValueHandler.register("spel", new SPELRefValueExpressionRunner());
+        RefValueHandler.register(REF_VALUE_TYPE, new SPELRefValueExpressionRunner());
     }
 }

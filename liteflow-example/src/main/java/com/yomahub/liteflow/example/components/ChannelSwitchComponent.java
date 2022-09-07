@@ -11,10 +11,10 @@ import java.util.Map;
 public class ChannelSwitchComponent extends NodeSwitchComponent {
     @Override
     public String processSwitch(Node node, Slot slot) throws Exception {
-        String channel = getCurrentRequestChannel();
+        String channel = slot.getParameterByType("channel");
         Map<String, String> channelLogicMapping = slot.getPropertyByType("channel.logic.mapping");
-        if(!channelLogicMapping.containsKey(channel)) {
-            throw new RuntimeException("未知的channel请求");
+        if (!channelLogicMapping.containsKey(channel)) {
+            return "other";
         }
         return channelLogicMapping.get(channel);
     }

@@ -7,9 +7,9 @@ import com.yomahub.liteflow.util.CopyOnWriteHashMap;
 import java.util.Collection;
 import java.util.Map;
 
-public class ChainBuilderSubPluginManage implements SubPluginManage<ChainBuilderInterceptor> {
+public class ELChainBuilderSubPluginManage implements SubPluginManage<ChainBuilderInterceptor> {
 
-    public static final String PLUGIN_MANAGE_NAME = "chain_builder";
+    public static final String PLUGIN_MANAGE_NAME = "el_chain_builder";
 
     private final Map<String, ChainBuilderInterceptor> interceptorMap = new CopyOnWriteHashMap<>();
 

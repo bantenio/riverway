@@ -17,10 +17,6 @@ public class RefValueHandler implements ValueHandler {
 
     private static final Map<String, RefValueExpressionRunner> expressionRunnerMap = new HashMap<>();
 
-    static {
-        register("ql", new QLRefValueExpressionRunner());
-    }
-
     private String expression;
 
     private String type;

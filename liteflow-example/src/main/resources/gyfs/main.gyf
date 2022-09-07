@@ -1,0 +1,17 @@
+package gyfs
+
+import com.yomahub.liteflow.parser.dsl.MainDslScript
+import groovy.transform.BaseScript
+
+@BaseScript MainDslScript _
+
+__init__()
+
+node 'preProcessNodeComponent'
+node 'channelSwitchComponent'
+node 'sendVerifyCodeSmsRequestComponent'
+
+
+chain 'register/register_do.gyf', 'register_do'
+
+__process_chains__()

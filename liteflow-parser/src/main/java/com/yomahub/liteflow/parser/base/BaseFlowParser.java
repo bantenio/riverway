@@ -17,30 +17,14 @@ import com.yomahub.liteflow.enums.NodeTypeEnum;
 import com.yomahub.liteflow.exception.*;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Chain;
-import com.yomahub.liteflow.property.LiteFlowConfig;
 
-import java.util.ArrayList;
-import java.util.List;
+public abstract class BaseFlowParser implements FlowParser {
 
-public abstract class BaseFlowParser<T> implements FlowParser {
-
-    @Override
-    public void parse(List<ParseResource> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
-        List<ObjectResource<T>> objectResources = new ArrayList<>(contentList.size());
-        for (ParseResource parseResource : contentList) {
-            objectResources.add(resourceToObjectResource(parseResource, flowConfiguration));
-        }
-        parseObject(objectResources, liteflowConfig, flowConfiguration);
-    }
-
-    abstract protected ObjectResource<T> resourceToObjectResource(ParseResource parseResource, FlowConfiguration flowConfiguration);
-
-    abstract public void parseObject(List<ObjectResource<T>> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException;
 
     public Chain buildChain(ChainPropBean chainPropBean,
                             LiteFlowChainBuilder chainBuilder,
                             FlowConfiguration flowConfiguration,
-                            ObjectResource<T> objectResource) {
+                            ParseResource objectResource) {
         String condValueStr = chainPropBean.getCondValueStr();
         String group = chainPropBean.getGroup();
         String errorResume = chainPropBean.getErrorResume();
@@ -49,7 +33,7 @@ public abstract class BaseFlowParser<T> implements FlowParser {
         ConditionTypeEnum conditionType = chainPropBean.getConditionType();
 
         if (ObjectUtil.isNull(conditionType)) {
-            throw new NotSupportConditionException(StrUtil.format("ConditionType is not supported in {} of {}", chainPropBean.getChainName(), objectResource));
+            throw new NotSupportConditionException(StrUtil.format("ConditionType is not supported in {} of {}", chainPropBean.getChainName(), objectResource.getResource()));
         }
 
         if (StrUtil.isBlank(condValueStr)) {

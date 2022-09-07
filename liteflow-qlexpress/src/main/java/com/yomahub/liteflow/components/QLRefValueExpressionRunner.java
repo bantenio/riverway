@@ -10,8 +10,14 @@ import com.yomahub.liteflow.slot.Slot;
 import java.util.List;
 
 public class QLRefValueExpressionRunner implements RefValueExpressionRunner {
+    public static final String REF_VALUE_TYPE = "ql";
 
     private ExpressRunner expressRunner = new ExpressRunner();
+
+
+    public static void registerSelf() {
+        RefValueHandler.register(REF_VALUE_TYPE, new QLRefValueExpressionRunner());
+    }
 
     @Override
     public Object getValue(Slot slot, Node node, String expression) throws RuntimeException {

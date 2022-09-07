@@ -7,14 +7,15 @@
 plugins {
     id 'com.yomahub.java-conventions'
 }
+apply plugin: "groovy"
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
 dependencies {
-    implementation project(':liteflow-parser')
-    implementation 'org.codehaus.groovy:groovy:3.0.8'
-    implementation 'org.codehaus.groovy:groovy-jsr223:3.0.8'
+    api project(':liteflow-parser')
+    api 'org.codehaus.groovy:groovy:3.0.12'
+    api 'org.codehaus.groovy:groovy-jsr223:3.0.12'
 }
 
 ext {
