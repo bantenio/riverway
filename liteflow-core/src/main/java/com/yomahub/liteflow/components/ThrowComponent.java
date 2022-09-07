@@ -14,7 +14,6 @@ public class ThrowComponent extends NodeComponent {
 
     public ThrowComponent(ValueHandler exception) {
         this.exceptionValueHandler = exception;
-
     }
 
     @Override

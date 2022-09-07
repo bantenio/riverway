@@ -29,6 +29,7 @@ import java.util.Map;
 
 /**
  * Node节点，实现可执行器
+ *
  * @author Bryan.Zhang
  */
 public class Node implements Executable, Cloneable {
@@ -112,7 +113,7 @@ public class Node implements Executable, Cloneable {
             //判断是否可执行，所以isAccess经常作为一个组件进入的实际判断要素，用作检查slot里的参数的完备性
             if (instance.isAccess()) {
                 //根据配置判断是否打印执行中的日志
-                log.info("[{}]:[O]start component[{}] execution", slot.getRequestId(), instance.getDisplayName());
+                log.info("[{}]:[O]start component[{}] execution", slot.getRequestId(), getDisplayName());
 
                 //这里开始进行重试的逻辑和主逻辑的运行
                 NodeExecutor nodeExecutor = NodeExecutorHelper.loadInstance().buildNodeExecutor(instance.getNodeExecutorClass());
@@ -122,7 +123,7 @@ public class Node implements Executable, Cloneable {
                 nodeExecutor.execute(this, flowConfiguration);
                 //如果组件覆盖了isEnd方法，或者在在逻辑中主要调用了setEnd(true)的话，流程就会立马结束
                 if (instance.isEnd()) {
-                    String errorInfo = StrUtil.format("[{}]:[{}] lead the chain to end", slot.getRequestId(), instance.getDisplayName());
+                    String errorInfo = StrUtil.format("[{}]:[{}] lead the chain to end", slot.getRequestId(), getDisplayName());
                     throw new ChainEndException(errorInfo);
                 }
             } else {
@@ -133,10 +134,10 @@ public class Node implements Executable, Cloneable {
         } catch (Exception e) {
             //如果组件覆盖了isContinueOnError方法，返回为true，那即便出了异常，也会继续流程
             if (instance.isContinueOnError()) {
-                String errorMsg = MessageFormat.format("[{0}]:component[{1}] cause error,but flow is still go on", slot.getRequestId(), id);
+                String errorMsg = MessageFormat.format("[{0}]:component[{1}] cause error,but flow is still go on", slot.getRequestId(), getExecuteName());
                 log.error(errorMsg);
             } else {
-                String errorMsg = MessageFormat.format("[{0}]:component[{1}] cause error,error:{2}", slot.getRequestId(), id, e.getMessage());
+                String errorMsg = MessageFormat.format("[{0}]:component[{1}] cause error,error:{2}", slot.getRequestId(), getExecuteName(), e.getMessage());
                 log.error(errorMsg);
                 throw e;
             }
@@ -175,7 +176,11 @@ public class Node implements Executable, Cloneable {
 
     @Override
     public String getExecuteName() {
-        return id;
+        return StrUtil.blankToDefault(id, name);
+    }
+
+    public String getDisplayName() {
+        return StrUtil.blankToDefault(instance.getDisplayName(), getExecuteName());
     }
 
     public String getTag() {

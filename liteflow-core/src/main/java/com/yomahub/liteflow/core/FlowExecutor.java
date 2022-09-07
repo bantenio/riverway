@@ -163,9 +163,9 @@ public class FlowExecutor {
         } catch (Throwable e) {
             if (ObjectUtil.isNotNull(chain)) {
                 String errMsg = StrUtil.format("[{}]:chain[{}] execute error on slot[{}]", slot.getRequestId(), chain.getChainName(), slotIndex);
-                log.error(errMsg, e);
+                log.error(errMsg);
             } else {
-                log.error(e.getMessage(), e);
+                log.error(e.getMessage());
             }
             slot.setException(e);
         } finally {

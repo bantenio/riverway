@@ -216,19 +216,21 @@ abstract class ChainDslScript extends Script {
         return new RefValueHandler(expression, target)
     }
 
-    NodeCondition Throw(Throwable throwable) {
+    NodeCondition Throw(Throwable throwable, String name) {
         if (throwable == null) {
             throw new LiteFlowParseException("Throw func throwable must be not null")
         }
         Node node = new Node(new ThrowComponent(throwable), flowConfiguration)
+        node.setName(name)
         return new NodeCondition(node)
     }
 
-    NodeCondition Throw(ValueHandler valueHandler) {
+    NodeCondition Throw(ValueHandler valueHandler, String name) {
         if (valueHandler == null) {
             throw new LiteFlowParseException("Throw func valueHandler must be not null")
         }
         Node node = new Node(new ThrowComponent(valueHandler), flowConfiguration)
+        node.setName(name)
         return new NodeCondition(node)
     }
 

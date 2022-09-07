@@ -75,7 +75,7 @@ public abstract class NodeComponent implements NodeProcessor {
         Slot slot = this.getSlot();
 
         //在元数据里加入step信息
-        CmpStep cmpStep = new CmpStep(slot.getChainName(), nodeId, name, CmpStepTypeEnum.SINGLE);
+        CmpStep cmpStep = new CmpStep(slot.getChainName(), node.getExecuteName(), node.getDisplayName(), CmpStepTypeEnum.SINGLE);
         cmpStep.setTag(tagTL.get());
         slot.addStep(cmpStep);
         StopWatch stopWatch = new StopWatch();
@@ -198,8 +198,9 @@ public abstract class NodeComponent implements NodeProcessor {
         return nodeId;
     }
 
-    public void setNodeId(String nodeId) {
+    public NodeComponent setNodeId(String nodeId) {
         this.nodeId = nodeId;
+        return this;
     }
 
     public NodeComponent getSelf() {
@@ -214,8 +215,9 @@ public abstract class NodeComponent implements NodeProcessor {
         return name;
     }
 
-    public void setName(String name) {
+    public NodeComponent setName(String name) {
         this.name = name;
+        return this;
     }
 
     public NodeTypeEnum getType() {

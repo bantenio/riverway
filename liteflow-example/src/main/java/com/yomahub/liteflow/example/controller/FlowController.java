@@ -3,6 +3,8 @@ package com.yomahub.liteflow.example.controller;
 import cn.hutool.core.map.MapBuilder;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.LiteflowResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.tenio.interstellar.context.DataObject;
 
@@ -13,6 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/flow")
 public class FlowController {
+    private static final Logger log = LoggerFactory.getLogger(FlowController.class);
 
     private final FlowConfiguration flowConfiguration;
 
@@ -31,7 +34,9 @@ public class FlowController {
         LiteflowResponse liteflowResponse = flowConfiguration.getFlowExecutor().execute2Resp(chainId, map);
         boolean isSuccessfully = liteflowResponse.isSuccess();
         if (!isSuccessfully) {
-            throw liteflowResponse.getCause();
+            Throwable throwable = liteflowResponse.getCause();
+            log.error("do chain {} on error", chainId, throwable);
+            throw throwable;
         }
         return body.getValue("result");
     }

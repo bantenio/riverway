@@ -22,6 +22,6 @@ THEN(
                         .swap("mobile", ref("#body.mobile"))
                         .property("sms.len", 6)
                         .id("len6"),
-                Throw(w_BizErr(Result.UNKNOWN)).id("other")
+                Throw(w_BizErr(Result.UNKNOWN), "other")
         )
 )

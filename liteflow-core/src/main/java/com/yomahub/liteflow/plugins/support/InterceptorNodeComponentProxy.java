@@ -241,8 +241,9 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
     }
 
     @Override
-    public void setNodeId(String nodeId) {
+    public NodeComponent setNodeId(String nodeId) {
         delegate.setNodeId(nodeId);
+        return this;
     }
 
     @Override
@@ -261,8 +262,9 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
     }
 
     @Override
-    public void setName(String name) {
+    public NodeComponent setName(String name) {
         delegate.setName(name);
+        return this;
     }
 
     @Override
