@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * EL规则中的tag的操作符
+ *
  * @author Bryan.Zhang
  * @since 2.8.0
  */
@@ -25,30 +26,30 @@ public class TagOperator extends Operator {
 
     @Override
     public Node executeInner(Object[] objects) throws Exception {
-        try{
-            if (ArrayUtil.isEmpty(objects)){
+        try {
+            if (ArrayUtil.isEmpty(objects)) {
                 throw new Exception();
             }
 
-            if (objects.length != 2){
+            if (objects.length != 2) {
                 log.error("parameter error");
-                throw new Exception();
+                throw new Exception("parameter error");
             }
 
             Node node;
-            if (objects[0] instanceof Node){
+            if (objects[0] instanceof Node) {
                 node = (Node) objects[0];
-            }else{
+            } else {
                 log.error("The caller must be Node item!");
-                throw new Exception();
+                throw new Exception("The caller must be Node item!");
             }
 
             String tag = null;
-            if (objects[1] instanceof String){
+            if (objects[1] instanceof String) {
                 tag = objects[1].toString();
-            }else{
+            } else {
                 log.error("the parameter must be String type!");
-                throw new Exception();
+                throw new Exception("the parameter must be String type!");
             }
 
             //这里为什么要clone一个呢？
@@ -59,8 +60,8 @@ public class TagOperator extends Operator {
 
             return copyNode;
 
-        }catch (Exception e){
-            throw new ELParseException("errors occurred in EL parsing");
+        } catch (Exception e) {
+            throw new ELParseException("errors occurred in EL parsing", e);
         }
     }
 }

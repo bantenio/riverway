@@ -34,7 +34,7 @@ public abstract class BaseXmlFlowParser extends BaseFlowParser<Document> {
     private final Set<String> CHAIN_NAME_SET = new HashSet<>();
 
     @Override
-    protected ObjectResource<Document> resourceToObjectResource(ParseResource parseResource) {
+    protected ObjectResource<Document> resourceToObjectResource(ParseResource parseResource, FlowConfiguration flowConfiguration) {
         try {
             ObjectResource<Document> objectResource = new ObjectResource<>();
             objectResource.setContent(parseResource.getContent())

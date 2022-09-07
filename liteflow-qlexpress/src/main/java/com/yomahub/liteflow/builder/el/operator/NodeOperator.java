@@ -35,7 +35,7 @@ public class NodeOperator extends Operator {
 
         if (objects.length != 1) {
             log.error("parameter error");
-            throw new Exception();
+            throw new Exception("parameter error");
         }
 
         String nodeId;
@@ -45,7 +45,7 @@ public class NodeOperator extends Operator {
             return new NodeCondition((Node) objects[0]);
         } else {
             log.error("The value must be Node item!");
-            throw new Exception();
+            throw new Exception("The value must be Node item!");
         }
 
         if (flowConfiguration.containNode(nodeId)) {
@@ -60,12 +60,12 @@ public class NodeOperator extends Operator {
                 } else {
                     String error = StrUtil.format("This node[{}] cannot be found", nodeId);
                     log.error(error);
-                    throw new Exception();
+                    throw new Exception(error);
                 }
             } else {
                 String error = StrUtil.format("This node[{}] cannot be found, or you can configure an substitute node", nodeId);
                 log.error(error);
-                throw new Exception();
+                throw new Exception(error);
             }
         }
     }

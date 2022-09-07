@@ -43,7 +43,7 @@ public class SwitchOperator extends Operator {
 
             return switchCondition;
         } catch (Exception e) {
-            throw new ELParseException("errors occurred in EL parsing");
+            throw new ELParseException("errors occurred in EL parsing", e);
         }
     }
 }

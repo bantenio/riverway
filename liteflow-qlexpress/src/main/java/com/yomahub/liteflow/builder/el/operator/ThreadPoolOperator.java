@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * EL规则中的threadPool的操作符
+ *
  * @author Bryan.Zhang
  * @since 2.8.0
  */
@@ -18,38 +19,38 @@ public class ThreadPoolOperator extends Operator {
 
     @Override
     public WhenCondition executeInner(Object[] objects) throws Exception {
-        try{
-            if (ArrayUtil.isEmpty(objects)){
+        try {
+            if (ArrayUtil.isEmpty(objects)) {
                 throw new Exception();
             }
 
-            if (objects.length != 2){
+            if (objects.length != 2) {
                 LOG.error("parameter error");
-                throw new Exception();
+                throw new Exception("parameter error");
             }
 
             WhenCondition whenCondition;
-            if (objects[0] instanceof WhenCondition){
+            if (objects[0] instanceof WhenCondition) {
                 whenCondition = (WhenCondition) objects[0];
-            }else{
+            } else {
                 LOG.error("The caller must be when condition item!");
-                throw new Exception();
+                throw new Exception("The caller must be when condition item!");
             }
 
             String threadPoolName = null;
-            if (objects[1] instanceof String){
+            if (objects[1] instanceof String) {
                 threadPoolName = objects[1].toString();
-            }else{
+            } else {
                 LOG.error("the parameter must be String type!");
-                throw new Exception();
+                throw new Exception("the parameter must be String type!");
             }
 
             whenCondition.setThreadExecutorName(threadPoolName);
 
             return whenCondition;
 
-        }catch (Exception e){
-            throw new ELParseException("errors occurred in EL parsing");
+        } catch (Exception e) {
+            throw new ELParseException("errors occurred in EL parsing", e);
         }
     }
 }

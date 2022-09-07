@@ -1,0 +1,145 @@
+syntax = "proto3";
+package com.weshare.zwhale.proto;
+
+option java_package = "com.weshare.zwhale.proto";
+
+message BizInfo {
+  int32 id = 1;
+  string bizGid = 2;
+  string bizType = 3;
+  int32 bizId = 4;
+  int32 bizStatus = 5;
+  string countryGid = 6;
+  string tenantGid = 7;
+  int64 createdAt = 8;
+  int64 updatedAt = 9;
+}
+
+message CountryInfo {
+  int32 id = 1;
+  string countryGid = 2;
+  string countryName = 3;
+  string countryLanguage = 4;
+  string countryLanguageFile = 5;
+  string countryTimeZone = 6;
+  int64 createdAt = 7;
+  int64 updatedAt = 8;
+}
+
+message CurrencyInfo {
+  int32 id = 1;
+  string currencyGid = 2;
+  string countryGid = 3;
+  string currencySymbol = 4;
+  string currencyUnit = 5;
+  int32 currencyLevel = 6;
+  // 倍数 low to high
+  int32 currencyConvertBase = 7;
+  int64 createdAt = 8;
+  int64 updatedAt = 9;
+}
+
+message TenantInfo {
+  int32 id = 1;
+  string tenantGid = 2;
+  string tenantName = 3;
+  int64 createdAt = 4;
+  int64 updatedAt = 5;
+}
+
+message OperateLog {
+  int32 id = 1;
+  string operateGid = 2;
+  int32 operateDataType = 3;
+  string operateDataGid = 4;
+  string operateType = 5;
+  string operatedAt = 6;
+  int64 createdAt = 7;
+  bytes operateData = 8;
+}
+
+message DataCenterBizRelation {
+  int32 id = 1;
+  string dataCenterGid = 2;
+  string bizGid = 3;
+}
+
+message AppInfo {
+  int32 id = 1;
+  string appGid = 2;
+  string appName = 3;
+  string mark = 4;
+  int64 createdAt = 5;
+  int64 updatedAt = 6;
+}
+
+message ConfigRecord {
+  int32 id = 1;
+  string configKey = 2;
+  string configValue = 3;
+  string configGroup = 4;
+  string hash = 5;
+  string mark = 6;
+  int32 configState = 7;
+  int64 createdAt = 8;
+  string createdUser = 9;
+  int64 updatedAt = 10;
+  string updatedUser = 11;
+}
+
+
+// region rpc request and response defines
+
+message ConfigBasicServiceQueryLogRequest {
+  int32 lastId = 1;
+  string dataCenterGid = 2;
+  int32 size = 3;
+}
+
+message ConfigBasicServiceQueryLogResponse {
+  repeated OperateLog operateLogs = 1;
+}
+
+message ConfigBasicServiceObtainDataCenterBizRelationRequest {
+  string dataCenterGid = 1;
+}
+
+message ConfigBasicServiceObtainDataCenterBizRelationResponse {
+  repeated BizInfo bizInfos = 1;
+}
+
+message ConfigBasicServiceObtainAppInfosRequest {
+  string dataCenterGid = 1;
+}
+
+message ConfigBasicServiceObtainAppInfosResponse {
+  repeated AppInfo appInfos = 1;
+}
+
+service ConfigBasicService {
+  // 获取数据中心所负责产品线列表信息
+  rpc obtainDataCenterBizRelation(ConfigBasicServiceObtainDataCenterBizRelationRequest) returns (ConfigBasicServiceObtainDataCenterBizRelationResponse);
+  // 获取应用定义列表
+  rpc obtainAppInfos(ConfigBasicServiceObtainAppInfosRequest) returns (ConfigBasicServiceObtainAppInfosResponse);
+}
+
+
+message ConfigBasicServiceObtainFullConfigRequest {
+  repeated string bizGid = 1;
+  repeated string countryGid = 2;
+}
+
+message ConfigBasicServiceObtainFullConfigResponse {
+  repeated ConfigRecord configRecords = 1;
+}
+
+service ConfigRecordService {
+  // 查询变更日志
+  rpc queryOperateLog(ConfigBasicServiceQueryLogRequest) returns (stream ConfigBasicServiceQueryLogResponse);
+  // 获取配置中心负责的全部配置
+  rpc obtainFullConfig(ConfigBasicServiceObtainFullConfigRequest) returns (ConfigBasicServiceObtainFullConfigResponse);
+}
+
+
+
+// endregion

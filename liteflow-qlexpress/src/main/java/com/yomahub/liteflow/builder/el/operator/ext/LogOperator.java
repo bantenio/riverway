@@ -48,16 +48,17 @@ public class LogOperator extends Operator {
             throw new Exception(msg);
         }
         String message = (String) var;
-
-
-        Object[] args = ArrayUtil.sub(objects, 1, -1);
-        for (int idx = 0; idx < args.length; idx++) {
-            opIdx++;
-            Object arg = args[idx];
-            if (!(arg instanceof ValueHandler) && !(arg instanceof String)) {
-                String msg = StrUtil.format("parameter {} must be String or ValueHandler", opIdx - paramOffset);
-                log.error(msg);
-                throw new Exception(msg);
+        Object[] args = new Object[0];
+        if (objects.length > 3) {
+            args = ArrayUtil.sub(objects, opIdx + 1, -1);
+            for (int idx = 0; idx < args.length; idx++) {
+                opIdx++;
+                Object arg = args[idx];
+                if (!(arg instanceof ValueHandler) && !(arg instanceof String)) {
+                    String msg = StrUtil.format("parameter {} must be String or ValueHandler", opIdx - paramOffset);
+                    log.error(msg);
+                    throw new Exception(msg);
+                }
             }
         }
         nodeCondition.addNodeAroundCondition(new LogNodeAround(message, args, level));

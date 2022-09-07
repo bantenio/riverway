@@ -12,13 +12,13 @@ compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
 dependencies {
-    implementation project(':liteflow-script-common')
-    implementation project(':liteflow-core')
-    implementation 'com.alibaba:QLExpress:3.3.0'
+    implementation project(':liteflow-parser')
+    implementation 'org.codehaus.groovy:groovy:3.0.8'
+    implementation 'org.codehaus.groovy:groovy-jsr223:3.0.8'
 }
 
 ext {
-    project_name = 'script-qlexpress'
+    project_name = 'groovy'
 }
 
 description = "${project_root_name}-${project_name}"

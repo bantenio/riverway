@@ -28,12 +28,12 @@ public abstract class BaseFlowParser<T> implements FlowParser {
     public void parse(List<ParseResource> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
         List<ObjectResource<T>> objectResources = new ArrayList<>(contentList.size());
         for (ParseResource parseResource : contentList) {
-            objectResources.add(resourceToObjectResource(parseResource));
+            objectResources.add(resourceToObjectResource(parseResource, flowConfiguration));
         }
         parseObject(objectResources, liteflowConfig, flowConfiguration);
     }
 
-    abstract protected ObjectResource<T> resourceToObjectResource(ParseResource parseResource);
+    abstract protected ObjectResource<T> resourceToObjectResource(ParseResource parseResource, FlowConfiguration flowConfiguration);
 
     abstract public void parseObject(List<ObjectResource<T>> contentList, LiteFlowConfig liteflowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException;
 

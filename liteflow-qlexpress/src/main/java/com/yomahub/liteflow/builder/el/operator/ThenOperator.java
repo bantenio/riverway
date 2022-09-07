@@ -22,7 +22,7 @@ public class ThenOperator extends Operator {
         try {
             if (objects.length <= 0) {
                 log.error("parameter error");
-                throw new Exception();
+                throw new Exception("parameter error");
             }
 
             ThenCondition thenCondition = new ThenCondition();
@@ -31,7 +31,7 @@ public class ThenOperator extends Operator {
                     thenCondition.addExecutable((Executable) obj);
                 } else {
                     log.error("parameter must be executable item!");
-                    throw new Exception();
+                    throw new Exception("parameter must be executable item!");
                 }
             }
             return thenCondition;

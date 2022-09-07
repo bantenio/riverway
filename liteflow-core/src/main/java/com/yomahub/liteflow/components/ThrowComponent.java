@@ -6,14 +6,19 @@ import com.yomahub.liteflow.slot.Slot;
 
 public class ThrowComponent extends NodeComponent {
 
-    private final Throwable exception;
+    private final ValueHandler exceptionValueHandler;
 
     public ThrowComponent(Throwable exception) {
-        this.exception = exception;
+        this.exceptionValueHandler = new ConstantValueHandler(exception);
+    }
+
+    public ThrowComponent(ValueHandler exception) {
+        this.exceptionValueHandler = exception;
+
     }
 
     @Override
     public void process(Node node, Slot slot) throws Throwable {
-        throw exception;
+        throw (Throwable) exceptionValueHandler.getValue(slot, node);
     }
 }

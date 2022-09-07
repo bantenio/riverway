@@ -1,5 +1,6 @@
 package com.yomahub.liteflow.builder.el.operator;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.ql.util.express.Operator;
 import com.yomahub.liteflow.exception.ELParseException;
 import com.yomahub.liteflow.flow.element.Executable;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * EL规则中的WHEN的操作符
+ *
  * @author Bryan.Zhang
  * @since 2.8.0
  */
@@ -25,23 +27,24 @@ public class WhenOperator extends Operator {
 
     @Override
     public WhenCondition executeInner(Object[] objects) throws Exception {
-        try{
-            if (objects.length <= 0){
+        try {
+            if (objects.length <= 0) {
                 LOG.error("parameter error");
-                throw new Exception();
+                throw new Exception("parameter error");
             }
-
+            int opIdx = -1;
             WhenCondition whenCondition = new WhenCondition(liteflowConfig);
-            for (Object obj : objects){
-                if (obj instanceof Executable){
-                    whenCondition.addExecutable((Executable)obj);
-                }else{
-                    throw new Exception();
+            for (Object obj : objects) {
+                opIdx++;
+                if (obj instanceof Executable) {
+                    whenCondition.addExecutable((Executable) obj);
+                } else {
+                    throw new Exception(CharSequenceUtil.format("parameter {} must be Executable instance!", opIdx));
                 }
             }
             return whenCondition;
-        }catch (Exception e){
-            throw new ELParseException("errors occurred in EL parsing");
+        } catch (Exception e) {
+            throw new ELParseException("errors occurred in EL parsing", e);
         }
     }
 }

@@ -33,7 +33,7 @@ public abstract class BaseJsonFlowParser extends BaseFlowParser<JSONObject> {
     private final Set<String> CHAIN_NAME_SET = new CopyOnWriteArraySet<>();
 
     @Override
-    protected ObjectResource<JSONObject> resourceToObjectResource(ParseResource parseResource) {
+    protected ObjectResource<JSONObject> resourceToObjectResource(ParseResource parseResource, FlowConfiguration flowConfiguration) {
         JSONObject flowJsonObject = JSONObject.parseObject(parseResource.getContent(), Feature.OrderedField);
         ObjectResource<JSONObject> objectResource = new ObjectResource<>();
         objectResource.setContent(parseResource.getContent())
@@ -50,7 +50,7 @@ public abstract class BaseJsonFlowParser extends BaseFlowParser<JSONObject> {
     /**
      * json 形式的主要解析过程
      *
-     * @param chainNameSet       用于去重
+     * @param chainNameSet 用于去重
      */
     public void parseJsonObject(List<ObjectResource<JSONObject>> contentList,
                                 Set<String> chainNameSet,

@@ -3,6 +3,7 @@ package com.yomahub.liteflow.parser.base;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yomahub.liteflow.builder.ParseResource;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
 public abstract class BaseYmlFlowParser extends BaseJsonFlowParser {
 
     @Override
-    protected ObjectResource<JSONObject> resourceToObjectResource(ParseResource parseResource) {
+    protected ObjectResource<JSONObject> resourceToObjectResource(ParseResource parseResource, FlowConfiguration flowConfiguration) {
         Yaml yaml = new Yaml();
         Map<String, Object> map = yaml.load(parseResource.getContent());
         JSONObject flowJsonObject = JSON.parseObject(JSON.toJSONString(map));

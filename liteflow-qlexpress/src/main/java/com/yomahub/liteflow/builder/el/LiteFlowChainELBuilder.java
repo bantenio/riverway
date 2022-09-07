@@ -176,7 +176,7 @@ public class LiteFlowChainELBuilder {
             for (String scriptErrorMsg : errorList) {
                 log.error("\n{} in {} of {}", scriptErrorMsg, chain.getChainName(), parseResource.getResource());
             }
-            throw new ELParseException(e);
+            throw new ELParseException(StrUtil.format("process el scripts on error in chain {} of the {}", chain.getChainName(), parseResource.getResource()), e);
         }
     }
 

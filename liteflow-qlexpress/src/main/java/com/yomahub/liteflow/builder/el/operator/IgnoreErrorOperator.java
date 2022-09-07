@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * EL规则中的ignoreError的操作符
+ *
  * @author Bryan.Zhang
  * @since 2.8.0
  */
@@ -18,28 +19,28 @@ public class IgnoreErrorOperator extends Operator {
 
     @Override
     public Condition executeInner(Object[] objects) throws Exception {
-        try{
-            if (ArrayUtil.isEmpty(objects)){
+        try {
+            if (ArrayUtil.isEmpty(objects)) {
                 throw new Exception();
             }
 
-            if (objects.length != 2){
+            if (objects.length != 2) {
                 LOG.error("parameter error");
                 throw new Exception();
             }
 
             Condition condition;
-            if (objects[0] instanceof Condition){
+            if (objects[0] instanceof Condition) {
                 condition = (Condition) objects[0];
-            }else{
+            } else {
                 LOG.error("The caller must be executable item!");
                 throw new Exception();
             }
 
             boolean ignoreError = false;
-            if (objects[1] instanceof Boolean){
+            if (objects[1] instanceof Boolean) {
                 ignoreError = Boolean.parseBoolean(objects[1].toString());
-            }else{
+            } else {
                 LOG.error("the parameter must be boolean type!");
                 throw new Exception();
             }
@@ -48,8 +49,8 @@ public class IgnoreErrorOperator extends Operator {
 
             return condition;
 
-        }catch (Exception e){
-            throw new ELParseException("errors occurred in EL parsing");
+        } catch (Exception e) {
+            throw new ELParseException("errors occurred in EL parsing", e);
         }
     }
 }

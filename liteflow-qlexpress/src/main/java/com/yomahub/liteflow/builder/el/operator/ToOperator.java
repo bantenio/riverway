@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * EL规则中的TO的操作符，用法须和SWITCH联合使用
+ *
  * @author Bryan.Zhang
  * @since 2.8.0
  */
@@ -19,36 +20,33 @@ public class ToOperator extends Operator {
 
     @Override
     public SwitchCondition executeInner(Object[] objects) throws Exception {
-        try{
-            if (ArrayUtil.isEmpty(objects)){
-                throw new Exception();
-            }
+        try {
 
-            if (objects.length <= 1){
+            if (objects.length <= 1) {
                 LOG.error("parameter error");
-                throw new Exception();
+                throw new Exception("parameter error");
             }
 
             SwitchCondition switchCondition;
-            if (objects[0] instanceof SwitchCondition){
+            if (objects[0] instanceof SwitchCondition) {
                 switchCondition = (SwitchCondition) objects[0];
-            }else{
+            } else {
                 LOG.error("The caller must be SwitchCondition item!");
-                throw new Exception();
+                throw new Exception("The caller must be SwitchCondition item!");
             }
 
             for (int i = 1; i < objects.length; i++) {
                 if (objects[i] instanceof Executable) {
                     Executable target = (Executable) objects[i];
                     switchCondition.addTargetItem(target);
-                }else {
+                } else {
                     LOG.error("The parameter must be Executable item!");
-                    throw new Exception();
+                    throw new Exception("The parameter must be Executable item!");
                 }
             }
             return switchCondition;
-        }catch (Exception e){
-            throw new ELParseException("errors occurred in EL parsing");
+        } catch (Exception e) {
+            throw new ELParseException("errors occurred in EL parsing", e);
         }
     }
 }

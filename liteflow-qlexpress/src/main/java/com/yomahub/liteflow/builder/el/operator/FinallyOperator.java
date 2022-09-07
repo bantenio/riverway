@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * EL规则中的THEN的操作符
+ *
  * @author Bryan.Zhang
  * @since 2.8.0
  */
@@ -18,24 +19,24 @@ public class FinallyOperator extends Operator {
 
     @Override
     public Object executeInner(Object[] objects) throws Exception {
-        try{
-            if (objects.length <= 0){
+        try {
+            if (objects.length <= 0) {
                 LOG.error("parameter error");
                 throw new Exception();
             }
 
             FinallyCondition finallyCondition = new FinallyCondition();
-            for (Object obj : objects){
-                if (obj instanceof Executable){
-                    finallyCondition.addExecutable((Executable)obj);
-                }else{
+            for (Object obj : objects) {
+                if (obj instanceof Executable) {
+                    finallyCondition.addExecutable((Executable) obj);
+                } else {
                     LOG.error("parameter must be executable item!");
                     throw new Exception();
                 }
             }
             return finallyCondition;
-        }catch (Exception e){
-            throw new ELParseException("errors occurred in EL parsing");
+        } catch (Exception e) {
+            throw new ELParseException("errors occurred in EL parsing", e);
         }
     }
 }
