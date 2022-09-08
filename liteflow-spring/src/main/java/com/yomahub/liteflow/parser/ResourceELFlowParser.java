@@ -80,7 +80,7 @@ public class ResourceELFlowParser implements UrlFlowParser {
         List<ParseResource> contents = allResource.stream().map(resource -> {
             try {
                 return new ParseResource()
-                        .setResourcePath(resource.getFile().getPath())
+                        .setResourcePath(resource.getURL().toString())
                         .setResource(resource.getFilename())
                         .setContent(IoUtil.read(resource.getInputStream(), CharsetUtil.CHARSET_UTF_8));
             } catch (IOException e) {

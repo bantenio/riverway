@@ -7,8 +7,11 @@ import groovy.transform.BaseScript
 
 __init__()
 
+// 整个流程模拟不同channel发送不同长度验证码短信的示例
 THEN(
+        // 请求前置处理
         preProcessNodeComponent,
+        // 判断channel 是2，流程将走len4分支（验证码长度为4）；如果是21，流程走len6分支（验证码长度为6）；
         SWITCH(
                 node(channelSwitchComponent)
                         .swap("channel", ref("#body.channel"))

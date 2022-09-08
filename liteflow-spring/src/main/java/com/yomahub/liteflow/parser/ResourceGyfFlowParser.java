@@ -56,7 +56,7 @@ public class ResourceGyfFlowParser implements UrlFlowParser {
             for (Resource resource : allResource) {
                 fileTypeSet.add(FileUtil.extName(resource.getFilename()));
                 contents.add(new ParseResource()
-                        .setResourcePath(resource.getFile().getPath())
+                        .setResourcePath(resource.getURL().toString())
                         .setResource(resource.getFilename())
                         .setContent(IoUtil.read(resource.getInputStream(), CharsetUtil.CHARSET_UTF_8)));
             }
