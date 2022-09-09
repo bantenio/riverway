@@ -89,7 +89,7 @@ public class LiteFlowChainELBuilder {
         expressRunner.addFunction("node", new NodeOperator(flowConfiguration));
         expressRunner.addFunction("ref", new RefOperator(flowConfiguration));
         expressRunner.addFunction("map", new CreateMapOperator());
-        expressRunner.addFunction("throw", new ThrowOperator());
+        expressRunner.addFunction("Throw", new ThrowOperator());
         expressRunner.addFunctionAndClassMethod("add", Map.class, new PutInMapOperator());
 
         SubPluginManage<?> subPluginManage = flowConfiguration.getPluginManager().getPluginManage(ELChainBuilderSubPluginManage.PLUGIN_MANAGE_NAME);

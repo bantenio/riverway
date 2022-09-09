@@ -34,18 +34,17 @@ public class NodeOperator extends Operator {
         }
 
         if (objects.length != 1) {
-            log.error("parameter error");
             throw new Exception("parameter error");
         }
-
+        Object val = objects[0];
         String nodeId;
-        if (objects[0] instanceof String) {
-            nodeId = (String) objects[0];
-        } else if (objects[0] instanceof Node) {
-            return new NodeCondition((Node) objects[0]);
+        if (val instanceof String) {
+            nodeId = (String) val;
+        } else if (val instanceof Node) {
+            return new NodeCondition((Node) val);
         } else {
-            log.error("The value must be Node item!");
-            throw new Exception("The value must be Node item!");
+            String msg = StrUtil.format("The value must be Node item! now it is {}", val);
+            throw new Exception(msg);
         }
 
         if (flowConfiguration.containNode(nodeId)) {
@@ -59,12 +58,10 @@ public class NodeOperator extends Operator {
                     return substituteNode;
                 } else {
                     String error = StrUtil.format("This node[{}] cannot be found", nodeId);
-                    log.error(error);
                     throw new Exception(error);
                 }
             } else {
                 String error = StrUtil.format("This node[{}] cannot be found, or you can configure an substitute node", nodeId);
-                log.error(error);
                 throw new Exception(error);
             }
         }
