@@ -31,11 +31,11 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void execute(Integer slotIndex) throws Throwable {
+    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
         beforeExecuteForInterceptor(delegate, slot, flowConfiguration);
         try {
-            delegate.execute(slotIndex);
+            delegate.execute(slotIndex, flowConfiguration);
             afterExecuteForInterceptor(delegate, slot, flowConfiguration);
         } catch (ChainEndException e) {
             throw e;
@@ -158,8 +158,8 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName) throws Throwable {
-        delegate.executeConditions(slotIndex, conditionList, chainName);
+    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executeConditions(slotIndex, conditionList, chainName, flowConfiguration);
     }
 
     @Override

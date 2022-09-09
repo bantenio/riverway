@@ -8,6 +8,7 @@
 package com.yomahub.liteflow.flow.element.condition;
 
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Executable;
 
 /**
@@ -21,14 +22,14 @@ public class ThenCondition extends Condition {
 	}
 
 	@Override
-	public void execute(Integer slotIndex) throws Throwable {
+	public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
 		for (Executable executableItem : this.getExecutableList()) {
 			//前置和后置组不执行，因为在build的时候会抽出来放在chain里面
 			if (executableItem instanceof PreCondition || executableItem instanceof FinallyCondition){
 				continue;
 			}
 			executableItem.setCurrChainName(this.getCurrChainName());
-			executableItem.execute(slotIndex);
+			executableItem.execute(slotIndex, flowConfiguration);
 		}
 	}
 }

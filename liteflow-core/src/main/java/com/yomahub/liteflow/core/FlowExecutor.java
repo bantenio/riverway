@@ -75,7 +75,7 @@ public class FlowExecutor {
     //单独调用某一个node
     public void invoke(String nodeId, Integer slotIndex) throws Throwable {
         Node node = flowConfiguration.getNode(nodeId);
-        node.execute(slotIndex);
+        node.execute(slotIndex, flowConfiguration);
     }
 
     //调用一个流程并返回LiteflowResponse，上下文为默认的DefaultContext，初始参数为null
@@ -154,7 +154,7 @@ public class FlowExecutor {
                 chain = new InterceptorChainProxy(chain, flowConfiguration);
             }
             // 执行chain
-            chain.execute(slotIndex);
+            chain.execute(slotIndex, flowConfiguration);
         } catch (ChainEndException e) {
             if (ObjectUtil.isNotNull(chain)) {
                 String warnMsg = StrUtil.format("[{}]:chain[{}] execute end on slot[{}]", slot.getRequestId(), chain.getChainName(), slotIndex);

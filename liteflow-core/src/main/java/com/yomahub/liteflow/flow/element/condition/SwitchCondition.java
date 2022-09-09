@@ -9,6 +9,7 @@ import com.yomahub.liteflow.enums.NodeTypeEnum;
 import com.yomahub.liteflow.exception.NoSwitchTargetNodeException;
 import com.yomahub.liteflow.exception.SwitchTargetCannotBePreOrFinallyException;
 import com.yomahub.liteflow.exception.SwitchTypeErrorException;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Executable;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.slot.DataBus;
@@ -28,7 +29,7 @@ public class SwitchCondition extends Condition {
     private final Map<String, Executable> targetMap = new HashMap<>();
 
     @Override
-    public void execute(Integer slotIndex) throws Throwable {
+    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         Executable executable = this.getSwitchNode();
         NodeComponent nodeComponent = null;
         if (executable instanceof Node) {
@@ -41,7 +42,7 @@ public class SwitchCondition extends Condition {
         if (nodeComponent != null && ListUtil.toList(NodeTypeEnum.SWITCH, NodeTypeEnum.SWITCH_SCRIPT).contains(nodeComponent.getType())) {
             //先执行switch节点
             executable.setCurrChainName(this.getCurrChainName());
-            executable.execute(slotIndex);
+            executable.execute(slotIndex, flowConfiguration);
 
             //根据switch节点执行出来的结果选择
             Slot slot = DataBus.getSlot(slotIndex);
@@ -55,7 +56,7 @@ public class SwitchCondition extends Condition {
                         throw new SwitchTargetCannotBePreOrFinallyException(errorInfo);
                     }
                     targetExecutor.setCurrChainName(this.getCurrChainName());
-                    targetExecutor.execute(slotIndex);
+                    targetExecutor.execute(slotIndex, flowConfiguration);
                 } else {
                     String errorInfo = StrUtil.format("[{}]:no target node find for the component[{}]", slot.getRequestId(), nodeComponent.getDisplayName());
                     throw new NoSwitchTargetNodeException(errorInfo);

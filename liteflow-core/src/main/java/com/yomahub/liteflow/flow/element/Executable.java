@@ -1,6 +1,7 @@
 package com.yomahub.liteflow.flow.element;
 
 import com.yomahub.liteflow.enums.ExecuteTypeEnum;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 
 /**
  * 可执行器接口
@@ -8,11 +9,11 @@ import com.yomahub.liteflow.enums.ExecuteTypeEnum;
  *
  * @author Bryan.Zhang
  */
-public interface Executable{
+public interface Executable {
 
-    void execute(Integer slotIndex) throws Throwable;
+    void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable;
 
-    default boolean isAccess(Integer slotIndex) throws Throwable{
+    default boolean isAccess(Integer slotIndex) throws Throwable {
         return true;
     }
 
@@ -20,7 +21,7 @@ public interface Executable{
 
     String getExecuteName();
 
-    default void setCurrChainName(String currentChainName){
+    default void setCurrChainName(String currentChainName) {
 
     }
 }

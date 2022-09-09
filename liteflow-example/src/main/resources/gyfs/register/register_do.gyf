@@ -11,6 +11,7 @@ __init__()
 THEN(
         // 请求前置处理
         preProcessNodeComponent,
+        apply("@loanService", "loan", "#body.channel"),
         // 判断channel 是2，流程将走len4分支（验证码长度为4）；如果是21，流程走len6分支（验证码长度为6）；
         SWITCH(
                 node(channelSwitchComponent)

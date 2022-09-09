@@ -64,7 +64,7 @@ public class LiteFlowConfiguration {
     }
 
     @Bean
-    public FlowConfiguration flowConfiguration(LiteFlowConfig liteFlowConfig, ExecutorServiceManager executorServiceManager, Map<String, NodeComponent> ignores) {
+    public FlowConfiguration flowConfiguration(LiteFlowConfig liteFlowConfig, ExecutorServiceManager executorServiceManager, Map<String, NodeComponent> ignores, ExtFuncInterceptor extFuncInterceptor) {
         ResourceGyfFlowParser.register();
         SPELRefValueExpressionRunner.registerSelf();
         QLRefValueExpressionRunner.registerSelf();
@@ -74,7 +74,7 @@ public class LiteFlowConfiguration {
                 .setNodeComponentMap(ignores)
                 .setLiteFlowConfig(liteFlowConfig)
                 .addSubManage(new GyfChainBuilderSubPluginManage())
-                .registerInterceptor("extFunc", new ExtFuncInterceptor())
+                .registerInterceptor("extFunc", extFuncInterceptor)
                 .build();
     }
 

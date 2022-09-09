@@ -3,6 +3,7 @@ package com.yomahub.liteflow.flow.element.condition;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.components.ValueHandler;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Executable;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.flow.element.condition.ext.NodeAround;
@@ -27,14 +28,14 @@ public class NodeCondition extends Condition {
     }
 
     @Override
-    public void execute(Integer slotIndex) throws Throwable {
+    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
         slot.putProperties(properties);
-        executeBefore(node, slot, slotIndex);
+        executeBefore(node, slot, slotIndex, flowConfiguration);
         processSwap(node, slot);
         try {
             node.setCurrChainName(this.getCurrChainName());
-            node.execute(slotIndex);
+            node.execute(slotIndex, flowConfiguration);
         } finally {
             slot.clearProperties();
         }
@@ -56,14 +57,14 @@ public class NodeCondition extends Condition {
         }
     }
 
-    protected void executeBefore(Node node, Slot slot, Integer slotIndex) throws Throwable {
+    protected void executeBefore(Node node, Slot slot, Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         List<Executable> list = this.getExecutableList();
         if (list.isEmpty()) {
             return;
         }
         for (Executable executable : list) {
             if (executable instanceof NodeAroundCondition) {
-                executable.execute(slotIndex);
+                executable.execute(slotIndex, flowConfiguration);
             }
         }
     }

@@ -2,6 +2,7 @@ package com.yomahub.liteflow.flow.element.condition;
 
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.enums.ExecuteTypeEnum;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Chain;
 
 import java.util.List;
@@ -49,33 +50,33 @@ public class ChainProxy extends Chain {
     }
 
     @Override
-    public void execute(Integer slotIndex) throws Throwable {
-        delegate.execute(slotIndex);
+    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.execute(slotIndex, flowConfiguration);
     }
 
     @Override
-    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName) throws Throwable {
-        delegate.executeConditions(slotIndex, conditionList, chainName);
+    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executeConditions(slotIndex, conditionList, chainName, flowConfiguration);
     }
 
     @Override
-    public void executePre(Integer slotIndex) throws Throwable {
-        delegate.executePre(slotIndex);
+    public void executePre(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executePre(slotIndex, flowConfiguration);
     }
 
     @Override
-    public void executeException(Integer slotIndex, Throwable e) throws Throwable {
-        delegate.executeException(slotIndex, e);
+    public void executeException(Integer slotIndex, Throwable e, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executeException(slotIndex, e, flowConfiguration);
     }
 
     @Override
-    public void executeAfter(Integer slotIndex) throws Throwable {
-        delegate.executeAfter(slotIndex);
+    public void executeAfter(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executeAfter(slotIndex, flowConfiguration);
     }
 
     @Override
-    public void executeFinally(Integer slotIndex) throws Throwable {
-        delegate.executeFinally(slotIndex);
+    public void executeFinally(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executeFinally(slotIndex, flowConfiguration);
     }
 
     @Override

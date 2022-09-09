@@ -11,6 +11,7 @@ package com.yomahub.liteflow.flow.element.condition;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
 import com.yomahub.liteflow.exception.WhenExecuteException;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.parallel.CompletableFutureTimeout;
 import com.yomahub.liteflow.flow.parallel.ParallelSupplier;
 import com.yomahub.liteflow.flow.parallel.WhenFutureObj;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 /**
  * 并行器
+ *
  * @author Bryan.Zhang
  */
 public class WhenCondition extends Condition {
@@ -43,8 +45,8 @@ public class WhenCondition extends Condition {
 
 
     @Override
-    public void execute(Integer slotIndex) throws Throwable {
-        executeAsyncCondition(slotIndex);
+    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        executeAsyncCondition(slotIndex, flowConfiguration);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class WhenCondition extends Condition {
 
     //使用线程池执行when并发流程
     //这块涉及到挺多的多线程逻辑，所以注释比较详细，看到这里的童鞋可以仔细阅读
-    private void executeAsyncCondition(Integer slotIndex) throws Throwable {
+    private void executeAsyncCondition(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
 
         String currChainName = this.getCurrChainName();
@@ -83,7 +85,7 @@ public class WhenCondition extends Condition {
             }
         }).map(executable -> CompletableFutureTimeout.completeOnTimeout(
                 WhenFutureObj.timeOut(executable.getExecuteName(), liteflowConfig),
-                CompletableFuture.supplyAsync(new ParallelSupplier(executable, currChainName, slotIndex), parallelExecutor),
+                CompletableFuture.supplyAsync(new ParallelSupplier(executable, currChainName, slotIndex, flowConfiguration), parallelExecutor),
                 liteflowConfig.getNodeComponentProperties().getWhenMaxWaitSeconds(),
                 TimeUnit.SECONDS
         )).collect(Collectors.toList());

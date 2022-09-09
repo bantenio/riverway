@@ -12,6 +12,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.yomahub.liteflow.enums.ExecuteTypeEnum;
 import com.yomahub.liteflow.exception.ChainEndException;
 import com.yomahub.liteflow.exception.FlowSystemException;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.condition.Condition;
 import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
@@ -70,7 +71,7 @@ public class Chain implements Executable {
 
     //执行chain的主方法
     @Override
-    public void execute(Integer slotIndex) throws Throwable {
+    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         if (CollUtil.isEmpty(conditionList)) {
             throw new FlowSystemException("no conditionList in this chain[" + chainName + "]");
         }
@@ -79,9 +80,9 @@ public class Chain implements Executable {
             //设置主ChainName
             slot.setChainName(chainName);
             //执行前置
-            this.executePre(slotIndex);
-            this.executeConditions(slotIndex, conditionList, chainName);
-            this.executeAfter(slotIndex);
+            this.executePre(slotIndex, flowConfiguration);
+            this.executeConditions(slotIndex, conditionList, chainName, flowConfiguration);
+            this.executeAfter(slotIndex, flowConfiguration);
         } catch (ChainEndException e) {
             //这里单独catch ChainEndException是因为ChainEndException是用户自己setIsEnd抛出的异常
             //是属于正常逻辑，所以会在FlowExecutor中判断。这里不作为异常处理
@@ -89,39 +90,39 @@ public class Chain implements Executable {
         } catch (Throwable e) {
             //这里事先取到exception set到slot里，为了方便finally取到exception
             slot.setException(e);
-            this.executeException(slotIndex, e);
+            this.executeException(slotIndex, e, flowConfiguration);
             throw e;
         } finally {
             //执行后置
-            this.executeFinally(slotIndex);
+            this.executeFinally(slotIndex, flowConfiguration);
         }
     }
 
-    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName) throws Throwable {
+    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
         //执行主体Condition
         for (Condition condition : conditionList) {
             condition.setCurrChainName(chainName);
-            condition.execute(slotIndex);
+            condition.execute(slotIndex, flowConfiguration);
         }
     }
 
     // 执行pre节点
-    public void executePre(Integer slotIndex) throws Throwable {
+    public void executePre(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         for (Condition condition : this.preConditionList) {
-            condition.execute(slotIndex);
+            condition.execute(slotIndex, flowConfiguration);
         }
     }
 
-    public void executeException(Integer slotIndex, Throwable e) throws Throwable {
+    public void executeException(Integer slotIndex, Throwable e, FlowConfiguration flowConfiguration) throws Throwable {
     }
 
-    public void executeAfter(Integer slotIndex) throws Throwable {
+    public void executeAfter(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
     }
 
     //执行后置
-    public void executeFinally(Integer slotIndex) throws Throwable {
+    public void executeFinally(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         for (Condition condition : this.finallyConditionList) {
-            condition.execute(slotIndex);
+            condition.execute(slotIndex, flowConfiguration);
         }
     }
 

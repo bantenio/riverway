@@ -1,6 +1,7 @@
 package com.yomahub.liteflow.flow.element.condition.ext;
 
 import com.yomahub.liteflow.enums.ExecuteTypeEnum;
+import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Executable;
 import com.yomahub.liteflow.flow.element.condition.NodeCondition;
 import com.yomahub.liteflow.slot.DataBus;
@@ -16,7 +17,7 @@ public class NodeAroundCondition implements Executable {
     }
 
     @Override
-    public void execute(Integer slotIndex) throws Throwable {
+    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         nodeAround.before(nodeCondition, nodeCondition.getNode(), DataBus.getSlot(slotIndex));
     }
 
