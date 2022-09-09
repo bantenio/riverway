@@ -17,6 +17,7 @@ import com.yomahub.liteflow.enums.NodeTypeEnum;
 import com.yomahub.liteflow.exception.*;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Chain;
+import com.yomahub.liteflow.flow.element.Node;
 
 public abstract class BaseFlowParser implements FlowParser {
 
@@ -62,7 +63,7 @@ public abstract class BaseFlowParser implements FlowParser {
         return chain;
     }
 
-    public void buildNode(NodePropBean nodePropBean, FlowConfiguration flowConfiguration) {
+    public Node buildNode(NodePropBean nodePropBean, FlowConfiguration flowConfiguration) {
         String id = nodePropBean.getId();
         String name = nodePropBean.getName();
         String clazz = nodePropBean.getClazz();
@@ -131,7 +132,7 @@ public abstract class BaseFlowParser implements FlowParser {
         }
 
         //进行node的build过程
-        LiteFlowNodeBuilder.createNode(flowConfiguration)
+        return LiteFlowNodeBuilder.createNode(flowConfiguration)
                 .setId(id)
                 .setInstance(nodeComponent)
                 .setName(name)

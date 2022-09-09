@@ -12,7 +12,7 @@ import java.util.Map;
 public class NodeComponentManager {
 
     private static final Logger log = LoggerFactory.getLogger(NodeComponentManager.class);
-    private final Map<String, NodeComponent> nodeComponentMap= new CopyOnWriteHashMap<>();
+    private final Map<String, NodeComponent> nodeComponentMap = new CopyOnWriteHashMap<>();
 
     public NodeComponent getNodeComponent(String nodeId) {
         return nodeComponentMap.get(nodeId);

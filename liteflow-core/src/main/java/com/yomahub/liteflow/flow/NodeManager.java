@@ -35,15 +35,15 @@ public class NodeManager {
         return nodeMap.containsKey(nodeId);
     }
 
-    public void addNode(String nodeId, String name, NodeComponent nodeComponent, FlowConfiguration flowConfiguration) {
+    public Node addNode(String nodeId, String name, NodeComponent nodeComponent, FlowConfiguration flowConfiguration) {
         try {
             //初始化Node
             Node node = new Node(nodeComponent, flowConfiguration);
             node.setName(name);
             nodeMap.put(nodeId, node);
+            return node;
         } catch (Exception e) {
             String error = StrUtil.format("component[{}] register error", StrUtil.isEmpty(name) ? nodeId : StrUtil.format("{}({})", nodeId, name));
-            log.error(error);
             throw new ComponentCannotRegisterException(error);
         }
     }

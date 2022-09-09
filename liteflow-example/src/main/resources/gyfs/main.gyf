@@ -1,5 +1,8 @@
 package gyfs
 
+import com.yomahub.liteflow.example.components.ChannelSwitchComponent
+import com.yomahub.liteflow.example.components.PreProcessNodeComponent
+import com.yomahub.liteflow.example.components.SendVerifyCodeSmsRequestComponent
 import com.yomahub.liteflow.parser.dsl.MainDslScript
 import groovy.transform.BaseScript
 
@@ -7,11 +10,8 @@ import groovy.transform.BaseScript
 
 __init__()
 
-node 'preProcessNodeComponent'
-node 'channelSwitchComponent'
-node 'sendVerifyCodeSmsRequestComponent'
-
+nodeWithId(PreProcessNodeComponent.class)
+nodeWithId(ChannelSwitchComponent.class)
+nodeWithId(SendVerifyCodeSmsRequestComponent.class)
 
 chain 'register/register_do.gyf', 'register_do'
-
-__process_chains__()

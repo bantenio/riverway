@@ -100,8 +100,8 @@ public class FlowConfiguration {
         return nodeManager.containNode(nodeId);
     }
 
-    public void addNode(String nodeId, String name, NodeComponent nodeComponent) {
-        nodeManager.addNode(nodeId, name, nodeComponent, this);
+    public Node addNode(String nodeId, String name, NodeComponent nodeComponent) {
+        return nodeManager.addNode(nodeId, name, nodeComponent, this);
     }
 
     public NodeComponent getNodeComponent(String nodeId) {

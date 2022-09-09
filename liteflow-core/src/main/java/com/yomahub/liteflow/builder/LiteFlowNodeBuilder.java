@@ -69,13 +69,12 @@ public class LiteFlowNodeBuilder {
         return this;
     }
 
-    public void build() {
+    public Node build() {
         checkBuild();
         try {
-            flowConfiguration.addNode(this.node.getId(), this.node.getName(), this.node.getInstance());
+            return flowConfiguration.addNode(this.node.getId(), this.node.getName(), this.node.getInstance());
         } catch (Exception e) {
             String errMsg = StrUtil.format("An exception occurred while building the node[{}]", this.node.getId());
-            log.error(errMsg, e);
             throw new NodeBuildException(errMsg);
         }
     }

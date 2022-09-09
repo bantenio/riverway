@@ -8,7 +8,10 @@ import com.yomahub.liteflow.builder.gyf.prop.GyfChainPropBean
 import com.yomahub.liteflow.core.NodeComponent
 import com.yomahub.liteflow.enums.ConditionTypeEnum
 import com.yomahub.liteflow.flow.FlowConfiguration
+import com.yomahub.liteflow.flow.element.Node
 import com.yomahub.liteflow.parser.base.BaseFlowParser
+import com.yomahub.liteflow.parser.dsl.define.ChainSpec
+import com.yomahub.liteflow.parser.dsl.define.NodeSpec
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
 abstract class MainDslScript extends Script {
@@ -19,7 +22,9 @@ abstract class MainDslScript extends Script {
 
     private ParseResource parseResource
 
-    private Set<GyfChainPropBean> chainPaths = new HashSet<>(10);
+    Set<GyfChainPropBean> chainPaths = new HashSet<>(10)
+
+    LinkedHashMap<String, Node> nodeDefs = []
 
     private Binding binding
 
@@ -33,47 +38,62 @@ abstract class MainDslScript extends Script {
         binding.removeVariable("parseResource")
     }
 
-    Set<GyfChainPropBean> __process_chains__() {
-        chainPaths;
+    void node(@DelegatesTo(NodeSpec.class) Closure closure) {
+        node null, false, closure
     }
 
-    void node(@DelegatesTo(NodePropBean.class) Closure<NodePropBean> closure) {
-        NodePropBean nodePropBean = new NodePropBean()
-        DefaultGroovyMethods.with(nodePropBean, closure)
-        baseFlowParser.buildNode(nodePropBean, flowConfiguration)
-    }
-
-    void node(String id, String name = null, String clazz = null, String type = null) {
-        node({
-            setId id
-            setName name
-            setClazz clazz
-            setType type
-        })
-    }
-
-    void node(Class<? extends NodeComponent> clazz) {
-        def simpleName = clazz.getSimpleName()
-        simpleName = StrUtil.lowerFirst(simpleName)
-        node { ->
-            setId simpleName
-            setClazz clazz.getName()
+    void node(String idVal, String clazzVal = null, String nameVal = null, String typeVal = null) {
+        node null, false, {
+            id(idVal)
+            clazz(clazzVal)
+            name(nameVal)
+            type(typeVal)
         }
     }
 
-    void chain(String path, @DelegatesTo(ChainPropBean.class) Closure<ChainPropBean> closure) {
-        ChainPropBean chainPropBean = new ChainPropBean()
-        DefaultGroovyMethods.with(chainPropBean, closure)
-        String chainName = chainPropBean.getChainName()
+    void node(Class<? extends NodeComponent> clazz, boolean withId = false, @DelegatesTo(NodeSpec.class) Closure closure = null) {
+        NodeSpec nodeSpec = new NodeSpec(nodePropBean: new NodePropBean())
+        if (clazz != null) {
+            if (withId) {
+                nodeSpec.idWithClazz(clazz)
+            } else {
+                nodeSpec.clazz(clazz)
+            }
+        }
+        if (closure != null) {
+            DefaultGroovyMethods.with(nodeSpec, closure)
+        }
+        Node node = baseFlowParser.buildNode(nodeSpec.nodePropBean, flowConfiguration)
+        nodeDefs."$node.id" = node
+    }
+
+    void nodeWithId(Class<? extends NodeComponent> clazz) {
+        node(clazz, true, null)
+    }
+
+    void nodes(List<Class<? extends NodeComponent>> nodeComponentClasses, @DelegatesTo(NodeSpec.class) Closure closure = null) {
+        nodeComponentClasses.forEach(clazz -> {
+            node(clazz, false, closure)
+        })
+    }
+
+    void nodesWithId(List<Class<? extends NodeComponent>> nodeComponentClasses, @DelegatesTo(NodeSpec.class) Closure closure = null) {
+        nodeComponentClasses.forEach(clazz -> {
+            node(clazz, true, closure)
+        })
+    }
+
+    void chain(@DelegatesTo(ChainSpec.class) Closure closure) {
+        ChainSpec chainSpec = new ChainSpec()
+        chainSpec.gyfChainPropBean = new GyfChainPropBean()
+        chainSpec.gyfChainPropBean.chainPropBean(new ChainPropBean())
+        DefaultGroovyMethods.with(chainSpec, closure)
+        String chainName = chainSpec.gyfChainPropBean.getChainName()
         if (flowConfiguration.containChain(chainName)) {
             throw new RuntimeException(StrUtil.format("the {} chain define is duplication", chainName))
         }
         flowConfiguration.addChain(chainName)
-//        LiteFlowChainBuilder chainBuilder = LiteFlowChainBuilder.createChain(flowConfiguration).setChainName(chainName)
-//
-//        // 构建 chain
-//        baseFlowParser.buildChain(chainPropBean, chainBuilder, flowConfiguration, parseResource)
-        chainPaths.add(new GyfChainPropBean(chainPath: path, chainPropBean: chainPropBean))
+        chainPaths.add(chainSpec.gyfChainPropBean)
     }
 
     void chain(String chainPath,
@@ -83,13 +103,19 @@ abstract class MainDslScript extends Script {
                String errorResume = null,
                String threadExecutorName = null,
                String any = null) {
-        chain(chainPath, {
-            setChainName chainName
-            setGroup group
-            setConditionType conditionType
-            setErrorResume errorResume
-            setThreadExecutorName threadExecutorName
-            setAny any
-        })
+        if (flowConfiguration.containChain(chainName)) {
+            throw new RuntimeException(StrUtil.format("the {} chain define is duplication", chainName))
+        }
+        var gyfChainPropBean = new GyfChainPropBean()
+        gyfChainPropBean.chainPropBean(new ChainPropBean())
+        gyfChainPropBean.setChainPath(chainPath)
+                .setChainName(chainName)
+                .setGroup(group)
+                .setConditionType(conditionType)
+                .setErrorResume(errorResume)
+                .setThreadExecutorName(threadExecutorName)
+                .setAny(any)
+        flowConfiguration.addChain(chainName)
+        chainPaths.add(gyfChainPropBean)
     }
 }

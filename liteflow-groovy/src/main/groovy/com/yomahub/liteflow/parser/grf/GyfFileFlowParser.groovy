@@ -50,8 +50,9 @@ class GyfFileFlowParser extends BaseFlowParser {
             for (String nodeId : flowConfiguration.getNodeMap().keySet()) {
                 binding.setVariable(nodeId, flowConfiguration.getNode(nodeId))
             }
-
-            Set<GyfChainPropBean> paths = (Set<GyfChainPropBean>) shell.evaluate(parseResource.getContent())
+            MainDslScript script = (MainDslScript) shell.parse(parseResource.getContent())
+            script.run()
+            Set<GyfChainPropBean> paths = script.chainPaths
             if (paths.isEmpty()) {
                 throw new LiteFlowParseException(StrUtil.format("The resource {} not defined chain", parseResource.getResource()))
             }
@@ -68,7 +69,7 @@ class GyfFileFlowParser extends BaseFlowParser {
         ParseResource parseResource = new ParseResource()
                 .setResourcePath(chainPath.toString())
                 .setResource(gyfChainPropBean.getChainPath())
-                .setContent(FileUtil.readUtf8String(chainPath.toFile()))
+                .setContent(FileUtil.readUtf8String(chainPath.toString()))
         Binding binding = new Binding()
         CompilerConfiguration config = new CompilerConfiguration()
         config.setScriptBaseClass(ChainDslScript.class.getName())

@@ -12,8 +12,9 @@ class GyfChainPropBean {
         return chainPath
     }
 
-    void setChainPath(String chainPath) {
+    GyfChainPropBean setChainPath(String chainPath) {
         this.chainPath = chainPath
+        return this
     }
 
     void chainPropBean(ChainPropBean chainPropBean) {
@@ -21,65 +22,65 @@ class GyfChainPropBean {
     }
 
     String getCondValueStr() {
-        return chainPropBean.getCondValueStr();
+        return chainPropBean.getCondValueStr()
     }
 
     GyfChainPropBean setCondValueStr(String condValueStr) {
         chainPropBean.setCondValueStr(condValueStr)
-        return this;
+        return this
     }
 
     String getGroup() {
-        return chainPropBean.getGroup();
+        return chainPropBean.getGroup()
     }
 
     GyfChainPropBean setGroup(String group) {
         chainPropBean.setGroup(group)
-        return this;
+        return this
     }
 
     String getErrorResume() {
-        return chainPropBean.getErrorResume();
+        return chainPropBean.getErrorResume()
     }
 
     GyfChainPropBean setErrorResume(String errorResume) {
         chainPropBean.setErrorResume(errorResume)
-        return this;
+        return this
     }
 
     String getAny() {
-        return chainPropBean.getAny();
+        return chainPropBean.getAny()
     }
 
     GyfChainPropBean setAny(String any) {
         chainPropBean.setAny(any)
-        return this;
+        return this
     }
 
     String getThreadExecutorName() {
-        return chainPropBean.getThreadExecutorName();
+        return chainPropBean.getThreadExecutorName()
     }
 
     GyfChainPropBean setThreadExecutorName(String threadExecutorName) {
         chainPropBean.setThreadExecutorName(threadExecutorName)
-        return this;
+        return this
     }
 
     ConditionTypeEnum getConditionType() {
-        return chainPropBean.getConditionType();
+        return chainPropBean.getConditionType()
     }
 
     GyfChainPropBean setConditionType(ConditionTypeEnum conditionType) {
         chainPropBean.setConditionType(conditionType)
-        return this;
+        return this
     }
 
     String getChainName() {
-        return chainPropBean.chainName;
+        return chainPropBean.chainName
     }
 
     GyfChainPropBean setChainName(String chainName) {
         chainPropBean.chainName = chainName
-        return this;
+        return this
     }
 }

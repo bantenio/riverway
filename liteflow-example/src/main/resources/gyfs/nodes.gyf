@@ -1,0 +1,13 @@
+package gyfs
+
+import com.yomahub.liteflow.example.components.ChannelSwitchComponent
+import com.yomahub.liteflow.example.components.PreProcessNodeComponent
+import com.yomahub.liteflow.example.components.SendVerifyCodeSmsRequestComponent
+
+class Nodes {
+    LinkedHashMap<String, Node> components = [
+            preProcessNodeComponent          : defineNode(PreProcessNodeComponent.class),
+            channelSwitchComponent           : defineNode(ChannelSwitchComponent.class),
+            sendVerifyCodeSmsRequestComponent: defineNode(SendVerifyCodeSmsRequestComponent.class)
+    ]
+}
