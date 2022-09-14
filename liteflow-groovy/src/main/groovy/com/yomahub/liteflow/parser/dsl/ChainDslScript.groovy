@@ -8,6 +8,7 @@ import com.yomahub.liteflow.builder.gyf.operator.ext.LogNodeAround
 import com.yomahub.liteflow.components.RefValueHandler
 import com.yomahub.liteflow.components.ThrowComponent
 import com.yomahub.liteflow.components.ValueHandler
+import com.yomahub.liteflow.components.ext.StringFormatNodeAround
 import com.yomahub.liteflow.flow.FlowConfiguration
 import com.yomahub.liteflow.flow.element.Executable
 import com.yomahub.liteflow.flow.element.Node
@@ -77,6 +78,15 @@ abstract class ChainDslScript extends Script {
                 throw new LiteFlowParseException("log func message must be not null or empty")
             }
             delegate.addNodeAroundCondition(new LogNodeAround(message, args, level))
+            return delegate
+        }
+        NodeCondition.metaClass.strFmt = { String message, String parameterName, Object... args ->
+
+            if (StrUtil.isBlank(message)) {
+                throw new NullPointerException("strFmt function the message must be blank!");
+            }
+            delegate.addNodeAroundCondition(new StringFormatNodeAround(message, args, parameterName));
+            StrUtil.format(message, args)
             return delegate
         }
     }
@@ -232,13 +242,6 @@ abstract class ChainDslScript extends Script {
         Node node = new Node(new ThrowComponent(valueHandler), flowConfiguration)
         node.setName(name)
         return new NodeCondition(node)
-    }
-
-    String strFmt(String message, Object... args) {
-        if (StrUtil.isBlank(message)) {
-            throw new NullPointerException("strFmt function the message must be blank!");
-        }
-        StrUtil.format(message, args)
     }
 
     def to = { Executable... executables ->
