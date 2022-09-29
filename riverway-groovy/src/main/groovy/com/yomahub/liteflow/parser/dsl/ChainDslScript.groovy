@@ -10,6 +10,7 @@ import com.yomahub.liteflow.components.ThrowComponent
 import com.yomahub.liteflow.components.ValueHandler
 import com.yomahub.liteflow.core.NodeComponent
 import com.yomahub.liteflow.core.NodeSwitchComponent
+import com.yomahub.liteflow.enums.ConditionTypeEnum
 import com.yomahub.liteflow.enums.NodeTypeEnum
 import com.yomahub.liteflow.flow.FlowConfiguration
 import com.yomahub.liteflow.flow.element.Chain
@@ -91,7 +92,9 @@ abstract class ChainDslScript extends Script {
         if (node == null) {
             throw new LiteFlowParseException("SWITCH parameter is null");
         }
-
+        if (node.getNode().getInstance().getType() != NodeTypeEnum.SWITCH) {
+            throw new LiteFlowParseException(StrUtil.format("Component {} is not NodeSwitchComponent", node.getCurrChainName()))
+        }
         SwitchCondition switchCondition = new SwitchCondition();
         switchCondition.setSwitchNode(node);
         return switchCondition;
