@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="stdout.pattern" value="${CONSOLE_LOG_PATTERN:-%d [%thread] %-5level %X{THREAD_ID} %logger{36} %line - [TxId:%X{PtxId},SpanId:%X{PspanId}] - %X{biz.sn}%msg%n}"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${stdout.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

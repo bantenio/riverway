@@ -1,0 +1,44 @@
+package gyfs.register
+
+import com.yomahub.liteflow.example.components.ChannelSwitchComponent
+import com.yomahub.liteflow.example.components.PreProcessNodeComponent
+import com.yomahub.liteflow.example.components.SendVerifyCodeSmsRequestComponent
+import com.yomahub.liteflow.example.result.ErrorCode
+import com.yomahub.liteflow.parser.dsl.ChainDslScript
+import com.yomahub.liteflow.parser.dsl.ext.GYFDslExtension
+import com.yomahub.liteflow.parser.groovy.dsl.SpringExtDefine
+import groovy.transform.BaseScript
+
+import static com.yomahub.liteflow.example.ext.flow.gyf.ExtFunc.w_BizErr
+
+@BaseScript ChainDslScript _
+
+__init__()
+
+use(GYFDslExtension) {
+    chain "register_do", {
+        // 整个流程模拟不同channel发送不同长度验证码短信的示例
+        THEN(
+                // 请求前置处理
+                node(PreProcessNodeComponent.class),
+                SpringExtDefine.apply("@loanService", "loan", "#requestBody.channel"),
+                // 判断channel 是2，流程将走len4分支（验证码长度为4）；如果是21，流程走len6分支（验证码长度为6）；
+                SWITCH(
+                        node(ChannelSwitchComponent.class)
+                                .swap("channel", ref("#requestBody.channel"))
+                                .property("channel.logic.mapping", map().add("2", "len4").add("21", "len6"))
+                ).to(
+                        node(SendVerifyCodeSmsRequestComponent.class)
+                                .swap("mobile", ref("#requestBody.zuid"))
+                                .property("sms.len", 4)
+                                .id("len4"),
+                        node(SendVerifyCodeSmsRequestComponent.class)
+                                .swap("mobile", ref("#requestBody.mobile"))
+                                .property("sms.len", 6)
+                                .id("len6"),
+                        Throw(w_BizErr(ErrorCode.UNKNOWN), "other")
+                )
+        )
+    }
+}
+

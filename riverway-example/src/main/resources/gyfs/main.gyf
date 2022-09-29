@@ -1,0 +1,8 @@
+package gyfs
+
+import com.yomahub.liteflow.parser.dsl.MainDslScript
+import groovy.transform.BaseScript
+
+@BaseScript MainDslScript _
+
+chain('common/verify_amount_chain.gyf')

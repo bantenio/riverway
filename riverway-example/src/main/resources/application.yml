@@ -1,0 +1,9 @@
+app:
+  name: riverway-example
+  config:
+    url: https://www.google.com
+    port: 8080
+logging:
+  file:
+    name: logs/${app.name}.log
+  config: classpath:logback.config.xml

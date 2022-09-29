@@ -20,7 +20,7 @@ repositories {
 }
 
 group = 'org.tenio.riverway'
-version = '1.0.34'
+version = '1.0.46'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 java {

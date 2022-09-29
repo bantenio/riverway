@@ -2,6 +2,12 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 subprojects {
+    configurations {
+        all*.exclude group: "org.apache.logging.log4j"
+        all*.exclude group: "com.alibaba", module: "fastjson"
+        // all*.exclude group: "com.google.code.gson", module: "gson"
+    }
+
     ext {
         protoGradleGeneratedSourcePath="${proto_gradle_generated_source_path}"
     }
