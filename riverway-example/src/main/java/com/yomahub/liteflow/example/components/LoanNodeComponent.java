@@ -19,8 +19,7 @@ public class LoanNodeComponent extends NodeComponent {
     }
 
     @Override
-    public void process(Node node) throws Exception {
-        Slot slot = getSlot();
+    public void process(Node node, Slot slot) throws Exception {
 //        DataObject name = slot.getFirstContextBean();
         DataObject name = slot.getContentBean("body");
 //        DataObject name = slot.getContextBean(DataObject.class);

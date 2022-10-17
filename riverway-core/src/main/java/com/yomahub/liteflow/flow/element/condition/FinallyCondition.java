@@ -19,7 +19,7 @@ import com.yomahub.liteflow.flow.element.Executable;
 public class FinallyCondition extends Condition {
 
 	@Override
-	public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+	public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
 		for(Executable executableItem : this.getExecutableList()){
 			executableItem.setCurrChainName(this.getCurrChainName());
 			executableItem.execute(slotIndex, flowConfiguration);

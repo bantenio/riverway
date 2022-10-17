@@ -7,13 +7,13 @@ import groovy.transform.TypeChecked
 
 @TypeChecked
 class SpringExtDefine {
-    static apply(String target, String methodName, String... args) {
+    static NodeCondition apply(String target, String methodName, String... args) {
         return SPELComponentBuilder.createObtainApplyExpression(
                 SPELUtil.getExpression(target, methodName, Arrays.asList(args))
         )
     }
 
-    static accept( String target, String methodName, String... args) {
+    static NodeCondition accept( String target, String methodName, String... args) {
         return SPELComponentBuilder.createObtainAcceptExpression(
                 SPELUtil.getExpression(target, methodName, Arrays.asList(args))
         )

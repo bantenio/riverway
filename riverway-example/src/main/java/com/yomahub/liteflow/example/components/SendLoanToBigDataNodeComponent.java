@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 public class SendLoanToBigDataNodeComponent extends NodeComponent {
     private static final Logger log = LoggerFactory.getLogger(SendLoanToBigDataNodeComponent.class);
     @Override
-    public void process(Node node) throws Exception {
-        Slot slot = getSlot();
+    public void process(Node node, Slot slot) throws Exception {
         log.info("SendLoanToBigDataNodeComponent.process variable result: {}", slot.getVariable("result"));
         log.info("SendLoanToBigDataNodeComponent.process param1: {}, param2: {}", slot.getProperty("param1"), slot.getProperty("param2"));
     }

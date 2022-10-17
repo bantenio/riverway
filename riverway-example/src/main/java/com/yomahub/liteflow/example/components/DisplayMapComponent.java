@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 public class DisplayMapComponent extends NodeComponent {
     private static final Logger log = LoggerFactory.getLogger(DisplayMapComponent.class);
     @Override
-    public void process(Node node) throws Exception {
-        Slot slot = getSlot();
+    public void process(Node node, Slot slot) throws Exception {
         log.info("DisplayMapComponent newParam param: {}", slot.getParameter("newParam"));
     }
 }

@@ -39,7 +39,7 @@ public class WhenCondition extends Condition {
 
 
     @Override
-    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         executeAsyncCondition(slotIndex, flowConfiguration);
     }
 

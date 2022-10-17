@@ -1,35 +1,24 @@
 package com.yomahub.liteflow.parser.grf
 
-
 import cn.hutool.core.io.IoUtil
 import cn.hutool.core.io.resource.ResourceUtil
 import cn.hutool.core.util.StrUtil
 import com.yomahub.liteflow.builder.LiteFlowParseException
 import com.yomahub.liteflow.builder.ParseResource
-import com.yomahub.liteflow.builder.gyf.prop.GyfChainPropBean
 import com.yomahub.liteflow.flow.FlowConfiguration
 import com.yomahub.liteflow.flow.element.Chain
-import com.yomahub.liteflow.flow.element.Executable
 import com.yomahub.liteflow.flow.element.condition.Condition
 import com.yomahub.liteflow.flow.element.condition.FinallyCondition
 import com.yomahub.liteflow.flow.element.condition.PreCondition
 import com.yomahub.liteflow.parser.base.BaseFlowParser
-import com.yomahub.liteflow.parser.dsl.ChainDslScript
 import com.yomahub.liteflow.parser.dsl.MainDslScript
-import com.yomahub.liteflow.plugins.SubPluginManage
-import com.yomahub.liteflow.plugins.gyf.AddFuncOrOperationInterceptorContext
-import com.yomahub.liteflow.plugins.gyf.AddImportsInterceptorContext
-import com.yomahub.liteflow.plugins.gyf.GyfChainBuilderInterceptor
-import com.yomahub.liteflow.plugins.gyf.GyfChainBuilderSubPluginManage
+import com.yomahub.liteflow.parser.dsl.define.PathChain
 import com.yomahub.liteflow.property.LiteFlowConfig
-import com.yomahub.liteflow.slot.SlotScope
 import groovy.transform.TypeChecked
 import org.codehaus.groovy.control.CompilerConfiguration
-import org.codehaus.groovy.control.customizers.ImportCustomizer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import javax.script.Bindings
 import java.nio.file.Path
 import java.nio.file.Paths
 
@@ -38,6 +27,8 @@ class GyfFileFlowParser extends BaseFlowParser {
     private static Logger log = LoggerFactory.getLogger(GyfFileFlowParser.class)
 
     private HashMap<String, Chain> parsedPaths = new LinkedHashMap<>()
+
+    private Map<String, Chain> mappingChains = null;
 
     @Override
     void parse(List<ParseResource> contentList, LiteFlowConfig liteFlowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {
@@ -54,18 +45,11 @@ class GyfFileFlowParser extends BaseFlowParser {
 
             //这里一定要先放chain，再放node，因为node优先于chain，所以当重名时，node会覆盖掉chain
             //往上下文里放入所有的chain，是的el表达式可以直接引用到chain
-            for (Chain chain : flowConfiguration.getChainMap().values()) {
-                binding.setVariable(chain.getChainName(), chain)
-            }
-
-            //往上下文里放入所有的node，使得el表达式可以直接引用到nodeId
-            for (String nodeId : flowConfiguration.getNodeMap().keySet()) {
-                binding.setVariable(nodeId, flowConfiguration.getNode(nodeId))
-            }
             GroovyShell shell = new GroovyShell(this.getClass().getClassLoader(), binding, config)
-            MainDslScript script = (MainDslScript) shell.parse(parseResource.getContent())
+            MainDslScript script = (MainDslScript) shell.parse(parseResource.getContent(), parseResource.resource)
             script.run()
             Set<String> paths = script.chainPaths
+            mappingChains = script.getMappingChains()
             if (paths.isEmpty()) {
                 throw new LiteFlowParseException(StrUtil.format("The resource {} not defined chain", parseResource.getResource()))
             }
@@ -76,12 +60,19 @@ class GyfFileFlowParser extends BaseFlowParser {
     }
 
     Chain parseChain(String path, FlowConfiguration flowConfiguration, Path parentPath) throws LiteFlowParseException {
+        boolean isPathChain = false
         if (isParsed(path)) {
             Chain chain = parsedPaths.get(path)
+            chain = chain == null ? mappingChains.get(path) : chain
             if (chain == null) {
                 throw new LiteFlowParseException(StrUtil.format("流程循环引用-> {}", path))
             }
-            return chain
+            if (chain instanceof PathChain) {
+                isPathChain = true
+                if (chain.isInited()) {
+                    return chain
+                }
+            }
         }
         parsedPaths.put(path, null)
         Path chainPath = parentPath.resolve(path)
@@ -96,12 +87,32 @@ class GyfFileFlowParser extends BaseFlowParser {
         binding.setVariable("parser", this)
         binding.setVariable("parentPath", parentPath)
         GroovyShell shell = new GroovyShell(this.getClass().getClassLoader(), binding, new CompilerConfiguration())
-        def chain = (Chain) shell.evaluate(parseResource.getContent(), parseResource.getResource())
-        parsedPaths.put(path, chain)
+        Object result = shell.evaluate(parseResource.getContent(), parseResource.getResource())
+        Chain chain = null;
+        if (result instanceof Chain) {
+            parsedPaths.put(path, result)
+            chain = (Chain) result
+        } else if (result instanceof Condition && isPathChain) {
+            def preConditionList = new ArrayList<Condition>()
+            def finallyConditionList = new ArrayList<Condition>()
+            for (executable in result.executableList) {
+                if (executable instanceof PreCondition) {
+                    preConditionList.add(executable)
+                } else if (executable instanceof FinallyCondition) {
+                    finallyConditionList.add(executable)
+                }
+            }
+            def conditionList = new ArrayList<Condition>()
+            conditionList.add(result)
+            chain = mappingChains.get(path)
+            chain.setConditionList(conditionList)
+            chain.setPreConditionList(preConditionList)
+            chain.setFinallyConditionList(finallyConditionList)
+        }
         return chain
     }
 
     boolean isParsed(String path) {
-        return parsedPaths.containsKey(path)
+        return parsedPaths.containsKey(path) || mappingChains.containsKey(path)
     }
 }

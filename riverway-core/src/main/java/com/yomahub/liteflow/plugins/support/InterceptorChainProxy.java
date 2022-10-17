@@ -31,7 +31,7 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
         beforeExecuteForInterceptor(delegate, slot, flowConfiguration);
         try {
@@ -143,8 +143,8 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void setConditionList(List<Condition> conditionList) {
-        delegate.setConditionList(conditionList);
+    public Chain setConditionList(List<Condition> conditionList) {
+        return delegate.setConditionList(conditionList);
     }
 
     @Override
@@ -153,8 +153,8 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void setChainName(String chainName) {
-        delegate.setChainName(chainName);
+    public Chain setChainName(String chainName) {
+        return delegate.setChainName(chainName);
     }
 
     @Override
@@ -178,8 +178,8 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void setPreConditionList(List<Condition> preConditionList) {
-        delegate.setPreConditionList(preConditionList);
+    public Chain setPreConditionList(List<Condition> preConditionList) {
+        return delegate.setPreConditionList(preConditionList);
     }
 
     @Override
@@ -188,8 +188,8 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void setFinallyConditionList(List<Condition> finallyConditionList) {
-        delegate.setFinallyConditionList(finallyConditionList);
+    public Chain setFinallyConditionList(List<Condition> finallyConditionList) {
+        return delegate.setFinallyConditionList(finallyConditionList);
     }
 
     @Override

@@ -8,7 +8,11 @@ public enum ConditionTypeEnum {
     TYPE_PRE("pre","pre"),
     TYPE_FINALLY("finally","finally"),
 
-    TYPE_NODE("node", "node")
+    TYPE_NODE("node", "node"),
+
+    TYPE_FOR("for", "for"),
+
+    TYPE_WHILE("while", "while")
     ;
     private String type;
     private String name;

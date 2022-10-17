@@ -2,6 +2,7 @@ package com.yomahub.liteflow.flow.element;
 
 import com.yomahub.liteflow.enums.ExecuteTypeEnum;
 import com.yomahub.liteflow.flow.FlowConfiguration;
+import com.yomahub.liteflow.slot.Slot;
 
 /**
  * 可执行器接口
@@ -11,7 +12,21 @@ import com.yomahub.liteflow.flow.FlowConfiguration;
  */
 public interface Executable {
 
-    void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable;
+    default Object execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        if (hasResult()) {
+            return processWithResult(slotIndex, flowConfiguration);
+        } else {
+            process(slotIndex, flowConfiguration);
+            return null;
+        }
+    }
+
+    void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable;
+
+    default Object processWithResult(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        return null;
+    }
+
 
     default boolean isAccess(Integer slotIndex) throws Throwable {
         return true;
@@ -23,5 +38,9 @@ public interface Executable {
 
     default void setCurrChainName(String currentChainName) {
 
+    }
+
+    default boolean hasResult() {
+        return false;
     }
 }

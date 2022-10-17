@@ -12,7 +12,6 @@ import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,17 +27,24 @@ public class NodeCondition extends Condition {
     }
 
     @Override
-    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public Object execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
         slot.putProperties(properties);
         executeBefore(node, slot, slotIndex, flowConfiguration);
         processSwap(node, slot);
+        Object result = null;
         try {
             node.setCurrChainName(this.getCurrChainName());
-            node.execute(slotIndex, flowConfiguration);
+            result = node.execute(slotIndex, flowConfiguration);
         } finally {
             slot.clearProperties();
         }
+        return result;
+    }
+
+    @Override
+    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+
     }
 
     public void processSwap(Node node, Slot slot) throws Throwable {
@@ -109,5 +115,10 @@ public class NodeCondition extends Condition {
 
     public void addNodeAroundCondition(NodeAround nodeAround) {
         this.getExecutableList().add(new NodeAroundCondition(this, nodeAround));
+    }
+
+    @Override
+    public boolean hasResult() {
+        return node.hasResult();
     }
 }

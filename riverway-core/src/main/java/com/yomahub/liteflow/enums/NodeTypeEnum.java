@@ -10,6 +10,10 @@ public enum NodeTypeEnum {
 
     SWITCH("switch", "条件"),
 
+    FOR("for", "次数循环"),
+    WHILE("while", "条件循环"),
+    BREAK("break", "跳出循环"),
+
     SCRIPT("script","脚本"),
     SWITCH_SCRIPT("switch_script","条件脚本")
     ;

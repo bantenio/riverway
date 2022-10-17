@@ -12,8 +12,7 @@ public class SendVerifyCodeSmsRequestComponent extends NodeComponent {
     private static final Logger log = LoggerFactory.getLogger(SendVerifyCodeSmsRequestComponent.class);
 
     @Override
-    public void process(Node node) throws Exception {
-        Slot slot = getSlot();
+    public void process(Node node, Slot slot) throws Exception {
         Integer smsLen = slot.getPropertyByType("sms.len");
         String mobile = slot.getParameterByType("mobile");
         sendVerifyCodeToMobile(smsLen, mobile);

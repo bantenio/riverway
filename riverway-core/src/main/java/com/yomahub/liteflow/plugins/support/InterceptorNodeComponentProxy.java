@@ -31,12 +31,13 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
     }
 
     @Override
-    public void execute(Node node, boolean isRetry) throws Throwable {
+    public Object execute(Node node, boolean isRetry) throws Throwable {
         Slot slot = delegate.getSlot();
         String chainName = slot.getChainName();
         beforeExecuteForInterceptor(chainName, node, delegate, slot, flowConfiguration, isRetry);
+        Object result = null;
         try {
-            delegate.execute(node, isRetry);
+            result = delegate.execute(node, isRetry);
             afterExecuteForInterceptor(chainName, node, delegate, slot, flowConfiguration, slot.getLastStep());
         } catch (ChainEndException e) {
             throw e;
@@ -46,6 +47,7 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
         } finally {
             this.afterFinallyForInterceptor(chainName, node, delegate, slot, flowConfiguration);
         }
+        return result;
     }
 
 
@@ -156,8 +158,8 @@ public class InterceptorNodeComponentProxy extends NodeComponent {
     }
 
     @Override
-    public void process(Node node) throws Throwable {
-        delegate.process(node);
+    public Object process(Node node) throws Throwable {
+        return delegate.process(node);
     }
 
     @Override

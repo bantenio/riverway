@@ -36,8 +36,8 @@ public class ChainProxy extends Chain {
     }
 
     @Override
-    public void setConditionList(List<Condition> conditionList) {
-        delegate.setConditionList(conditionList);
+    public Chain setConditionList(List<Condition> conditionList) {
+        return delegate.setConditionList(conditionList);
     }
 
     @Override
@@ -46,13 +46,22 @@ public class ChainProxy extends Chain {
     }
 
     @Override
-    public void setChainName(String chainName) {
-        delegate.setChainName(chainName);
+    public Chain setChainName(String chainName) {
+        return delegate.setChainName(chainName);
     }
 
     @Override
-    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        delegate.execute(slotIndex, flowConfiguration);
+    public Object execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        return delegate.execute(slotIndex, flowConfiguration);
+    }
+
+    @Override
+    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.process(slotIndex, flowConfiguration);
+    }
+
+    public Object processWithResult(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        return delegate.processWithResult(slotIndex, flowConfiguration);
     }
 
     @Override
@@ -96,8 +105,8 @@ public class ChainProxy extends Chain {
     }
 
     @Override
-    public void setPreConditionList(List<Condition> preConditionList) {
-        delegate.setPreConditionList(preConditionList);
+    public Chain setPreConditionList(List<Condition> preConditionList) {
+        return delegate.setPreConditionList(preConditionList);
     }
 
     @Override
@@ -106,8 +115,8 @@ public class ChainProxy extends Chain {
     }
 
     @Override
-    public void setFinallyConditionList(List<Condition> finallyConditionList) {
-        delegate.setFinallyConditionList(finallyConditionList);
+    public Chain setFinallyConditionList(List<Condition> finallyConditionList) {
+        return delegate.setFinallyConditionList(finallyConditionList);
     }
 
     @Override

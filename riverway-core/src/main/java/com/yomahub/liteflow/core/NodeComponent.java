@@ -67,11 +67,11 @@ public abstract class NodeComponent implements NodeProcessor {
     public NodeComponent() {
     }
 
-    public void execute(Node node, boolean isRetry) throws Throwable {
-        executeInner(node, isRetry);
+    public Object execute(Node node, boolean isRetry) throws Throwable {
+        return executeInner(node, isRetry);
     }
 
-    protected void executeInner(Node node, boolean isRetry) throws Throwable {
+    protected Object executeInner(Node node, boolean isRetry) throws Throwable {
         Slot slot = this.getSlot();
 
         //在元数据里加入step信息
@@ -80,14 +80,14 @@ public abstract class NodeComponent implements NodeProcessor {
         slot.addStep(cmpStep);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-
+        Object result = null;
 
         try {
             //前置处理
             self.beforeProcess(this.getNodeId(), slot);
 
             //主要的处理逻辑
-            self.process(node);
+            result = self.process(node);
 
             //成功后回调方法
             self.onSuccess(node);
@@ -120,10 +120,16 @@ public abstract class NodeComponent implements NodeProcessor {
             self.afterProcess(this.getNodeId(), slot);
             slot._swapParameter();
         }
+        return result;
     }
 
     public void process(Node node, Slot slot) throws Throwable {
     }
+
+    public Object processWithResult(Node node, Slot slot) throws Throwable {
+        return null;
+    }
+
 
     public <T> void beforeProcess(String nodeId, Slot slot) {
     }

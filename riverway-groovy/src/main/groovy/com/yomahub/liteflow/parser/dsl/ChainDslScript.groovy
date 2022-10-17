@@ -5,20 +5,19 @@ import cn.hutool.core.util.ObjectUtil
 import cn.hutool.core.util.StrUtil
 import com.yomahub.liteflow.builder.LiteFlowParseException
 import com.yomahub.liteflow.builder.prop.NodePropBean
-import com.yomahub.liteflow.components.RefValueHandler
-import com.yomahub.liteflow.components.ThrowComponent
-import com.yomahub.liteflow.components.ValueHandler
+import com.yomahub.liteflow.components.*
 import com.yomahub.liteflow.core.NodeComponent
 import com.yomahub.liteflow.core.NodeSwitchComponent
-import com.yomahub.liteflow.enums.ConditionTypeEnum
 import com.yomahub.liteflow.enums.NodeTypeEnum
 import com.yomahub.liteflow.flow.FlowConfiguration
 import com.yomahub.liteflow.flow.element.Chain
 import com.yomahub.liteflow.flow.element.Executable
 import com.yomahub.liteflow.flow.element.Node
 import com.yomahub.liteflow.flow.element.condition.*
+import com.yomahub.liteflow.parser.dsl.define.PathChain
 import com.yomahub.liteflow.parser.grf.GyfFileFlowParser
 import com.yomahub.liteflow.property.LiteFlowConfig
+import com.yomahub.liteflow.slot.SlotScope
 import groovy.transform.TypeChecked
 
 import java.nio.file.Path
@@ -34,7 +33,7 @@ abstract class ChainDslScript extends Script {
 
     private Path parentPath
 
-    void __init__() {
+    void __init__(boolean includeChainAndNode = false) {
         this.binding = this.getBinding()
         this.flowConfiguration = (FlowConfiguration) this.binding.getVariable("flowConfiguration")
         this.parser = (GyfFileFlowParser) binding.getVariable("parser")
@@ -42,6 +41,20 @@ abstract class ChainDslScript extends Script {
         this.binding.removeVariable("flowConfiguration")
         this.binding.removeVariable("parser")
         this.binding.removeVariable("parentPath")
+        if (includeChainAndNode) {
+            for (Chain chain : flowConfiguration.getChainMap().values()) {
+                binding.setVariable(chain.getChainName(), chain)
+            }
+
+            //往上下文里放入所有的node，使得el表达式可以直接引用到nodeId
+            for (String nodeId : flowConfiguration.getNodeMap().keySet()) {
+                binding.setVariable(nodeId, flowConfiguration.getNode(nodeId))
+            }
+
+            binding.setVariable("SCOPE_VARIABLE", SlotScope.SCOPE_VARIABLE)
+            binding.setVariable("SCOPE_PARAMETER", SlotScope.SCOPE_PARAMETER)
+            binding.setVariable("SCOPE_RESPONSE", SlotScope.SCOPE_RESPONSE)
+        }
     }
 
     ThenCondition THEN(Executable... executables) throws Throwable {
@@ -225,6 +238,9 @@ abstract class ChainDslScript extends Script {
         flowConfiguration.addChain(chainName)
         defineFunc.delegate = this
         def chain = flowConfiguration.getChain(chainName)
+        if (chain instanceof PathChain && chain.isInited()) {
+            return chain
+        }
         def condition = defineFunc()
         if (condition != null) {
             def preConditionList = new ArrayList<Condition>()
@@ -242,6 +258,9 @@ abstract class ChainDslScript extends Script {
             chain.setPreConditionList(preConditionList)
             chain.setFinallyConditionList(finallyConditionList)
         }
+        if (chain instanceof PathChain) {
+            chain.setInited(true)
+        }
         return chain
     }
 
@@ -249,4 +268,47 @@ abstract class ChainDslScript extends Script {
         return parser.parseChain(path, flowConfiguration, parentPath)
     }
 
+    ForCondition FOR(Node node) {
+        NodeComponent component = node.getInstance()
+        if (!(component instanceof NodeForComponent)) {
+            throw new LiteFlowParseException(StrUtil.format("the component {} is not NodeForComponent instance", component.getClass().getName()))
+        }
+        return new ForCondition().setForNode(node)
+    }
+
+    ForCondition FOR(NodeCondition node) {
+        NodeComponent component = node.getNode().getInstance()
+        if (!(component instanceof NodeForComponent)) {
+            throw new LiteFlowParseException(StrUtil.format("the component {} is not NodeForComponent instance", component.getClass().getName()))
+        }
+        return new ForCondition().setForNode(node)
+    }
+
+    ForCondition FOR(Class<? extends NodeForComponent> clazz) {
+        return new ForCondition().setForNode(node(clazz))
+    }
+
+    ForCondition FOR(int loopCount) {
+        return FOR(new Node(new NodeForComponent(loopCount)))
+    }
+
+    WhileCondition WHILE(Node node) {
+        NodeComponent component = node.getInstance()
+        if (!(component instanceof NodeWhileComponent)) {
+            throw new LiteFlowParseException(StrUtil.format("the component {} is not NodeWhileComponent instance", component.getClass().getName()))
+        }
+        return new WhileCondition().setWhileNode(node)
+    }
+
+    WhileCondition WHILE(NodeCondition node) {
+        NodeComponent component = node.getNode().getInstance()
+        if (!(component instanceof NodeWhileComponent)) {
+            throw new LiteFlowParseException(StrUtil.format("the component {} is not NodeWhileComponent instance", component.getClass().getName()))
+        }
+        return new WhileCondition().setWhileNode(node)
+    }
+
+    WhileCondition WHILE(Class<? extends NodeWhileComponent> clazz) {
+        return new WhileCondition().setWhileNode(node(clazz))
+    }
 }

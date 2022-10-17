@@ -29,7 +29,7 @@ public class SwitchCondition extends Condition {
     private final Map<String, Executable> targetMap = new HashMap<>();
 
     @Override
-    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         Executable executable = this.getSwitchNode();
         NodeComponent nodeComponent = null;
         if (executable instanceof Node) {

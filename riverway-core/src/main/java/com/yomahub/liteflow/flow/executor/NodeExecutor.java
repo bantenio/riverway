@@ -25,10 +25,11 @@ public abstract class NodeExecutor {
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     //执行器执行入口-若需要更大维度的执行方式可以重写该方法
-    public void execute(Node node, FlowConfiguration flowConfiguration) throws Throwable {
+    public Object execute(Node node, FlowConfiguration flowConfiguration) throws Throwable {
         NodeComponent instance = node.getInstance();
         int retryCount = node.getRetryCount();
         List<Class<? extends Exception>> forExceptions = Arrays.asList(instance.getRetryForExceptions());
+        Object result = null;
         for (int i = 0; i <= retryCount; i++) {
             try {
                 // 先执行一次
@@ -37,10 +38,10 @@ public abstract class NodeExecutor {
                     if (pluginManager != null && !pluginManager.getPluginManage(NodeComponentExecutorPluginManage.PLUGIN_MANAGE_NAME).isEmpty()) {
                         instance = new InterceptorNodeComponentProxy(instance, flowConfiguration);
                     }
-                    instance.execute(node, false);
+                    result = instance.execute(node, false);
                 } else {
                     // 进入重试逻辑
-                    retry(instance, i, node, flowConfiguration);
+                    result = retry(instance, i, node, flowConfiguration);
                 }
                 break;
             } catch (ChainEndException e) {
@@ -53,12 +54,14 @@ public abstract class NodeExecutor {
                 if (!flag || i >= retryCount) {
                     throw e;
                 }
+                return null;
             }
         }
+        return result;
     }
 
     //执行重试逻辑 - 子类通过实现该方法进行重试逻辑的控制
-    protected void retry(NodeComponent instance, int currentRetryCount, Node node, FlowConfiguration flowConfiguration) throws Throwable {
+    protected Object retry(NodeComponent instance, int currentRetryCount, Node node, FlowConfiguration flowConfiguration) throws Throwable {
         Slot slot = DataBus.getSlot(instance.getSlotIndex());
         log.info("[{}]:component[{}] performs {} retry", slot.getRequestId(), instance.getDisplayName(), currentRetryCount + 1);
         PluginManager pluginManager = flowConfiguration.getPluginManager();
@@ -66,6 +69,6 @@ public abstract class NodeExecutor {
             instance = new InterceptorNodeComponentProxy(instance, flowConfiguration);
         }
         //执行业务逻辑的主要入口
-        instance.execute(node, true);
+        return instance.execute(node, true);
     }
 }

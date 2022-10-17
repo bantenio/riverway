@@ -57,21 +57,23 @@ public class Chain implements Executable {
         return conditionList;
     }
 
-    public void setConditionList(List<Condition> conditionList) {
+    public Chain setConditionList(List<Condition> conditionList) {
         this.conditionList = conditionList;
+        return this;
     }
 
     public String getChainName() {
         return chainName;
     }
 
-    public void setChainName(String chainName) {
+    public Chain setChainName(String chainName) {
         this.chainName = chainName;
+        return this;
     }
 
     //执行chain的主方法
     @Override
-    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         if (CollUtil.isEmpty(conditionList)) {
             throw new FlowSystemException("no conditionList in this chain[" + chainName + "]");
         }
@@ -140,15 +142,17 @@ public class Chain implements Executable {
         return preConditionList;
     }
 
-    public void setPreConditionList(List<Condition> preConditionList) {
+    public Chain setPreConditionList(List<Condition> preConditionList) {
         this.preConditionList = preConditionList;
+        return this;
     }
 
     public List<Condition> getFinallyConditionList() {
         return finallyConditionList;
     }
 
-    public void setFinallyConditionList(List<Condition> finallyConditionList) {
+    public Chain setFinallyConditionList(List<Condition> finallyConditionList) {
         this.finallyConditionList = finallyConditionList;
+        return this;
     }
 }

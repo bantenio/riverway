@@ -114,7 +114,7 @@ public class Node implements Executable, Cloneable {
     //node的执行主要逻辑
     //所有的可执行节点，其实最终都会落到node上来，因为chain中包含的也是node
     @Override
-    public void execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         NodeComponent instance = getInstance(flowConfiguration);
 
         Slot slot = DataBus.getSlot(slotIndex);
@@ -157,6 +157,54 @@ public class Node implements Executable, Cloneable {
             instance.removeTag();
             instance.removeCurrChainName();
         }
+    }
+
+    @Override
+    public Object processWithResult(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        NodeComponent instance = getInstance(flowConfiguration);
+
+        Slot slot = DataBus.getSlot(slotIndex);
+        Object result = null;
+        try {
+            //判断是否可执行，所以isAccess经常作为一个组件进入的实际判断要素，用作检查slot里的参数的完备性
+            if (instance.isAccess()) {
+                //根据配置判断是否打印执行中的日志
+                log.info("[{}]:[O]start component[{}] execution", slot.getRequestId(), getDisplayName());
+
+                //这里开始进行重试的逻辑和主逻辑的运行
+                NodeExecutor nodeExecutor = NodeExecutorHelper.loadInstance().buildNodeExecutor(instance.getNodeExecutorClass());
+                // 调用节点执行器进行执行
+                instance.setSlotIndex(slotIndex);
+                instance.setSelf(instance);
+                result = nodeExecutor.execute(this, flowConfiguration);
+                //如果组件覆盖了isEnd方法，或者在在逻辑中主要调用了setEnd(true)的话，流程就会立马结束
+                if (instance.isEnd()) {
+                    String errorInfo = StrUtil.format("[{}]:[{}] lead the chain to end", slot.getRequestId(), getDisplayName());
+                    throw new ChainEndException(errorInfo);
+                }
+            } else {
+                log.info("[{}]:[X]skip component[{}] execution", slot.getRequestId(), instance.getDisplayName());
+            }
+        } catch (ChainEndException e) {
+            throw e;
+        } catch (Exception e) {
+            //如果组件覆盖了isContinueOnError方法，返回为true，那即便出了异常，也会继续流程
+            if (instance.isContinueOnError()) {
+                String errorMsg = MessageFormat.format("[{0}]:component[{1}] cause error,but flow is still go on", slot.getRequestId(), getExecuteName());
+                log.error(errorMsg);
+            } else {
+                String errorMsg = MessageFormat.format("[{0}]:component[{1}] cause error,error:{2}", slot.getRequestId(), getExecuteName(), e.getMessage());
+                log.error(errorMsg);
+                throw e;
+            }
+        } finally {
+            //移除threadLocal里的信息
+            instance.removeSlotIndex();
+            instance.removeIsEnd();
+            instance.removeTag();
+            instance.removeCurrChainName();
+        }
+        return result;
     }
 
     //在同步场景并不会单独执行这方法，同步场景会在execute里面去判断isAccess。
@@ -227,5 +275,10 @@ public class Node implements Executable, Cloneable {
 
     public void setRetryCount(int retryCount) {
         this.retryCount = retryCount;
+    }
+
+    @Override
+    public boolean hasResult() {
+        return instance.hasResult();
     }
 }
