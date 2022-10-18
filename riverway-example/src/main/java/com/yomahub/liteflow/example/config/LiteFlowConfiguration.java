@@ -32,7 +32,8 @@ public class LiteFlowConfiguration {
 
     @Bean
     public LiteFlowConfig liteFlowConfig(ExecutorProperties executorProperties) {
-        return new LiteFlowConfig().setFlowPaths(Arrays.asList("gyf:classpath*://gyfs/main.gyf"))
+        return new LiteFlowConfig()
+                .setFlowPaths(Arrays.asList("gyf:classpath*://gyfs/main.gyf"))
                 .setRefType(SPELRefValueExpressionRunner.REF_VALUE_TYPE)
                 .setExecutorProperties(executorProperties);
     }

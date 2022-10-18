@@ -9,7 +9,7 @@ class SPELUtil {
         if (args != null) {
             params = new StringBuilder()
             for (arg in args) {
-                if (params.size() == 0 && args.size() > 1) {
+                if (params.size() > 0) {
                     params.append(',')
                 }
                 params.append(arg)
