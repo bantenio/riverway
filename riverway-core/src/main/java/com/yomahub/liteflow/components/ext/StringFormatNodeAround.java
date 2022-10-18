@@ -1,6 +1,6 @@
 package com.yomahub.liteflow.components.ext;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.yomahub.liteflow.components.ConstantValueHandler;
 import com.yomahub.liteflow.components.ValueHandler;
 import com.yomahub.liteflow.flow.element.Node;
@@ -31,8 +31,10 @@ public class StringFormatNodeAround implements NodeAround {
                 tmpArgs[idx] = ((ValueHandler) arg).getValue(slot, node);
             } else if (arg instanceof String) {
                 tmpArgs[idx] = slot.getVariable((String) arg);
+            } else {
+                tmpArgs[idx] = new ConstantValueHandler(arg);
             }
         }
-        nodeCondition.addSwapHandler(parameterName, new ConstantValueHandler(StrUtil.format(message, tmpArgs)));
+        nodeCondition.addSwapHandler(parameterName, new ConstantValueHandler(CharSequenceUtil.format(message, tmpArgs)));
     }
 }

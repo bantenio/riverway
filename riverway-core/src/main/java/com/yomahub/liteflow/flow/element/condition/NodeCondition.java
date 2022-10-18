@@ -1,6 +1,6 @@
 package com.yomahub.liteflow.flow.element.condition;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.yomahub.liteflow.components.ValueHandler;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
 import com.yomahub.liteflow.flow.FlowConfiguration;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NodeCondition extends Condition {
+public class NodeCondition extends Condition<NodeCondition> {
     private final Node node;
 
     private final Map<String, Object> properties = new HashMap<>();
@@ -59,16 +59,18 @@ public class NodeCondition extends Condition {
             } else if (valRef instanceof ValueHandler) {
                 Object val = ((ValueHandler) valRef).getValue(slot, node);
                 slot._putInParameter(entry.getKey(), val);
+            } else {
+                slot._putInParameter(entry.getKey(), valRef);
             }
         }
     }
 
     protected void executeBefore(Node node, Slot slot, Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        List<Executable> list = this.getExecutableList();
+        List<Executable<? extends Executable<?>>> list = this.getExecutableList();
         if (list.isEmpty()) {
             return;
         }
-        for (Executable executable : list) {
+        for (Executable<? extends Executable<?>> executable : list) {
             if (executable instanceof NodeAroundCondition) {
                 executable.execute(slotIndex, flowConfiguration);
             }
@@ -76,11 +78,11 @@ public class NodeCondition extends Condition {
     }
 
     protected void executeAfter(Node node, Slot slot, Integer slotIndex) throws Throwable {
-        List<Executable> list = this.getExecutableList();
+        List<Executable<? extends Executable<?>>> list = this.getExecutableList();
         if (list.isEmpty()) {
             return;
         }
-        for (Executable executable : list) {
+        for (Executable<? extends Executable<?>> executable : list) {
             if (executable instanceof NodeAroundCondition) {
                 ((NodeAroundCondition) executable).executeAfter(slotIndex);
             }
@@ -92,12 +94,37 @@ public class NodeCondition extends Condition {
         return ConditionTypeEnum.TYPE_NODE;
     }
 
-    public void addProperty(String key, Object value) {
+    public NodeCondition addProperty(String key, Object value) {
         properties.put(key, value);
+        return getSelf();
     }
 
-    public void addSwapHandler(String key, Object valSwap) {
+    public NodeCondition property(String key, Object value) {
+        properties.put(key, value);
+        return getSelf();
+    }
+
+    public Object getProperty(String key) {
+        return properties.get(key);
+    }
+
+    public <T> T getPropertyByType(String key) {
+        return (T) properties.get(key);
+    }
+
+
+    public <T> T property(String key) {
+        return getPropertyByType(key);
+    }
+
+    public NodeCondition addSwapHandler(String key, Object valSwap) {
         swaps.put(key, valSwap);
+        return getSelf();
+    }
+
+    public NodeCondition swap(String key, Object valSwap) {
+        swaps.put(key, valSwap);
+        return getSelf();
     }
 
     public Node getNode() {
@@ -106,16 +133,29 @@ public class NodeCondition extends Condition {
 
     @Override
     public String getExecuteName() {
-        return StrUtil.blankToDefault(this.getId(), node.getExecuteName());
+        return CharSequenceUtil.blankToDefault(this.getId(), node.getExecuteName());
     }
 
-    public void addNodeAroundCondition(NodeAroundCondition nodeAroundCondition) {
+    public NodeCondition addNodeAroundCondition(NodeAroundCondition nodeAroundCondition) {
         this.getExecutableList().add(nodeAroundCondition);
+        return getSelf();
     }
 
-    public void addNodeAroundCondition(NodeAround nodeAround) {
+    public NodeCondition addNodeAroundCondition(NodeAround nodeAround) {
         this.getExecutableList().add(new NodeAroundCondition(this, nodeAround));
+        return getSelf();
     }
+
+    public NodeCondition nodeAround(NodeAroundCondition nodeAroundCondition) {
+        this.getExecutableList().add(nodeAroundCondition);
+        return getSelf();
+    }
+
+    public NodeCondition nodeAround(NodeAround nodeAround) {
+        this.getExecutableList().add(new NodeAroundCondition(this, nodeAround));
+        return getSelf();
+    }
+
 
     @Override
     public boolean hasResult() {

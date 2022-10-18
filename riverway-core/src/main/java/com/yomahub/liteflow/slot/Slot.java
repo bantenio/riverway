@@ -370,4 +370,8 @@ public class Slot {
     public boolean hasProperty(String key) {
         return this.properties.containsKey(key);
     }
+
+    public FlowConfiguration getFlowConfiguration() {
+        return this.getFlowConfiguration();
+    }
 }

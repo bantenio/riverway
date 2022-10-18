@@ -15,7 +15,7 @@ import com.yomahub.liteflow.flow.element.Executable;
  * 串行器
  * @author Bryan.Zhang
  */
-public class ThenCondition extends Condition {
+public class ThenCondition extends Condition<ThenCondition> {
 	@Override
 	public ConditionTypeEnum getConditionType() {
 		return ConditionTypeEnum.TYPE_THEN;
@@ -23,7 +23,7 @@ public class ThenCondition extends Condition {
 
 	@Override
 	public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-		for (Executable executableItem : this.getExecutableList()) {
+		for (Executable<? extends Executable<?>> executableItem : this.getExecutableList()) {
 			//前置和后置组不执行，因为在build的时候会抽出来放在chain里面
 			if (executableItem instanceof PreCondition || executableItem instanceof FinallyCondition){
 				continue;

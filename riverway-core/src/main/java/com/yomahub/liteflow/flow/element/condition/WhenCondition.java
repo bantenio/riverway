@@ -8,6 +8,7 @@
  */
 package com.yomahub.liteflow.flow.element.condition;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
 import com.yomahub.liteflow.exception.WhenExecuteException;
@@ -15,7 +16,6 @@ import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.parallel.CompletableFutureTimeout;
 import com.yomahub.liteflow.flow.parallel.ParallelSupplier;
 import com.yomahub.liteflow.flow.parallel.WhenFutureObj;
-import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  *
  * @author Bryan.Zhang
  */
-public class WhenCondition extends Condition {
+public class WhenCondition extends Condition<WhenCondition> {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
@@ -144,7 +144,7 @@ public class WhenCondition extends Condition {
             //循环判断CompletableFuture的返回值，如果异步执行失败，则抛出相应的业务异常
             for (WhenFutureObj whenFutureObj : allCompletableWhenFutureObjList) {
                 if (!whenFutureObj.isSuccess()) {
-                    LOG.info(StrUtil.format("requestId [{}] when-executor[{}] execute failed. errorResume [false].", slot.getRequestId(), whenFutureObj.getExecutorName()));
+                    LOG.info(CharSequenceUtil.format("requestId [{}] when-executor[{}] execute failed. errorResume [false].", slot.getRequestId(), whenFutureObj.getExecutorName()));
                     throw whenFutureObj.getEx();
                 }
             }

@@ -6,12 +6,12 @@
 
 rootProject.name = 'riverway'
 include(":${project_root_name}-core")
-include(":${project_root_name}-qlexpress")
 include(":${project_root_name}-parser")
-include(":${project_root_name}-script-common")
+include(":${project_root_name}-qlexpress")
 include(":${project_root_name}-groovy")
-include(":${project_root_name}-kotlin")
 include(":${project_root_name}-spring")
-include(":${project_root_name}-example")
-include(":${project_root_name}-spring-kotlin")
 include(":${project_root_name}-spring-groovy")
+//include(":${project_root_name}-kotlin")
+//include(":${project_root_name}-spring-kotlin")
+include(":${project_root_name}-script-common")
+include(":${project_root_name}-example")

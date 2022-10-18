@@ -34,7 +34,6 @@ ext {
 }
 
 dependencies {
-    implementation project(":${project_root_name}-spring-kotlin")
     implementation project(":${project_root_name}-spring-groovy")
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: "com.fasterxml.jackson.core", module: "jackson-databind"

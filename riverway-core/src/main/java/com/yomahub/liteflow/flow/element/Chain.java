@@ -27,19 +27,19 @@ import java.util.List;
  *
  * @author Bryan.Zhang
  */
-public class Chain implements Executable {
+public class Chain<T extends Chain<T>> implements Executable<T> {
 
     private static final Logger log = LoggerFactory.getLogger(Chain.class);
 
     private String chainName;
 
-    private List<Condition> conditionList = new ArrayList<>();
+    private List<Condition<? extends Condition<?>>> conditionList = new ArrayList<>();
 
     //前置处理Condition，用来区别主体的Condition
-    private List<Condition> preConditionList = new ArrayList<>();
+    private List<Condition<? extends Condition<?>>> preConditionList = new ArrayList<>();
 
     //后置处理Condition，用来区别主体的Condition
-    private List<Condition> finallyConditionList = new ArrayList<>();
+    private List<Condition<? extends Condition<?>>> finallyConditionList = new ArrayList<>();
 
     public Chain(String chainName) {
         this.chainName = chainName;
@@ -48,16 +48,16 @@ public class Chain implements Executable {
     public Chain() {
     }
 
-    public Chain(String chainName, List<Condition> conditionList) {
+    public Chain(String chainName, List<Condition<? extends Condition<?>>> conditionList) {
         this.chainName = chainName;
         this.conditionList = conditionList;
     }
 
-    public List<Condition> getConditionList() {
+    public List<Condition<? extends Condition<?>>> getConditionList() {
         return conditionList;
     }
 
-    public Chain setConditionList(List<Condition> conditionList) {
+    public Chain setConditionList(List<Condition<? extends Condition<?>>> conditionList) {
         this.conditionList = conditionList;
         return this;
     }
@@ -69,6 +69,11 @@ public class Chain implements Executable {
     public Chain setChainName(String chainName) {
         this.chainName = chainName;
         return this;
+    }
+
+    @Override
+    public T getSelf() {
+        return (T) this;
     }
 
     //执行chain的主方法
@@ -100,7 +105,7 @@ public class Chain implements Executable {
         }
     }
 
-    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
+    public void executeConditions(Integer slotIndex, List<Condition<? extends Condition<?>>> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
         //执行主体Condition
         for (Condition condition : conditionList) {
             condition.setCurrChainName(chainName);
@@ -110,7 +115,7 @@ public class Chain implements Executable {
 
     // 执行pre节点
     public void executePre(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        for (Condition condition : this.preConditionList) {
+        for (Condition<? extends Condition<?>> condition : this.preConditionList) {
             condition.execute(slotIndex, flowConfiguration);
         }
     }
@@ -123,7 +128,7 @@ public class Chain implements Executable {
 
     //执行后置
     public void executeFinally(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        for (Condition condition : this.finallyConditionList) {
+        for (Condition<? extends Condition<?>> condition : this.finallyConditionList) {
             condition.execute(slotIndex, flowConfiguration);
         }
     }
@@ -138,21 +143,21 @@ public class Chain implements Executable {
         return chainName;
     }
 
-    public List<Condition> getPreConditionList() {
+    public List<Condition<? extends Condition<?>>> getPreConditionList() {
         return preConditionList;
     }
 
-    public Chain setPreConditionList(List<Condition> preConditionList) {
+    public T setPreConditionList(List<Condition<? extends Condition<?>>> preConditionList) {
         this.preConditionList = preConditionList;
-        return this;
+        return getSelf();
     }
 
-    public List<Condition> getFinallyConditionList() {
+    public List<Condition<? extends Condition<?>>> getFinallyConditionList() {
         return finallyConditionList;
     }
 
-    public Chain setFinallyConditionList(List<Condition> finallyConditionList) {
+    public T setFinallyConditionList(List<Condition<? extends Condition<?>>> finallyConditionList) {
         this.finallyConditionList = finallyConditionList;
-        return this;
+        return getSelf();
     }
 }

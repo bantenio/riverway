@@ -18,14 +18,20 @@ import java.util.List;
 
 /**
  * Condition的抽象类
+ *
  * @author Bryan.Zhang
  */
-public abstract class Condition implements Executable {
+public abstract class Condition<T extends Condition<T>> implements Executable<T> {
 
     private String id;
 
+    @Override
+    public T getSelf() {
+        return (T) this;
+    }
+
     //可执行元素的集合
-    private List<Executable> executableList = new ArrayList<>();
+    private List<Executable<? extends Executable<?>>> executableList = new ArrayList<>();
 
     //只在when类型下有效，以区分当when调用链调用失败时是否继续往下执行 默认false不继续执行
     private boolean errorResume = false;
@@ -53,32 +59,51 @@ public abstract class Condition implements Executable {
         return this.id;
     }
 
-    public List<Executable> getExecutableList() {
+    public List<Executable<? extends Executable<?>>> getExecutableList() {
         return executableList;
     }
 
-    public void setExecutableList(List<Executable> executableList) {
+    public T setExecutableList(List<Executable<? extends Executable<?>>> executableList) {
         this.executableList = executableList;
+        return getSelf();
     }
 
-    public void addExecutable(Executable executable) {
+    public T addExecutable(Executable<? extends Executable<?>> executable) {
         this.executableList.add(executable);
+        return getSelf();
     }
 
     public boolean isErrorResume() {
         return errorResume;
     }
 
-    public void setErrorResume(boolean errorResume) {
+    public T setErrorResume(boolean errorResume) {
         this.errorResume = errorResume;
+        return getSelf();
+    }
+
+    public T errorResume(boolean errorResume) {
+        this.errorResume = errorResume;
+        return getSelf();
+    }
+
+    public T ignoreError(boolean errorResume) {
+        this.errorResume = errorResume;
+        return getSelf();
     }
 
     public String getGroup() {
         return group;
     }
 
-    public void setGroup(String group) {
+    public T setGroup(String group) {
         this.group = group;
+        return getSelf();
+    }
+
+    public T group(String group) {
+        this.group = group;
+        return getSelf();
     }
 
     public abstract ConditionTypeEnum getConditionType();
@@ -87,26 +112,42 @@ public abstract class Condition implements Executable {
         return any;
     }
 
-    public void setAny(boolean any) {
+    public T setAny(boolean any) {
         this.any = any;
+        return getSelf();
+    }
+
+    public T any(boolean any) {
+        this.any = any;
+        return getSelf();
     }
 
     public String getThreadExecutorName() {
         return threadExecutorName;
     }
 
-    public Condition setThreadExecutorName(String threadExecutorName) {
+    public T setThreadExecutorName(String threadExecutorName) {
         this.threadExecutorName = threadExecutorName;
-        return this;
+        return getSelf();
+    }
+
+    public T threadPool(String threadExecutorName) {
+        this.threadExecutorName = threadExecutorName;
+        return getSelf();
     }
 
     public String getId() {
         return id;
     }
 
-    public Condition setId(String id) {
+    public T setId(String id) {
         this.id = id;
-        return this;
+        return getSelf();
+    }
+
+    public T id(String id) {
+        this.id = id;
+        return getSelf();
     }
 
     public String getCurrChainName() {
@@ -114,7 +155,8 @@ public abstract class Condition implements Executable {
     }
 
     @Override
-    public void setCurrChainName(String currChainName) {
+    public T setCurrChainName(String currChainName) {
         this.currChainName = currChainName;
+        return getSelf();
     }
 }

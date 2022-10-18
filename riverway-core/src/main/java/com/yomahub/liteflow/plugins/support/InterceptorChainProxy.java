@@ -16,16 +16,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InterceptorChainProxy extends Chain {
+public class InterceptorChainProxy extends Chain<InterceptorChainProxy> {
     private static final Logger log = LoggerFactory.getLogger(InterceptorChainProxy.class);
 
-    private final Chain delegate;
+    private final Chain<? extends Chain<?>> delegate;
 
     private final FlowConfiguration flowConfiguration;
 
     private final ThreadLocal<Map<Interceptor, ChainInterceptorContext>> interceptorContextThreadLocal = new ThreadLocal<>();
 
-    public InterceptorChainProxy(Chain delegate, FlowConfiguration flowConfiguration) {
+    public InterceptorChainProxy(Chain<? extends Chain<?>> delegate, FlowConfiguration flowConfiguration) {
         this.delegate = delegate;
         this.flowConfiguration = flowConfiguration;
     }
@@ -47,7 +47,7 @@ public class InterceptorChainProxy extends Chain {
         }
     }
 
-    public void beforeExecuteForInterceptor(Chain delegate,
+    public void beforeExecuteForInterceptor(Chain<? extends Chain<?>> delegate,
                                             Slot slot,
                                             FlowConfiguration flowConfiguration) throws Exception {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
@@ -71,7 +71,7 @@ public class InterceptorChainProxy extends Chain {
         }
     }
 
-    public void afterExceptionForInterceptor(Chain delegate,
+    public void afterExceptionForInterceptor(Chain<? extends Chain<?>> delegate,
                                              Slot slot,
                                              FlowConfiguration flowConfiguration,
                                              Exception e) throws Exception {
@@ -93,7 +93,7 @@ public class InterceptorChainProxy extends Chain {
         }
     }
 
-    public void afterExecuteForInterceptor(Chain delegate,
+    public void afterExecuteForInterceptor(Chain<? extends Chain<?>> delegate,
                                            Slot slot,
                                            FlowConfiguration flowConfiguration) throws Exception {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
@@ -114,7 +114,7 @@ public class InterceptorChainProxy extends Chain {
         }
     }
 
-    public void afterFinallyForInterceptor(Chain delegate,
+    public void afterFinallyForInterceptor(Chain<? extends Chain<?>> delegate,
                                            Slot slot,
                                            FlowConfiguration flowConfiguration) throws Exception {
         PluginManager pluginManager = flowConfiguration.getPluginManager();
@@ -138,13 +138,14 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public List<Condition> getConditionList() {
+    public List<Condition<? extends Condition<?>>> getConditionList() {
         return delegate.getConditionList();
     }
 
     @Override
-    public Chain setConditionList(List<Condition> conditionList) {
-        return delegate.setConditionList(conditionList);
+    public InterceptorChainProxy setConditionList(List<Condition<? extends Condition<?>>> conditionList) {
+        delegate.setConditionList(conditionList);
+        return getSelf();
     }
 
     @Override
@@ -158,7 +159,7 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
+    public void executeConditions(Integer slotIndex, List<Condition<? extends Condition<?>>> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
         delegate.executeConditions(slotIndex, conditionList, chainName, flowConfiguration);
     }
 
@@ -173,23 +174,25 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public List<Condition> getPreConditionList() {
+    public List<Condition<? extends Condition<?>>> getPreConditionList() {
         return delegate.getPreConditionList();
     }
 
     @Override
-    public Chain setPreConditionList(List<Condition> preConditionList) {
-        return delegate.setPreConditionList(preConditionList);
+    public InterceptorChainProxy setPreConditionList(List<Condition<? extends Condition<?>>> preConditionList) {
+        delegate.setPreConditionList(preConditionList);
+        return getSelf();
     }
 
     @Override
-    public List<Condition> getFinallyConditionList() {
+    public List<Condition<? extends Condition<?>>> getFinallyConditionList() {
         return delegate.getFinallyConditionList();
     }
 
     @Override
-    public Chain setFinallyConditionList(List<Condition> finallyConditionList) {
-        return delegate.setFinallyConditionList(finallyConditionList);
+    public InterceptorChainProxy setFinallyConditionList(List<Condition<? extends Condition<?>>> finallyConditionList) {
+        delegate.setFinallyConditionList(finallyConditionList);
+        return getSelf();
     }
 
     @Override
@@ -198,7 +201,8 @@ public class InterceptorChainProxy extends Chain {
     }
 
     @Override
-    public void setCurrChainName(String currentChainName) {
+    public InterceptorChainProxy setCurrChainName(String currentChainName) {
         delegate.setCurrChainName(currentChainName);
+        return getSelf();
     }
 }

@@ -6,7 +6,7 @@ import com.yomahub.liteflow.flow.element.Executable;
 import com.yomahub.liteflow.flow.element.condition.NodeCondition;
 import com.yomahub.liteflow.slot.DataBus;
 
-public class NodeAroundCondition implements Executable {
+public class NodeAroundCondition implements Executable<NodeAroundCondition> {
     private final NodeCondition nodeCondition;
 
     private final NodeAround nodeAround;
@@ -14,6 +14,11 @@ public class NodeAroundCondition implements Executable {
     public NodeAroundCondition(NodeCondition nodeCondition, NodeAround nodeAround) {
         this.nodeCondition = nodeCondition;
         this.nodeAround = nodeAround;
+    }
+
+    @Override
+    public NodeAroundCondition getSelf() {
+        return this;
     }
 
     @Override

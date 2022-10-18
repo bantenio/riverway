@@ -1,6 +1,7 @@
 /**
  * <p>Title: liteflow</p>
  * <p>Description: 轻量级的组件式流程框架</p>
+ *
  * @author Bryan.Zhang
  * @email weenyc31@163.com
  * @Date 2020/4/1
@@ -16,18 +17,18 @@ import com.yomahub.liteflow.flow.element.Executable;
  * @author Bryan.Zhang
  * @since 2.6.4
  */
-public class FinallyCondition extends Condition {
+public class FinallyCondition extends Condition<FinallyCondition> {
 
-	@Override
-	public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-		for(Executable executableItem : this.getExecutableList()){
-			executableItem.setCurrChainName(this.getCurrChainName());
-			executableItem.execute(slotIndex, flowConfiguration);
-		}
-	}
+    @Override
+    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+        for (Executable<? extends Executable<?>> executableItem : this.getExecutableList()) {
+            executableItem.setCurrChainName(this.getCurrChainName());
+            executableItem.execute(slotIndex, flowConfiguration);
+        }
+    }
 
-	@Override
-	public ConditionTypeEnum getConditionType() {
-		return ConditionTypeEnum.TYPE_FINALLY;
-	}
+    @Override
+    public ConditionTypeEnum getConditionType() {
+        return ConditionTypeEnum.TYPE_FINALLY;
+    }
 }

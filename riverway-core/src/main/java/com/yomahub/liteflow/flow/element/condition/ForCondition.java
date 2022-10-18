@@ -12,7 +12,7 @@ import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
 
-public class ForCondition extends LoopCondition {
+public class ForCondition extends LoopCondition<ForCondition> {
     private NodeCondition forNode;
 
     private String indexVariableName;
@@ -21,12 +21,12 @@ public class ForCondition extends LoopCondition {
     public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
         if (ObjectUtil.isNull(forNode) || !forNode.hasResult()) {
-            String errorInfo = StrUtil.format("[{}]:no for-node found", slot.getRequestId());
+            String errorInfo = CharSequenceUtil.format("[{}]:no for-node found", slot.getRequestId());
             throw new NoForNodeException(errorInfo);
         }
 
         //获得要循环的可执行对象
-        Executable executableItem = this.getDoExecutor();
+        Executable<? extends Executable<?>> executableItem = this.getDoExecutor();
         NodeCondition breakNode = getBreakNode();
         boolean hasBreak = ObjectUtil.isNotNull(breakNode);
 
@@ -55,7 +55,7 @@ public class ForCondition extends LoopCondition {
         return ConditionTypeEnum.TYPE_FOR;
     }
 
-    public Executable getDoExecutor() {
+    public Executable<? extends Executable<?>> getDoExecutor() {
         return this.getExecutableList().get(0);
     }
 

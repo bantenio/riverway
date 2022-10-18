@@ -32,7 +32,7 @@ import java.util.Map;
  *
  * @author Bryan.Zhang
  */
-public class Node implements Executable, Cloneable {
+public class Node implements Executable<Node>, Cloneable {
 
     private static final Logger log = LoggerFactory.getLogger(Node.class);
 
@@ -109,6 +109,11 @@ public class Node implements Executable, Cloneable {
             }
         }
         return instance;
+    }
+
+    @Override
+    public Node getSelf() {
+        return this;
     }
 
     //node的执行主要逻辑
@@ -265,8 +270,9 @@ public class Node implements Executable, Cloneable {
     }
 
     @Override
-    public void setCurrChainName(String currentChainName) {
+    public Node setCurrChainName(String currentChainName) {
         instance.setCurrChainName(currentChainName);
+        return this;
     }
 
     public int getRetryCount() {

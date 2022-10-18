@@ -12,7 +12,7 @@ import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
 
-public class WhileCondition extends LoopCondition {
+public class WhileCondition extends LoopCondition<WhileCondition> {
     private NodeCondition whileNode;
 
     private String indexVariableName;
@@ -21,12 +21,12 @@ public class WhileCondition extends LoopCondition {
     public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         Slot slot = DataBus.getSlot(slotIndex);
         if (ObjectUtil.isNull(whileNode) || !whileNode.hasResult()) {
-            String errorInfo = StrUtil.format("[{}]:no while-node found", slot.getRequestId());
+            String errorInfo = CharSequenceUtil.format("[{}]:no while-node found", slot.getRequestId());
             throw new NoWhileNodeException(errorInfo);
         }
 
         //获得要循环的可执行对象
-        Executable executableItem = this.getDoExecutor();
+        Executable<? extends Executable<?>> executableItem = this.getDoExecutor();
         NodeCondition breakNode = getBreakNode();
         boolean hasBreak = ObjectUtil.isNotNull(breakNode);
 
@@ -51,7 +51,7 @@ public class WhileCondition extends LoopCondition {
         }
     }
 
-    public Executable getDoExecutor() {
+    public Executable<? extends Executable<?>> getDoExecutor() {
         return this.getExecutableList().get(0);
     }
 

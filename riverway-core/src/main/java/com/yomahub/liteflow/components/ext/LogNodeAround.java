@@ -1,5 +1,6 @@
 package com.yomahub.liteflow.components.ext;
 
+import com.yomahub.liteflow.components.ConstantValueHandler;
 import com.yomahub.liteflow.components.ValueHandler;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.flow.element.condition.NodeCondition;
@@ -33,6 +34,8 @@ public class LogNodeAround implements NodeAround {
                 tmpArgs[idx] = ((ValueHandler) arg).getValue(slot, node);
             } else if (arg instanceof String) {
                 tmpArgs[idx] = slot.getVariable((String) arg);
+            } else {
+                tmpArgs[idx] = new ConstantValueHandler(arg);
             }
         }
         if (log.isTraceEnabled() && Level.TRACE == level) {

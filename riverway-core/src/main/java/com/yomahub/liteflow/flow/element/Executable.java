@@ -10,7 +10,9 @@ import com.yomahub.liteflow.slot.Slot;
  *
  * @author Bryan.Zhang
  */
-public interface Executable {
+public interface Executable<T extends Executable<T>> {
+
+    T getSelf();
 
     default Object execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
         if (hasResult()) {
@@ -36,8 +38,8 @@ public interface Executable {
 
     String getExecuteName();
 
-    default void setCurrChainName(String currentChainName) {
-
+    default T setCurrChainName(String currentChainName) {
+        return getSelf();
     }
 
     default boolean hasResult() {

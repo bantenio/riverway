@@ -7,17 +7,17 @@ import com.yomahub.liteflow.flow.element.Chain;
 
 import java.util.List;
 
-public class ChainProxy extends Chain {
-    private final Chain delegate;
+public class ChainProxy extends Chain<ChainProxy> {
+    private final Chain<? extends Chain<?>> delegate;
 
     private String id;
 
-    public ChainProxy(Chain delegate, String id) {
+    public ChainProxy(Chain<? extends Chain<?>> delegate, String id) {
         this.delegate = delegate;
         this.id = id;
     }
 
-    public ChainProxy(Chain delegate) {
+    public ChainProxy(Chain<? extends Chain<?>> delegate) {
         this.delegate = delegate;
     }
 
@@ -27,17 +27,23 @@ public class ChainProxy extends Chain {
 
     public ChainProxy setId(String id) {
         this.id = id;
-        return this;
+        return getSelf();
+    }
+
+    public ChainProxy id(String id) {
+        this.id = id;
+        return getSelf();
     }
 
     @Override
-    public List<Condition> getConditionList() {
+    public List<Condition<? extends Condition<?>>> getConditionList() {
         return delegate.getConditionList();
     }
 
     @Override
-    public Chain setConditionList(List<Condition> conditionList) {
-        return delegate.setConditionList(conditionList);
+    public ChainProxy setConditionList(List<Condition<? extends Condition<?>>> conditionList) {
+        delegate.setConditionList(conditionList);
+        return getSelf();
     }
 
     @Override
@@ -46,8 +52,9 @@ public class ChainProxy extends Chain {
     }
 
     @Override
-    public Chain setChainName(String chainName) {
-        return delegate.setChainName(chainName);
+    public ChainProxy setChainName(String chainName) {
+        delegate.setChainName(chainName);
+        return getSelf();
     }
 
     @Override
@@ -65,7 +72,7 @@ public class ChainProxy extends Chain {
     }
 
     @Override
-    public void executeConditions(Integer slotIndex, List<Condition> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
+    public void executeConditions(Integer slotIndex, List<Condition<? extends Condition<?>>> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
         delegate.executeConditions(slotIndex, conditionList, chainName, flowConfiguration);
     }
 
@@ -100,23 +107,25 @@ public class ChainProxy extends Chain {
     }
 
     @Override
-    public List<Condition> getPreConditionList() {
+    public List<Condition<? extends Condition<?>>> getPreConditionList() {
         return delegate.getPreConditionList();
     }
 
     @Override
-    public Chain setPreConditionList(List<Condition> preConditionList) {
-        return delegate.setPreConditionList(preConditionList);
+    public ChainProxy setPreConditionList(List<Condition<? extends Condition<?>>> preConditionList) {
+        delegate.setPreConditionList(preConditionList);
+        return getSelf();
     }
 
     @Override
-    public List<Condition> getFinallyConditionList() {
+    public List<Condition<? extends Condition<?>>> getFinallyConditionList() {
         return delegate.getFinallyConditionList();
     }
 
     @Override
-    public Chain setFinallyConditionList(List<Condition> finallyConditionList) {
-        return delegate.setFinallyConditionList(finallyConditionList);
+    public ChainProxy setFinallyConditionList(List<Condition<? extends Condition<?>>> finallyConditionList) {
+        delegate.setFinallyConditionList(finallyConditionList);
+        return getSelf();
     }
 
     @Override
@@ -125,7 +134,8 @@ public class ChainProxy extends Chain {
     }
 
     @Override
-    public void setCurrChainName(String currentChainName) {
+    public ChainProxy setCurrChainName(String currentChainName) {
         delegate.setCurrChainName(currentChainName);
+        return getSelf();
     }
 }
