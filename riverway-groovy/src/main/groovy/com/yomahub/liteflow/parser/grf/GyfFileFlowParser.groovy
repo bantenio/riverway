@@ -26,9 +26,9 @@ import java.nio.file.Paths
 class GyfFileFlowParser extends BaseFlowParser {
     private static Logger log = LoggerFactory.getLogger(GyfFileFlowParser.class)
 
-    private HashMap<String, Chain> parsedPaths = new LinkedHashMap<>()
+    private HashMap<String, Chain<? extends Chain<?>>> parsedPaths = new LinkedHashMap<>()
 
-    private Map<String, Chain> mappingChains = null;
+    private Map<String, Chain<? extends Chain<?>>> mappingChains = null;
 
     @Override
     void parse(List<ParseResource> contentList, LiteFlowConfig liteFlowConfig, FlowConfiguration flowConfiguration) throws LiteFlowParseException {

@@ -48,7 +48,7 @@ abstract class MainDslScript extends Script {
         flowConfiguration.addNode(name, name, nodeComponent)
     }
 
-    Map<String, Chain> getMappingChains() {
+    Map<String, Chain<? extends Chain<?>>> getMappingChains() {
         return this.mappingChains
     }
 }

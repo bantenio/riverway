@@ -2,7 +2,7 @@ package com.yomahub.liteflow.parser.dsl.define
 
 import com.yomahub.liteflow.flow.element.Chain
 
-class PathChain extends Chain {
+class PathChain extends Chain<PathChain> {
     private String chainPath
     private boolean inited = false
 
