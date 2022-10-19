@@ -39,8 +39,8 @@ public class WhenCondition extends Condition<WhenCondition> {
 
 
     @Override
-    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        executeAsyncCondition(slotIndex, flowConfiguration);
+    public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
+        executeAsyncCondition(slot, flowConfiguration);
     }
 
     @Override
@@ -50,8 +50,7 @@ public class WhenCondition extends Condition<WhenCondition> {
 
     //使用线程池执行when并发流程
     //这块涉及到挺多的多线程逻辑，所以注释比较详细，看到这里的童鞋可以仔细阅读
-    private void executeAsyncCondition(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        Slot slot = DataBus.getSlot(slotIndex);
+    private void executeAsyncCondition(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
 
         String currChainName = this.getCurrChainName();
 
@@ -72,14 +71,14 @@ public class WhenCondition extends Condition<WhenCondition> {
                 !(executable instanceof PreCondition) && !(executable instanceof FinallyCondition)
         ).filter(executable -> {
             try {
-                return executable.isAccess(slotIndex);
+                return executable.isAccess(slot);
             } catch (Throwable e) {
                 LOG.error("there was an error when executing the when component isAccess", e);
                 return false;
             }
         }).map(executable -> CompletableFutureTimeout.completeOnTimeout(
                 WhenFutureObj.timeOut(executable.getExecuteName(), flowConfiguration.getLiteflowConfig()),
-                CompletableFuture.supplyAsync(new ParallelSupplier(executable, currChainName, slotIndex, flowConfiguration), parallelExecutor),
+                CompletableFuture.supplyAsync(new ParallelSupplier(executable, currChainName, slot, flowConfiguration), parallelExecutor),
                 flowConfiguration.getLiteflowConfig().getNodeComponentProperties().getWhenMaxWaitSeconds(),
                 TimeUnit.SECONDS
         )).collect(Collectors.toList());

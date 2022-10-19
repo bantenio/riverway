@@ -31,11 +31,10 @@ public class InterceptorChainProxy extends Chain<InterceptorChainProxy> {
     }
 
     @Override
-    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        Slot slot = DataBus.getSlot(slotIndex);
+    public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         beforeExecuteForInterceptor(delegate, slot, flowConfiguration);
         try {
-            delegate.execute(slotIndex, flowConfiguration);
+            delegate.execute(slot, flowConfiguration);
             afterExecuteForInterceptor(delegate, slot, flowConfiguration);
         } catch (ChainEndException e) {
             throw e;
@@ -159,8 +158,8 @@ public class InterceptorChainProxy extends Chain<InterceptorChainProxy> {
     }
 
     @Override
-    public void executeConditions(Integer slotIndex, List<Condition<? extends Condition<?>>> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
-        delegate.executeConditions(slotIndex, conditionList, chainName, flowConfiguration);
+    public void executeConditions(Slot slot, List<Condition<? extends Condition<?>>> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executeConditions(slot, conditionList, chainName, flowConfiguration);
     }
 
     @Override
@@ -196,8 +195,8 @@ public class InterceptorChainProxy extends Chain<InterceptorChainProxy> {
     }
 
     @Override
-    public boolean isAccess(Integer slotIndex) throws Throwable {
-        return delegate.isAccess(slotIndex);
+    public boolean isAccess(Slot slot) throws Throwable {
+        return delegate.isAccess(slot);
     }
 
     @Override

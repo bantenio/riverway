@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.enums.ExecuteTypeEnum;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Chain;
+import com.yomahub.liteflow.slot.Slot;
 
 import java.util.List;
 
@@ -58,42 +59,42 @@ public class ChainProxy extends Chain<ChainProxy> {
     }
 
     @Override
-    public Object execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        return delegate.execute(slotIndex, flowConfiguration);
+    public Object execute(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
+        return delegate.execute(slot, flowConfiguration);
     }
 
     @Override
-    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        delegate.process(slotIndex, flowConfiguration);
+    public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.process(slot, flowConfiguration);
     }
 
-    public Object processWithResult(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        return delegate.processWithResult(slotIndex, flowConfiguration);
-    }
-
-    @Override
-    public void executeConditions(Integer slotIndex, List<Condition<? extends Condition<?>>> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
-        delegate.executeConditions(slotIndex, conditionList, chainName, flowConfiguration);
+    public Object processWithResult(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
+        return delegate.processWithResult(slot, flowConfiguration);
     }
 
     @Override
-    public void executePre(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        delegate.executePre(slotIndex, flowConfiguration);
+    public void executeConditions(Slot slot, List<Condition<? extends Condition<?>>> conditionList, String chainName, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executeConditions(slot, conditionList, chainName, flowConfiguration);
     }
 
     @Override
-    public void executeException(Integer slotIndex, Throwable e, FlowConfiguration flowConfiguration) throws Throwable {
-        delegate.executeException(slotIndex, e, flowConfiguration);
+    public void executePre(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executePre(slot, flowConfiguration);
     }
 
     @Override
-    public void executeAfter(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        delegate.executeAfter(slotIndex, flowConfiguration);
+    public void executeException(Slot slot, Throwable e, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executeException(slot, e, flowConfiguration);
     }
 
     @Override
-    public void executeFinally(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        delegate.executeFinally(slotIndex, flowConfiguration);
+    public void executeAfter(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executeAfter(slot, flowConfiguration);
+    }
+
+    @Override
+    public void executeFinally(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
+        delegate.executeFinally(slot, flowConfiguration);
     }
 
     @Override
@@ -129,8 +130,8 @@ public class ChainProxy extends Chain<ChainProxy> {
     }
 
     @Override
-    public boolean isAccess(Integer slotIndex) throws Throwable {
-        return delegate.isAccess(slotIndex);
+    public boolean isAccess(Slot slot) throws Throwable {
+        return delegate.isAccess(slot);
     }
 
     @Override

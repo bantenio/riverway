@@ -2,6 +2,7 @@ package com.yomahub.liteflow.flow.parallel;
 
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Executable;
+import com.yomahub.liteflow.slot.Slot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,14 +22,14 @@ public class ParallelSupplier implements Supplier<WhenFutureObj> {
 
     private final String currChainName;
 
-    private final Integer slotIndex;
+    private final Slot slot;
 
     private final FlowConfiguration flowConfiguration;
 
-    public ParallelSupplier(Executable executableItem, String currChainName, Integer slotIndex, FlowConfiguration flowConfiguration) {
+    public ParallelSupplier(Executable executableItem, String currChainName, Slot slot, FlowConfiguration flowConfiguration) {
         this.executableItem = executableItem;
         this.currChainName = currChainName;
-        this.slotIndex = slotIndex;
+        this.slot = slot;
         this.flowConfiguration = flowConfiguration;
     }
 
@@ -36,7 +37,7 @@ public class ParallelSupplier implements Supplier<WhenFutureObj> {
     public WhenFutureObj get() {
         try {
             executableItem.setCurrChainName(currChainName);
-            executableItem.execute(slotIndex, flowConfiguration);
+            executableItem.execute(slot, flowConfiguration);
             return WhenFutureObj.success(executableItem.getExecuteName());
         } catch (Throwable e) {
             return WhenFutureObj.fail(executableItem.getExecuteName(), e);

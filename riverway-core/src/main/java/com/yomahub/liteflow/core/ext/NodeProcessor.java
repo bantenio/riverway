@@ -3,14 +3,12 @@ package com.yomahub.liteflow.core.ext;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.slot.Slot;
 
-import java.util.Optional;
-
 public interface NodeProcessor {
-    default Object process(Node node) throws Throwable {
+    default Object handle(Node node, Slot slot) throws Throwable {
         if (hasResult()) {
-            return processWithResult(node, getSlot());
+            return processWithResult(node, slot);
         } else {
-            process(node, getSlot());
+            process(node, slot);
             return null;
         }
     }

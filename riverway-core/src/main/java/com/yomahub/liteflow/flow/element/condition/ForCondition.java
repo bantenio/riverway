@@ -18,8 +18,7 @@ public class ForCondition extends LoopCondition<ForCondition> {
     private String indexVariableName;
 
     @Override
-    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        Slot slot = DataBus.getSlot(slotIndex);
+    public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         if (ObjectUtil.isNull(forNode) || !forNode.hasResult()) {
             String errorInfo = CharSequenceUtil.format("[{}]:no for-node found", slot.getRequestId());
             throw new NoForNodeException(errorInfo);
@@ -30,7 +29,7 @@ public class ForCondition extends LoopCondition<ForCondition> {
         NodeCondition breakNode = getBreakNode();
         boolean hasBreak = ObjectUtil.isNotNull(breakNode);
 
-        int forCount = getIntegerResult(forNode, slotIndex, flowConfiguration);
+        int forCount = getIntegerResult(forNode, slot, flowConfiguration);
         MutableValueHandler indexValueHandler = null;
         boolean hasIndexVariable = CharSequenceUtil.isNotBlank(indexVariableName);
         //循环执行
@@ -42,9 +41,9 @@ public class ForCondition extends LoopCondition<ForCondition> {
                 indexValueHandler.setValue(i);
                 ((NodeCondition) executableItem).addSwapHandler(indexVariableName, indexValueHandler);
             }
-            executableItem.execute(slotIndex, flowConfiguration);
+            executableItem.execute(slot, flowConfiguration);
             //如果break组件不为空，则去执行
-            if (hasBreak && getBooleanResult(breakNode, slotIndex, flowConfiguration)) {
+            if (hasBreak && getBooleanResult(breakNode, slot, flowConfiguration)) {
                 break;
             }
         }

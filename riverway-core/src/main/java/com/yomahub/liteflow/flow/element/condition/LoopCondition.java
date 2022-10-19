@@ -7,19 +7,20 @@ import com.yomahub.liteflow.core.NodeComponent;
 import com.yomahub.liteflow.exception.ComponentResultInvalidException;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Node;
+import com.yomahub.liteflow.slot.Slot;
 
 public abstract class LoopCondition<T extends LoopCondition<T>> extends Condition<T> {
 
-    protected boolean getBooleanResult(NodeCondition whileNode, Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        Object result = whileNode.execute(slotIndex, flowConfiguration);
+    protected boolean getBooleanResult(NodeCondition whileNode, Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
+        Object result = whileNode.execute(slot, flowConfiguration);
         if (!(result instanceof Boolean)) {
             throw new ComponentResultInvalidException(CharSequenceUtil.format("The while component {} result is not a boolean value:{}", whileNode.getNode().getClazz(), result));
         }
         return (Boolean) result;
     }
 
-    protected int getIntegerResult(NodeCondition whileNode, Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        Object result = whileNode.execute(slotIndex, flowConfiguration);
+    protected int getIntegerResult(NodeCondition whileNode, Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
+        Object result = whileNode.execute(slot, flowConfiguration);
         if (!(result instanceof Integer)) {
             throw new ComponentResultInvalidException(CharSequenceUtil.format("The while component {} result is not a int value:{}", whileNode.getNode().getClazz(), result));
         }

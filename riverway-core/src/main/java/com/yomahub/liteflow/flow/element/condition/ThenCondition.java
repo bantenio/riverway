@@ -10,6 +10,7 @@ package com.yomahub.liteflow.flow.element.condition;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Executable;
+import com.yomahub.liteflow.slot.Slot;
 
 /**
  * 串行器
@@ -22,14 +23,14 @@ public class ThenCondition extends Condition<ThenCondition> {
 	}
 
 	@Override
-	public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+	public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
 		for (Executable<? extends Executable<?>> executableItem : this.getExecutableList()) {
 			//前置和后置组不执行，因为在build的时候会抽出来放在chain里面
 			if (executableItem instanceof PreCondition || executableItem instanceof FinallyCondition){
 				continue;
 			}
 			executableItem.setCurrChainName(this.getCurrChainName());
-			executableItem.execute(slotIndex, flowConfiguration);
+			executableItem.execute(slot, flowConfiguration);
 		}
 	}
 }

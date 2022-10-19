@@ -11,6 +11,7 @@ package com.yomahub.liteflow.flow.element.condition;
 import com.yomahub.liteflow.enums.ConditionTypeEnum;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Executable;
+import com.yomahub.liteflow.slot.Slot;
 
 /**
  * 前置Condition
@@ -20,10 +21,10 @@ import com.yomahub.liteflow.flow.element.Executable;
 public class FinallyCondition extends Condition<FinallyCondition> {
 
     @Override
-    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         for (Executable<? extends Executable<?>> executableItem : this.getExecutableList()) {
             executableItem.setCurrChainName(this.getCurrChainName());
-            executableItem.execute(slotIndex, flowConfiguration);
+            executableItem.execute(slot, flowConfiguration);
         }
     }
 

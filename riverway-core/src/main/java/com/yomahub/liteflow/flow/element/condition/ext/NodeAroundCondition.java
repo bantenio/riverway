@@ -5,6 +5,7 @@ import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.flow.element.Executable;
 import com.yomahub.liteflow.flow.element.condition.NodeCondition;
 import com.yomahub.liteflow.slot.DataBus;
+import com.yomahub.liteflow.slot.Slot;
 
 public class NodeAroundCondition implements Executable<NodeAroundCondition> {
     private final NodeCondition nodeCondition;
@@ -22,12 +23,12 @@ public class NodeAroundCondition implements Executable<NodeAroundCondition> {
     }
 
     @Override
-    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        nodeAround.before(nodeCondition, nodeCondition.getNode(), DataBus.getSlot(slotIndex));
+    public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
+        nodeAround.before(nodeCondition, nodeCondition.getNode(), slot);
     }
 
-    public void executeAfter(Integer slotIndex) throws Throwable {
-        nodeAround.after(nodeCondition, nodeCondition.getNode(), DataBus.getSlot(slotIndex));
+    public void executeAfter(Slot slot) throws Throwable {
+        nodeAround.after(nodeCondition, nodeCondition.getNode(), slot);
     }
 
     @Override

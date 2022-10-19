@@ -67,12 +67,11 @@ public abstract class NodeComponent implements NodeProcessor {
     public NodeComponent() {
     }
 
-    public Object execute(Node node, boolean isRetry) throws Throwable {
-        return executeInner(node, isRetry);
+    public Object execute(Slot slot, Node node, boolean isRetry) throws Throwable {
+        return executeInner(slot, node, isRetry);
     }
 
-    protected Object executeInner(Node node, boolean isRetry) throws Throwable {
-        Slot slot = this.getSlot();
+    protected Object executeInner(Slot slot, Node node, boolean isRetry) throws Throwable {
 
         //在元数据里加入step信息
         CmpStep cmpStep = new CmpStep(slot.getChainName(), node.getExecuteName(), node.getDisplayName(), CmpStepTypeEnum.SINGLE);
@@ -87,7 +86,7 @@ public abstract class NodeComponent implements NodeProcessor {
             self.beforeProcess(this.getNodeId(), slot);
 
             //主要的处理逻辑
-            result = self.process(node);
+            result = self.handle(node, slot);
 
             //成功后回调方法
             self.onSuccess(node);

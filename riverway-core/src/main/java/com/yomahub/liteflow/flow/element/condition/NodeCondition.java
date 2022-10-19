@@ -8,7 +8,6 @@ import com.yomahub.liteflow.flow.element.Executable;
 import com.yomahub.liteflow.flow.element.Node;
 import com.yomahub.liteflow.flow.element.condition.ext.NodeAround;
 import com.yomahub.liteflow.flow.element.condition.ext.NodeAroundCondition;
-import com.yomahub.liteflow.slot.DataBus;
 import com.yomahub.liteflow.slot.Slot;
 
 import java.util.HashMap;
@@ -27,15 +26,14 @@ public class NodeCondition extends Condition<NodeCondition> {
     }
 
     @Override
-    public Object execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        Slot slot = DataBus.getSlot(slotIndex);
+    public Object execute(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         slot.putProperties(properties);
-        executeBefore(node, slot, slotIndex, flowConfiguration);
+        executeBefore(node, slot, flowConfiguration);
         processSwap(node, slot);
         Object result = null;
         try {
             node.setCurrChainName(this.getCurrChainName());
-            result = node.execute(slotIndex, flowConfiguration);
+            result = node.execute(slot, flowConfiguration);
         } finally {
             slot.clearProperties();
         }
@@ -43,7 +41,7 @@ public class NodeCondition extends Condition<NodeCondition> {
     }
 
     @Override
-    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
 
     }
 
@@ -65,26 +63,26 @@ public class NodeCondition extends Condition<NodeCondition> {
         }
     }
 
-    protected void executeBefore(Node node, Slot slot, Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    protected void executeBefore(Node node, Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         List<Executable<? extends Executable<?>>> list = this.getExecutableList();
         if (list.isEmpty()) {
             return;
         }
         for (Executable<? extends Executable<?>> executable : list) {
             if (executable instanceof NodeAroundCondition) {
-                executable.execute(slotIndex, flowConfiguration);
+                executable.execute(slot, flowConfiguration);
             }
         }
     }
 
-    protected void executeAfter(Node node, Slot slot, Integer slotIndex) throws Throwable {
+    protected void executeAfter(Node node, Slot slot) throws Throwable {
         List<Executable<? extends Executable<?>>> list = this.getExecutableList();
         if (list.isEmpty()) {
             return;
         }
         for (Executable<? extends Executable<?>> executable : list) {
             if (executable instanceof NodeAroundCondition) {
-                ((NodeAroundCondition) executable).executeAfter(slotIndex);
+                ((NodeAroundCondition) executable).executeAfter(slot);
             }
         }
     }

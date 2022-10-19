@@ -31,7 +31,7 @@ public class SwitchCondition extends Condition<SwitchCondition> {
     private final Map<String, Executable<? extends Executable<?>>> targetMap = new HashMap<>();
 
     @Override
-    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         Executable<? extends Executable<?>> executable = this.getSwitchNode();
         NodeComponent nodeComponent = null;
         if (executable instanceof Node) {
@@ -44,10 +44,9 @@ public class SwitchCondition extends Condition<SwitchCondition> {
         if (nodeComponent != null && ListUtil.toList(NodeTypeEnum.SWITCH, NodeTypeEnum.SWITCH_SCRIPT).contains(nodeComponent.getType())) {
             //先执行switch节点
             executable.setCurrChainName(this.getCurrChainName());
-            executable.execute(slotIndex, flowConfiguration);
+            executable.execute(slot, flowConfiguration);
 
             //根据switch节点执行出来的结果选择
-            Slot slot = DataBus.getSlot(slotIndex);
             String targetId = slot.getSwitchResult(nodeComponent.getClass().getName());
             if (CharSequenceUtil.isNotBlank(targetId)) {
                 Executable<? extends Executable<?>> targetExecutor = targetMap.get(targetId);
@@ -58,7 +57,7 @@ public class SwitchCondition extends Condition<SwitchCondition> {
                         throw new SwitchTargetCannotBePreOrFinallyException(errorInfo);
                     }
                     targetExecutor.setCurrChainName(this.getCurrChainName());
-                    targetExecutor.execute(slotIndex, flowConfiguration);
+                    targetExecutor.execute(slot, flowConfiguration);
                 } else {
                     String errorInfo = CharSequenceUtil.format("[{}]:no target node find for the component[{}]", slot.getRequestId(), nodeComponent.getDisplayName());
                     throw new NoSwitchTargetNodeException(errorInfo);

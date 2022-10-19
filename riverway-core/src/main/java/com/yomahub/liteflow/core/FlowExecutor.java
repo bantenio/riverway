@@ -61,21 +61,21 @@ public class FlowExecutor {
     }
 
     //隐式流程的调用方法
-    public void invoke(String chainId, Integer slotIndex, Map<String, Object> params) throws Throwable {
-        LiteflowResponse response = this.execute2Resp(chainId, params, slotIndex, true);
+    public void invoke(String chainId, Slot slot, Map<String, Object> params) throws Throwable {
+        LiteflowResponse response = this.execute2Resp(chainId, params, slot, true);
         if (!response.isSuccess()) {
             throw response.getCause();
         }
     }
 
-    public LiteflowResponse invoke2Resp(String chainId, Integer slotIndex, Map<String, Object> params) {
-        return this.execute2Resp(chainId, params, slotIndex, true);
+    public LiteflowResponse invoke2Resp(String chainId, Slot slot, Map<String, Object> params) {
+        return this.execute2Resp(chainId, params, slot, true);
     }
 
     //单独调用某一个node
-    public void invoke(String nodeId, Integer slotIndex) throws Throwable {
+    public void invoke(String nodeId, Slot slot) throws Throwable {
         Node node = flowConfiguration.getNode(nodeId);
-        node.execute(slotIndex, flowConfiguration);
+        node.execute(slot, flowConfiguration);
     }
 
     //调用一个流程并返回LiteflowResponse，上下文为默认的DefaultContext，初始参数为null
@@ -104,10 +104,9 @@ public class FlowExecutor {
         }
     }
 
-    protected LiteflowResponse execute2Resp(String chainId, Map<String, Object> params, Integer slotIndex, boolean isInnerChain) {
-        Slot slot = null;
+    protected LiteflowResponse execute2Resp(String chainId, Map<String, Object> params, Slot slot, boolean isInnerChain) {
         try {
-            slot = doExecute(chainId, params, slotIndex, isInnerChain);
+            slot = doExecute(chainId, params, slot, isInnerChain);
             return new LiteflowResponse(slot);
         } finally {
             if (slot != null) {
@@ -116,22 +115,13 @@ public class FlowExecutor {
         }
     }
 
-    protected Slot doExecute(String chainId, Map<String, Object> params, Integer slotIndex, boolean isInnerChain) {
+    protected Slot doExecute(String chainId, Map<String, Object> params, Slot slot, boolean isInnerChain) {
 
-        if (!isInnerChain && ObjectUtil.isNull(slotIndex)) {
-            slotIndex = DataBus.offerSlot(params, flowConfiguration);
+        if (!isInnerChain && ObjectUtil.isNull(slot)) {
+            slot = DataBus.offerSlot(params, flowConfiguration);
             if (BooleanUtil.isTrue(logConfig.getPrintExecutionLog())) {
-                log.info("slot[{}] offered", slotIndex);
+                log.info("slot[{}] offered", slot.getIndex());
             }
-        }
-
-        if (slotIndex == -1) {
-            throw new NoAvailableSlotException("there is no available slot");
-        }
-
-        Slot slot = DataBus.getSlot(slotIndex);
-        if (ObjectUtil.isNull(slot)) {
-            throw new NoAvailableSlotException(StrUtil.format("the slot[{}] is not exist", slotIndex));
         }
 
         if (StrUtil.isBlank(slot.getRequestId())) {
@@ -142,6 +132,7 @@ public class FlowExecutor {
         }
 
         Chain chain = null;
+        int slotIndex = slot.getIndex();
         try {
             chain = flowConfiguration.getChain(chainId);
 
@@ -154,7 +145,7 @@ public class FlowExecutor {
                 chain = new InterceptorChainProxy(chain, flowConfiguration);
             }
             // 执行chain
-            chain.execute(slotIndex, flowConfiguration);
+            chain.execute(slot, flowConfiguration);
         } catch (ChainEndException e) {
             if (ObjectUtil.isNotNull(chain)) {
                 String warnMsg = StrUtil.format("[{}]:chain[{}] execute end on slot[{}]", slot.getRequestId(), chain.getChainName(), slotIndex);

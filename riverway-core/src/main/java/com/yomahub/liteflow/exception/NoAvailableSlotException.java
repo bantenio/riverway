@@ -8,6 +8,13 @@ public class NoAvailableSlotException extends RuntimeException {
 	private String message;
 
 	public NoAvailableSlotException(String message) {
+		super(message);
+		this.message = message;
+	}
+
+
+	public NoAvailableSlotException(String message, Throwable tx) {
+		super(message, tx);
 		this.message = message;
 	}
 

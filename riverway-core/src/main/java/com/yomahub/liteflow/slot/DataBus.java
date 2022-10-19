@@ -10,6 +10,9 @@ package com.yomahub.liteflow.slot;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.yomahub.liteflow.exception.LiteFlowException;
+import com.yomahub.liteflow.exception.NoAvailableSlotException;
 import com.yomahub.liteflow.flow.FlowConfiguration;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import org.slf4j.Logger;
@@ -57,17 +60,14 @@ public class DataBus {
         }
     }
 
-    public static int offerSlot(Map<String, Object> params, FlowConfiguration flowConfiguration) {
+    public static Slot offerSlot(Map<String, Object> params, FlowConfiguration flowConfiguration) {
+        Integer slotIndex;
         try {
-            //把classList通过反射初始化成对象列表
-            //这里用newInstanceIfPossible这个方法，是为了兼容当没有无参构造方法所报的错
-
-            Slot slot = new Slot(flowConfiguration, params);
 
             //这里有没有并发问题？
             //没有，因为QUEUE的类型为ConcurrentLinkedQueue，并发情况下，每次取到的index不会相同
             //当然前提是QUEUE里面的值不会重复，但是这个是由其他机制来保证的
-            Integer slotIndex = QUEUE.poll();
+            slotIndex = QUEUE.poll();
             if (ObjectUtil.isNull(slotIndex)) {
                 //只有在扩容的时候需要用到synchronized重量级锁
                 //扩一次容，增强原来size的0.75，因为初始slot容量为1024，从某种层面来说，即便并发很大。但是扩容的次数不会很多。
@@ -86,15 +86,15 @@ public class DataBus {
             }
 
             if (ObjectUtil.isNotNull(slotIndex)) {
+                Slot slot = new DefaultSlot(flowConfiguration, params, slotIndex);
                 SLOTS.put(slotIndex, slot);
                 OCCUPY_COUNT.incrementAndGet();
-                return slotIndex;
+                return slot;
             }
         } catch (Exception e) {
-            log.error("offer slot error", e);
-            return -1;
+            throw new NoAvailableSlotException("offer slot error", e);
         }
-        return -1;
+        throw new NoAvailableSlotException(StrUtil.format("the slot[{}] is not exist", slotIndex));
     }
 
     public static Slot getSlot(int slotIndex) {

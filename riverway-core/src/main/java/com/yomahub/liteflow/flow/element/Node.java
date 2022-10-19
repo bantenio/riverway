@@ -119,10 +119,8 @@ public class Node implements Executable<Node>, Cloneable {
     //node的执行主要逻辑
     //所有的可执行节点，其实最终都会落到node上来，因为chain中包含的也是node
     @Override
-    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         NodeComponent instance = getInstance(flowConfiguration);
-
-        Slot slot = DataBus.getSlot(slotIndex);
         try {
             //判断是否可执行，所以isAccess经常作为一个组件进入的实际判断要素，用作检查slot里的参数的完备性
             if (instance.isAccess()) {
@@ -132,9 +130,9 @@ public class Node implements Executable<Node>, Cloneable {
                 //这里开始进行重试的逻辑和主逻辑的运行
                 NodeExecutor nodeExecutor = NodeExecutorHelper.loadInstance().buildNodeExecutor(instance.getNodeExecutorClass());
                 // 调用节点执行器进行执行
-                instance.setSlotIndex(slotIndex);
+                instance.setSlotIndex(slot.getIndex());
                 instance.setSelf(instance);
-                nodeExecutor.execute(this, flowConfiguration);
+                nodeExecutor.execute(this, slot, flowConfiguration);
                 //如果组件覆盖了isEnd方法，或者在在逻辑中主要调用了setEnd(true)的话，流程就会立马结束
                 if (instance.isEnd()) {
                     String errorInfo = StrUtil.format("[{}]:[{}] lead the chain to end", slot.getRequestId(), getDisplayName());
@@ -165,10 +163,8 @@ public class Node implements Executable<Node>, Cloneable {
     }
 
     @Override
-    public Object processWithResult(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    public Object processWithResult(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         NodeComponent instance = getInstance(flowConfiguration);
-
-        Slot slot = DataBus.getSlot(slotIndex);
         Object result = null;
         try {
             //判断是否可执行，所以isAccess经常作为一个组件进入的实际判断要素，用作检查slot里的参数的完备性
@@ -179,9 +175,9 @@ public class Node implements Executable<Node>, Cloneable {
                 //这里开始进行重试的逻辑和主逻辑的运行
                 NodeExecutor nodeExecutor = NodeExecutorHelper.loadInstance().buildNodeExecutor(instance.getNodeExecutorClass());
                 // 调用节点执行器进行执行
-                instance.setSlotIndex(slotIndex);
+                instance.setSlotIndex(slot.getIndex());
                 instance.setSelf(instance);
-                result = nodeExecutor.execute(this, flowConfiguration);
+                result = nodeExecutor.execute(this, slot, flowConfiguration);
                 //如果组件覆盖了isEnd方法，或者在在逻辑中主要调用了setEnd(true)的话，流程就会立马结束
                 if (instance.isEnd()) {
                     String errorInfo = StrUtil.format("[{}]:[{}] lead the chain to end", slot.getRequestId(), getDisplayName());
@@ -217,8 +213,8 @@ public class Node implements Executable<Node>, Cloneable {
     //增加这个方法是为了在异步的时候，先去过滤掉isAccess为false的异步组件。然后再异步执行。
     //详情见这个issue:https://gitee.com/dromara/liteFlow/issues/I4XRBA
     @Override
-    public boolean isAccess(Integer slotIndex) throws Exception {
-        instance.setSlotIndex(slotIndex);
+    public boolean isAccess(Slot slot) throws Exception {
+        instance.setSlotIndex(slot.getIndex());
         return instance.isAccess();
     }
 

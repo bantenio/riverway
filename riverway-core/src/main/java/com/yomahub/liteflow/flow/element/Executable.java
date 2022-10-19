@@ -14,23 +14,23 @@ public interface Executable<T extends Executable<T>> {
 
     T getSelf();
 
-    default Object execute(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    default Object execute(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         if (hasResult()) {
-            return processWithResult(slotIndex, flowConfiguration);
+            return processWithResult(slot, flowConfiguration);
         } else {
-            process(slotIndex, flowConfiguration);
+            process(slot, flowConfiguration);
             return null;
         }
     }
 
-    void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable;
+    void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable;
 
-    default Object processWithResult(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
+    default Object processWithResult(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         return null;
     }
 
 
-    default boolean isAccess(Integer slotIndex) throws Throwable {
+    default boolean isAccess(Slot slot) throws Throwable {
         return true;
     }
 

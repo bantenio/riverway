@@ -18,8 +18,7 @@ public class WhileCondition extends LoopCondition<WhileCondition> {
     private String indexVariableName;
 
     @Override
-    public void process(Integer slotIndex, FlowConfiguration flowConfiguration) throws Throwable {
-        Slot slot = DataBus.getSlot(slotIndex);
+    public void process(Slot slot, FlowConfiguration flowConfiguration) throws Throwable {
         if (ObjectUtil.isNull(whileNode) || !whileNode.hasResult()) {
             String errorInfo = CharSequenceUtil.format("[{}]:no while-node found", slot.getRequestId());
             throw new NoWhileNodeException(errorInfo);
@@ -34,7 +33,7 @@ public class WhileCondition extends LoopCondition<WhileCondition> {
         boolean hasIndexVariable = CharSequenceUtil.isNotBlank(indexVariableName);
         int loopIndex = 1;
         //循环执行
-        while (getBooleanResult(whileNode, slotIndex, flowConfiguration)) {
+        while (getBooleanResult(whileNode, slot, flowConfiguration)) {
             if (hasIndexVariable && executableItem instanceof NodeCondition) {
                 if (indexValueHandler == null) {
                     indexValueHandler = new MutableValueHandler();
@@ -42,9 +41,9 @@ public class WhileCondition extends LoopCondition<WhileCondition> {
                 indexValueHandler.setValue(loopIndex);
                 ((NodeCondition) executableItem).addSwapHandler(indexVariableName, indexValueHandler);
             }
-            executableItem.execute(slotIndex, flowConfiguration);
+            executableItem.execute(slot, flowConfiguration);
             //如果break组件不为空，则去执行
-            if (hasBreak && getBooleanResult(breakNode, slotIndex, flowConfiguration)) {
+            if (hasBreak && getBooleanResult(breakNode, slot, flowConfiguration)) {
                 break;
             }
             loopIndex++;
