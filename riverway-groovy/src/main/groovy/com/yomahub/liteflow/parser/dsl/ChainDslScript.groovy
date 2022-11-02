@@ -154,6 +154,12 @@ abstract class ChainDslScript extends Script {
     static Class<NodeSwitchComponent> SWITCH_COMPONENT_CLASS = NodeSwitchComponent.class
 
     NodeCondition node(String id, Class<? extends NodeComponent> clazz) {
+        if(flowConfiguration.containNode(id)) {
+            return new NodeCondition(flowConfiguration.getNode(id))
+        }
+        if(flowConfiguration.hasNodeComponent(id)) {
+            return new NodeCondition(flowConfiguration.getNodeManager().addNode(id, id, flowConfiguration.getNodeComponent(id)))
+        }
         def clazzName = clazz.simpleName
         def beanName = StrUtil.lowerFirst(clazzName)
         def nodePropBean = new NodePropBean()
