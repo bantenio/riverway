@@ -1,16 +1,12 @@
 package com.yomahub.liteflow.parser
 
 import cn.hutool.core.io.FileUtil
-import cn.hutool.core.io.IoUtil
-import cn.hutool.core.io.resource.ResourceUtil
-import cn.hutool.core.util.ArrayUtil
-import cn.hutool.core.util.CharsetUtil
 import cn.hutool.core.util.StrUtil
 import com.yomahub.liteflow.builder.*
 import com.yomahub.liteflow.exception.ConfigErrorException
 import com.yomahub.liteflow.exception.NotSupportParseWayException
 import com.yomahub.liteflow.flow.FlowConfiguration
-import com.yomahub.liteflow.parser.grf.GyfFileFlowParser
+import com.yomahub.liteflow.parser.gyf.GyfFileFlowParser
 import com.yomahub.liteflow.property.LiteFlowConfig
 
 class ResourceGyfFlowParser implements UrlFlowParser {

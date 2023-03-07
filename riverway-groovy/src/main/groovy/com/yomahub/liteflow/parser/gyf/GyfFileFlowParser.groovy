@@ -1,4 +1,4 @@
-package com.yomahub.liteflow.parser.grf
+package com.yomahub.liteflow.parser.gyf
 
 import cn.hutool.core.io.IoUtil
 import cn.hutool.core.io.resource.ResourceUtil
@@ -11,6 +11,7 @@ import com.yomahub.liteflow.flow.element.condition.Condition
 import com.yomahub.liteflow.flow.element.condition.FinallyCondition
 import com.yomahub.liteflow.flow.element.condition.PreCondition
 import com.yomahub.liteflow.parser.base.BaseFlowParser
+import com.yomahub.liteflow.parser.dsl.ChainDslScript
 import com.yomahub.liteflow.parser.dsl.MainDslScript
 import com.yomahub.liteflow.parser.dsl.define.PathChain
 import com.yomahub.liteflow.property.LiteFlowConfig
@@ -79,12 +80,10 @@ class GyfFileFlowParser extends BaseFlowParser {
                 .setResourcePath(chainPath.toUri())
                 .setResource(path)
                 .setContent(IoUtil.readUtf8(chainResourceStream))
-        Binding binding = new Binding()
-        binding.setVariable("flowConfiguration", flowConfiguration)
-        binding.setVariable("parser", this)
-        binding.setVariable("parentPath", parentPath)
-        GroovyShell shell = new GroovyShell(this.getClass().getClassLoader(), binding, new CompilerConfiguration())
-        Object result = shell.evaluate(parseResource.getContent(), parseResource.getResource())
+        GroovyShell shell = new GroovyShell(this.getClass().getClassLoader(), new Binding(), new CompilerConfiguration())
+        ChainDslScript script = (ChainDslScript) shell.parse(parseResource.getContent(), parseResource.getResource());
+        script.init(flowConfiguration, this, parentPath)
+        Object result = script.run()
         Chain chain = null;
         if (result instanceof Chain) {
             parsedPaths.put(path, result)

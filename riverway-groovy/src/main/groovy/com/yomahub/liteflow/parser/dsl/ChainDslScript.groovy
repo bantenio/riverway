@@ -15,7 +15,7 @@ import com.yomahub.liteflow.flow.element.Executable
 import com.yomahub.liteflow.flow.element.Node
 import com.yomahub.liteflow.flow.element.condition.*
 import com.yomahub.liteflow.parser.dsl.define.PathChain
-import com.yomahub.liteflow.parser.grf.GyfFileFlowParser
+import com.yomahub.liteflow.parser.gyf.GyfFileFlowParser
 import com.yomahub.liteflow.property.LiteFlowConfig
 import com.yomahub.liteflow.slot.SlotScope
 import groovy.transform.TypeChecked
