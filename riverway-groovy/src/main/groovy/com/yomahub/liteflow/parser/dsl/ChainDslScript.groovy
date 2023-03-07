@@ -20,6 +20,7 @@ import com.yomahub.liteflow.property.LiteFlowConfig
 import com.yomahub.liteflow.slot.SlotScope
 import groovy.transform.TypeChecked
 
+import java.beans.Introspector
 import java.nio.file.Path
 
 @TypeChecked
@@ -29,18 +30,11 @@ abstract class ChainDslScript extends Script {
 
     private Binding binding
 
-    private GyfFileFlowParser parser;
+    private GyfFileFlowParser parser
 
     private Path parentPath
 
     void __init__(boolean includeChainAndNode = false) {
-        this.binding = this.getBinding()
-        this.flowConfiguration = (FlowConfiguration) this.binding.getVariable("flowConfiguration")
-        this.parser = (GyfFileFlowParser) binding.getVariable("parser")
-        this.parentPath = (Path) binding.getVariable("parentPath")
-        this.binding.removeVariable("flowConfiguration")
-        this.binding.removeVariable("parser")
-        this.binding.removeVariable("parentPath")
         if (includeChainAndNode) {
             for (Chain chain : flowConfiguration.getChainMap().values()) {
                 binding.setVariable(chain.getChainName(), chain)
@@ -55,6 +49,16 @@ abstract class ChainDslScript extends Script {
             binding.setVariable("SCOPE_PARAMETER", SlotScope.SCOPE_PARAMETER)
             binding.setVariable("SCOPE_RESPONSE", SlotScope.SCOPE_RESPONSE)
         }
+    }
+
+    void init(FlowConfiguration flowConfiguration, GyfFileFlowParser parser, Path parentPath) {
+        this.flowConfiguration = flowConfiguration
+        this.parser = parser
+        this.parentPath = parentPath
+        this.binding = this.getBinding()
+        this.binding.removeVariable("flowConfiguration")
+        this.binding.removeVariable("parser")
+        this.binding.removeVariable("parentPath")
     }
 
     ThenCondition THEN(Executable... executables) throws Throwable {
@@ -148,7 +152,7 @@ abstract class ChainDslScript extends Script {
     }
 
     NodeCondition node(Class<? extends NodeComponent> clazz) {
-        def beanName = StrUtil.lowerFirst(clazz.simpleName)
+        def beanName = Introspector.decapitalize(clazz.simpleName)
         return node(beanName, clazz)
     }
     static Class<NodeSwitchComponent> SWITCH_COMPONENT_CLASS = NodeSwitchComponent.class

@@ -1,12 +1,12 @@
 package gyfs.common.preTradeVerify
 
-
+import com.yomahub.liteflow.example.components.WriteTransResponseToRedisComponent
 import com.yomahub.liteflow.parser.dsl.ChainDslScript
 import com.yomahub.liteflow.parser.dsl.ext.GYFDslExtension
 import groovy.transform.BaseScript
 
-import static com.yomahub.liteflow.parser.groovy.dsl.SpringExtDefine.*
-import static com.yomahub.liteflow.slot.SlotScope.*
+import static com.yomahub.liteflow.parser.groovy.dsl.SpringExtDefine.accept
+import static com.yomahub.liteflow.slot.SlotScope.SCOPE_VARIABLE
 
 @BaseScript ChainDslScript _
 __init__(true)
@@ -17,7 +17,7 @@ use(GYFDslExtension) {
                     .property("resultName", "transQueryResponse")
                     .property("scope", SCOPE_VARIABLE),
             // 2. 写入缓存
-            node(writeTransResponseToRedisComponent)
+            node(WriteTransResponseToRedisComponent.class)
                     .swap("transQueryResponse", ref("#transQueryResponse"))
     )
 }

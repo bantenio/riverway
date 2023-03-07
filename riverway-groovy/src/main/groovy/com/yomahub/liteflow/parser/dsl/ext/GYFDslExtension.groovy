@@ -34,6 +34,10 @@ class GYFDslExtension {
     }
 
     static NodeCondition strFmt(NodeCondition self, String parameterName, String message, Object... args) {
+        return fmt(self, parameterName, message, args)
+    }
+
+    static NodeCondition fmt(NodeCondition self, String parameterName, String message, Object... args) {
         if (StrUtil.isBlank(message)) {
             throw new LiteFlowParseException("log func message must be not null or empty")
         }

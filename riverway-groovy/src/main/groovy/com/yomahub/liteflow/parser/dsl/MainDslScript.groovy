@@ -18,8 +18,11 @@ abstract class MainDslScript extends Script {
     private Map<String, PathChain> mappingChains = new HashMap<>()
 
     void __init__(boolean includeChainAndNode = false) {
+    }
+
+    void init(FlowConfiguration flowConfiguration) {
+        this.flowConfiguration = flowConfiguration;
         this.binding = this.getBinding()
-        this.flowConfiguration = (FlowConfiguration) this.binding.getVariable("flowConfiguration")
         this.binding.removeVariable("flowConfiguration")
         this.binding.removeVariable("parser")
         this.binding.removeVariable("parentPath")

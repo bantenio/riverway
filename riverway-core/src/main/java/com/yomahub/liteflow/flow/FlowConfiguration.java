@@ -10,7 +10,6 @@ import com.yomahub.liteflow.flow.id.DefaultRequestIdGenerator;
 import com.yomahub.liteflow.flow.id.RequestIdGenerator;
 import com.yomahub.liteflow.parser.ResourceParser;
 import com.yomahub.liteflow.parser.ext.HuToolResourceParser;
-import com.yomahub.liteflow.plugins.Interceptor;
 import com.yomahub.liteflow.plugins.PluginManager;
 import com.yomahub.liteflow.property.LiteFlowConfig;
 import com.yomahub.liteflow.thread.ExecutorServiceManager;
@@ -25,7 +24,7 @@ public class FlowConfiguration {
 
     private NodeComponentManager nodeComponentManager = new NodeComponentManager();
 
-    private ExecutorServiceManager executorServiceManager = new ExecutorServiceManager();
+    private ExecutorServiceManager executorServiceManager;
 
     private LiteFlowConfig liteflowConfig;
 

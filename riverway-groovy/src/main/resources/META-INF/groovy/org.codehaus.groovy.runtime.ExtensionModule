@@ -1,0 +1,3 @@
+moduleName=RiverWayGYFDslModule
+moduleVersion=1.0
+extensionClasses=com.yomahub.liteflow.parser.dsl.ext.GYFDslExtension

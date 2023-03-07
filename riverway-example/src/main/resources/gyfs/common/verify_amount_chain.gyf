@@ -1,9 +1,7 @@
 package gyfs.common
 
-import com.yomahub.liteflow.components.NoOpComponent
 import com.yomahub.liteflow.example.components.NoOpSwitchComponent
 import com.yomahub.liteflow.parser.dsl.ChainDslScript
-import com.yomahub.liteflow.parser.dsl.ext.GYFDslExtension
 import groovy.transform.BaseScript
 import org.slf4j.event.Level
 
@@ -13,16 +11,14 @@ __init__()
 
 def RegisterDo = include('register/register_do.gyf')
 
-use(GYFDslExtension) {
 
-    chain "verifyAmountChain", {
-        THEN(
-                SWITCH(
-                        node(NoOpSwitchComponent.class)
-                                .log(Level.INFO, "zuid was {}", ref("#requestBody.zuid"))
-                ).to(
-                        RegisterDo.id("loanProductTypeChain")
-                )
-        )
-    }
+chain "verifyAmountChain", {
+    THEN(
+            SWITCH(
+                    node(NoOpSwitchComponent.class)
+                            .log(Level.INFO, "zuid was {}", ref("#requestBody.zuid"))
+            ).to(
+                    RegisterDo.id("loanProductTypeChain")
+            )
+    )
 }

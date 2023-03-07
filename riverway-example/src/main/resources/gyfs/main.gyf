@@ -5,8 +5,6 @@ import groovy.transform.BaseScript
 
 @BaseScript MainDslScript _
 
-__init__()
-
 node 'writeTransResponseToRedisComponent'
 
 chain('common/get_trans_query_response_chain.gyf', "getTransQueryResponseChain")

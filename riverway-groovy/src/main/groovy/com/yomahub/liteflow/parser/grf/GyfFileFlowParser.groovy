@@ -38,15 +38,12 @@ class GyfFileFlowParser extends BaseFlowParser {
 
             URI parentPathValue = parseResource.getResourcePath()
             Path parentPath = Paths.get(parentPathValue).getParent()
-            Binding binding = new Binding()
-            binding.setVariable("flowConfiguration", flowConfiguration)
-            binding.setVariable("parser", this)
-            binding.setVariable("parentPath", parentPath)
 
             //这里一定要先放chain，再放node，因为node优先于chain，所以当重名时，node会覆盖掉chain
             //往上下文里放入所有的chain，是的el表达式可以直接引用到chain
-            GroovyShell shell = new GroovyShell(this.getClass().getClassLoader(), binding, config)
+            GroovyShell shell = new GroovyShell(this.getClass().getClassLoader(), new Binding(), config)
             MainDslScript script = (MainDslScript) shell.parse(parseResource.getContent(), parseResource.resource)
+            script.init(flowConfiguration)
             script.run()
             Set<String> paths = script.chainPaths
             mappingChains = script.getMappingChains()
