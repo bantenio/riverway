@@ -14,8 +14,8 @@ compileTestJava.options.encoding = "UTF-8"
 
 dependencies {
     api project(":${project_root_name}-parser")
-    api 'org.codehaus.groovy:groovy:3.0.12'
-    api 'org.codehaus.groovy:groovy-jsr223:3.0.12'
+    api 'org.apache.groovy:groovy:4.0.9'
+    implementation 'org.apache.groovy:groovy-jsr223:4.0.9'
 }
 
 ext {
